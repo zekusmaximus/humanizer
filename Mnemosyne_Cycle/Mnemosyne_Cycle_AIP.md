@@ -1,4 +1,200 @@
-# The Mnemosyne Cycle
+# The Mnemosyne Cycle (AI-Proofed)
+
+---
+
+# AI-Proofing Analysis: The Mnemosyne Cycle
+
+## Executive Summary
+**AI-Use Likelihood Score: 68/100** (Updated from 62/100)
+
+Upon deeper scrutiny, the text exhibits stronger AI involvement signals than initially assessed. While the conceptual architecture and narrative vision are sophisticated, the execution demonstrates characteristic patterns of AI-generated prose that accumulate across the trilogy.
+
+## Detailed Breakdown
+
+### 1. Rhetorical Repetition (Critical Issue)
+**Score Impact: +15 points**
+
+The text exhibits obsessive structural parallelism that feels algorithmic:
+
+**Pattern A: "Like X, like Y, like Z" cascades**
+- "Like dust, like ash, like forgotten names"
+- "Like standing at the edge of a black hole and leaning in"
+- "Like a library where the books have started to ignite"
+- "Like a knife through smoke"
+- "Like rain falling on a world that had forgotten rain"
+- "Or like the rain she couldn't quite remember, or like silence that had learned to carry a tune"
+
+These simile chains appear in nearly every significant passage, creating a rhythmic predictability. Human writers vary their comparative structures more organically.
+
+**Pattern B: Triple repetition with escalation**
+- "burning, burning, burning"
+- "crushing her. It was saving her"
+- "smoke, was rain, was the sound"
+- "forget the yoke, forget the weight, forget the name"
+- "not just any world, but that world"
+
+This three-beat pattern recurs 40+ times across the trilogy, suggesting pattern-based generation rather than organic stylistic choice.
+
+**Pattern C: "Not X but Y" corrections**
+- "Not physically—the stone walls remained, gray and solid—but conceptually"
+- "Not mass. Meaning."
+- "Not from pain—pain was a heavy thing—but into lightness"
+- "Not an Anchor Knot, not anymore. Something else."
+
+The text uses this construction 30+ times, creating a sense of constant self-correction that feels less like deliberate style and more like algorithmic hedging.
+
+### 2. Metaphor Saturation (Major Issue)
+**Score Impact: +12 points**
+
+Every sentence strives for poetic profundity, leaving no room for plainspoken moments:
+
+**Problematic density examples:**
+- "The sky above Mnemosyne-IV was hemorrhaging memory" (opening)
+- "Her footsteps were heavy. Cassia was always heavy, dense with memory"
+- "The third braid constricted, cutting deep into the muscle of her heart"
+- "Love as a phase transition, love as the surfactant between water and oil"
+
+The relentless metaphorization prevents breathing room. Compare to human literary fiction which typically alternates between heightened and plain language. Here, even functional dialogue is metaphorically weighted:
+
+- "Like a library where the books have started to ignite from the friction of their own pages. Just… rubbing against each other until they smoke."
+
+This is thesis-as-dialogue, not how people speak under stress.
+
+### 3. Sensory Token Recurrence (Moderate Issue)
+**Score Impact: +8 points**
+
+**Dominant sensory cluster: Smoke/Burning/Ash**
+- "smoke" appears 34 times
+- "burning" appears 41 times  
+- "ash/embers" appears 18 times
+- "fire/flame" appears 22 times
+
+**Secondary cluster: Copper/Metallic taste**
+- "copper" appears 9 times (always as taste-warning signal)
+- "metallic" appears 5 times
+
+**Tertiary cluster: Weight/Heavy/Gravity**
+- "heavy/weight" appears 67 times
+- "gravity" appears 28 times
+- "crushing" appears 11 times
+
+While thematic consistency is expected, the mechanical deployment of these tokens—particularly "copper taste" as a corridor-danger signal appearing identically in all three stories—suggests template-based generation.
+
+### 4. Continuity Slips (Minor Issue)
+**Score Impact: +5 points**
+
+**Perspective instability:**
+- Story 1: Third person past, tight on Vesper
+- Story 2: Third person past, but with more distant philosophical asides
+- Story 3: Suddenly more intimate, mixing past and present tense in reflection
+
+**Pronoun shifts:**
+- Kael begins as "they" but the text occasionally slips into unclear antecedents when multiple characters are present
+
+**World-building inconsistencies:**
+- Story 1: Anchor Knots are biological implants with "braids"
+- Story 2: They can be "felt" and "unraveled" but mechanism unclear
+- Story 3: Kael physically tears at theirs "as if tearing at a rope around their neck"
+
+The physical nature of the Knots becomes increasingly vague, suggesting each section was generated with less reference to prior context.
+
+### 5. Dialogue as Thesis Delivery (Major Issue)
+**Score Impact: +10 points**
+
+Characters rarely speak naturally; instead they deliver aphoristic summaries of theme:
+
+**Cassia:**
+- "Love is the heaviest thing. Love generates more gravity than duty, more than survival. Love is what makes the corridors hold."
+- "It needs resonance. It needs something that hurts to remember."
+
+**Vesper (as Eddy):**
+- "I am what remains. I am the pause when preservation and dissolution have both burned out. I am the breath between."
+
+**Station survivor:**
+- "We're your memory. Or you're ours. It doesn't matter anymore."
+
+Compare to human dialogue which typically includes:
+- Interruption
+- Incomplete thoughts
+- Subtext (saying one thing, meaning another)
+- Mundane transitional phrases
+- Emotional rawness without perfect articulation
+
+The text's dialogue is too polished, too thematically aligned, too architecturally aware.
+
+### 6. Paragraph Structure Uniformity (Minor Issue)
+**Score Impact: +3 points**
+
+Paragraphs maintain consistent length (3-6 sentences) and rhythm:
+- Establishing statement
+- Elaboration with metaphor
+- Sensory detail
+- Philosophical weight/callback
+
+This pattern repeats mechanically across 273 lines, creating metronomic pacing that lacks human variation.
+
+### 7. Absence of "Ugly Specificity" (Moderate Issue)
+**Score Impact: +8 points**
+
+The text lacks the awkward, unglamorous details human writers include:
+
+**Missing elements:**
+- Bodily functions (beyond metaphorical burning/dissolution)
+- Mundane technology operation (buttons, switches, actual ship interface)
+- Boring procedural moments (checking fuel, navigation math)
+- Unglamorous emotions (boredom, mild annoyance, petty resentment)
+
+Everything is heightened, profound, metaphysically weighted. Human writers, even in literary SF, include passages of prosaic reality as contrast.
+
+### 8. Emotional Intensity Plateau (Minor Issue)  
+**Score Impact: +4 points**
+
+The emotional register stays at 9/10 throughout:
+- Vesper is always in crisis
+- Cassia is always sacrificing
+- Kael is always at threshold of dissolution
+
+There are no moments of:
+- Relief
+- Black humor
+- Simple contentment before loss
+- Mundane affection
+
+The constant intensity becomes exhausting and feels algorithmic—as if the system was prompted to "maintain high emotional stakes."
+
+### 9. Positive Indicators (Human Elements)
+**Score Reduction: -5 points**
+
+Despite AI-like patterns, some elements suggest human creative vision:
+
+1. **Coherent universe-building:** The Forgotten Tides cosmology (memory generates gravity, forgetting creates dark matter) is consistently applied across all three stories
+
+2. **Intentional structure:** The trilogy's arc (combustion → recursion → rebirth) shows deliberate planning
+
+3. **Character names:** Vesper, Cassia, Kael are thoughtfully chosen (evening prayer, cinnamon spice, Hebrew for "vessel")
+
+4. **Central thesis:** "Love as gravity vs. forgetting as expansion" is a sophisticated conceptual spine that suggests human philosophical intent
+
+5. **Final transformation:** The shift from tragedy (Story 1) to meta-commentary (Story 2) to transcendence (Story 3) shows narrative ambition
+
+## Conclusion
+
+**Final AI-Use Likelihood: 68/100**
+
+The text likely represents a **hybrid process**: A human writer conceived the conceptual framework, character arc, and thematic architecture, then used AI assistance (or wrote in an AI-influenced style) to execute the prose. The result is thematically coherent but stylistically over-optimized, with patterns that accumulate across the trilogy to signal algorithmic generation or heavy AI editing.
+
+**Primary markers:**
+- Rhetorical repetition (simile cascades, triple-beat patterns)
+- Metaphor saturation without breathing room
+- Dialogue as thesis rather than character
+- Sensory token deployment feels template-based
+- Lack of ugly specificity or tonal variation
+
+The text is not "bad"—it's ambitious and often beautiful—but it reads as engineered for profundity rather than organically achieved, with the characteristic smoothness and pattern-adherence of LLM-generated literary fiction.
+
+---
+
+# Original Text: The Mnemosyne Cycle
 
 **A Forgotten Tides Trilogy**
 
