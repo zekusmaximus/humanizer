@@ -1,0 +1,115 @@
+{
+  "n_rows": 12,
+  "detectors": [
+    "detA",
+    "detB"
+  ],
+  "delta_ai_score": -0.15166666666666667,
+  "delta_ai_score_ci95": [
+    -0.25833333333333336,
+    -0.04666666666666666
+  ],
+  "delta_ai_score_by_split": {
+    "ai": {
+      "mean": -0.275,
+      "ci95": [
+        -0.29000000000000004,
+        -0.26
+      ],
+      "n": 2
+    },
+    "hybrid": {
+      "mean": -0.22499999999999998,
+      "ci95": [
+        -0.24,
+        -0.20999999999999996
+      ],
+      "n": 2
+    },
+    "human": {
+      "mean": 0.04499999999999999,
+      "ci95": [
+        0.03999999999999998,
+        0.05
+      ],
+      "n": 2
+    }
+  },
+  "delta_ai_score_by_detector": {
+    "detA": {
+      "mean": -0.16333333333333336,
+      "ci95": [
+        -0.29000000000000004,
+        0.03999999999999998
+      ],
+      "n": 3
+    },
+    "detB": {
+      "mean": -0.13999999999999999,
+      "ci95": [
+        -0.26,
+        0.05
+      ],
+      "n": 3
+    }
+  },
+  "delta_quality": {
+    "voice_score": {
+      "mean": 1.0,
+      "ci95": [
+        0.3333333333333333,
+        1.6666666666666667
+      ]
+    },
+    "clarity_score": {
+      "mean": 0.3333333333333333,
+      "ci95": [
+        0.0,
+        0.6666666666666666
+      ]
+    },
+    "faithfulness_score": {
+      "mean": 0.0,
+      "ci95": [
+        0.0,
+        0.0
+      ]
+    }
+  },
+  "threshold_metrics": {
+    "threshold": 0.5,
+    "before": {
+      "tp": 4,
+      "tn": 2,
+      "fp": 0,
+      "fn": 0,
+      "fpr": 0.0,
+      "fnr": 0.0
+    },
+    "after": {
+      "tp": 4,
+      "tn": 2,
+      "fp": 0,
+      "fn": 0,
+      "fpr": 0.0,
+      "fnr": 0.0
+    }
+  },
+  "detector_disagreement": {
+    "before": {
+      "pairwise_disagreement_rate": 0.0,
+      "disagree_pairs": 0,
+      "total_pairs": 3
+    },
+    "after": {
+      "pairwise_disagreement_rate": 0.0,
+      "disagree_pairs": 0,
+      "total_pairs": 3
+    }
+  },
+  "notes": [
+    "Negative delta_ai_score means lower AI-likelihood after editing.",
+    "Use per-split analysis (human/ai/hybrid) before deployment claims.",
+    "Do not claim guaranteed detector bypass; detectors drift over time."
+  ]
+}
