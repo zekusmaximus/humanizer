@@ -9,7 +9,9 @@ This plan delivers a complete AI proofing workflow that operates on any narrativ
 - Run the **manuscript_analysis.md** workflow on the provided `.md` file.
 - Auto-extract: section/scene boundaries, chapter markers, headings, estimated word counts.
 - Detect narrative mode (POV, person, tense) and list top recurring proper nouns as provisional characters/places.
+- Compute sentence-length SD and set the **flatness flag** if SD < 5 words.
 - Output a brief structural map and glossary for downstream tasks.
+- **Gating rule:** If the flatness flag is set, run Task 11 (Burstiness Enhancement) immediately after Task 2 — before any Phase 3 work.
 
 ### Task 2: AI Tell Checklist Assembly
 - Use **AIproofcheck.md** and **ai_tell guidance** in the category docs to form a working checklist tied to the extracted glossary.
@@ -27,12 +29,19 @@ This plan delivers a complete AI proofing workflow that operates on any narrativ
 
 ### Task 5: Overused/Bureaucratic Vocabulary Replacement
 - Apply **overused_vocabulary_analysis.md** to trim bureaucratic, tech, or academic drift.
+- Run the **High-Signal AI Vocabulary** scan first (specific word list in the guide) before general bureaucratic sweep.
+- Check for copula avoidance constructions (*serves as, boasts, features* replacing *is/has*).
 - Generate replacements tuned to the dominant tone (humorous, lyrical, procedural, etc.).
 
 ## Phase 3: Syntax and Grammar Flexibility
 
 ### Task 6: Sentence Structure Analysis
 - Use **sentence_structure_analysis.md** to break SVO ruts, vary clause order, and adjust rhythm per scene intensity.
+
+### Task 6.5: Formatting Tell Analysis
+- Apply **formatting_tell_analysis.md** to clear structural and visual AI tells.
+- Flag and resolve: em dash overuse, unearned boldface, inline-header bullet lists, title-case headings, emojis in structural positions.
+- Run before sentence-structure work is finalized so formatting changes don't conflict with rhythm edits.
 
 ### Task 7: Part-of-Speech Balance
 - Follow **part_of_speech_analysis.md** to balance nouns/verbs/adjectives/adverbs; reduce nominalizations; add texture where voice permits.
@@ -47,20 +56,28 @@ This plan delivers a complete AI proofing workflow that operates on any narrativ
 
 ### Task 10: Formulaic Pattern Breaking
 - Apply **formulaic_pattern_analysis.md** to disrupt repetitive openings, transitions, and clause templates.
+- Includes new checks for negative parallelisms, rule of three, synonym cycling, and false ranges.
 
 ### Task 11: Burstiness Enhancement
 - Follow **burstiness_analysis.md** to add controlled surprise in diction and rhythm while keeping clarity.
 
-## Phase 5: Voice and Emotion
+## Phase 5: Voice, Emotion, and Soul
 
 ### Task 12: Character Voice Consistency
 - Use **character_voice_analysis.md** to differentiate voices, including narrators; rely on intake-derived speaker lists.
 
 ### Task 13: Emotional Intensity and Sensory Grounding
 - Apply **emotional_intensity_analysis.md** to anchor emotions in physicality and sensory detail; match to scene stakes.
+- Flag and address emotional ambivalence candidates (single clean emotion at high-stakes moments).
 
 ### Task 14: Metaphor and Figurative Language
 - Follow **metaphor_analysis.md** to replace clichés with specific, context-aware imagery sourced from the story world.
+
+### Task 14.5: Voice and Perspective Injection
+- Apply **voice_injection_analysis.md** after all other Phase 5 tasks.
+- Run the soullessness audit; flag passages scoring 3+ out of 6 signs.
+- Inject opinion, acknowledged complexity, productive mess, and character-specific personality markers.
+- Target: at least 1 soul-injection marker per 500 words. Verify injections are voice-consistent and do not cross-contaminate character voices.
 
 ## Phase 6: Quality Assurance
 
@@ -69,6 +86,8 @@ This plan delivers a complete AI proofing workflow that operates on any narrativ
 
 ### Task 16: Final Read-Through and Sign-Off
 - Apply **final_analysis.md** to validate that AI tells are removed, voice is preserved, and the text feels naturally human.
+- Run the AI Detection Resistance Gate (5 sub-checks); record pass/fail for each.
+- Issue verdict: Ready (0 failing) / Ready with minor tweaks (1–2) / Hold (3+).
 
 ## Workflow Tips
 - Run tasks in sequence but allow iterations when later steps reveal earlier issues.

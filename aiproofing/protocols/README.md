@@ -10,13 +10,15 @@ This folder provides a genre-agnostic AI proofing system that can be applied to 
 - Prompts and checklists are phrased for agents or humans to execute in a repeatable way.
 
 ## Core Components
-- **AIproof_plan.md** – End-to-end, phase-based protocol that can be executed on any narrative input.
-- **AIproofcheck.md** – Quick verification checklist to apply after revisions.
-- **manuscript_analysis.md** – Intake workflow that builds working context from an untagged file.
-- **automation_playbook.md** – Drop-in instructions a coding agent can follow when asked to “AI proof the following .md file.”
-- **ai_tell_checklist.md** – Fast scan for the most common AI signals to watch for during any pass.
-- **Category Guides** – Focused analyses for vocabulary, idioms, sentence structure, POS balance, modality, readability, formulaic patterns, burstiness, character voice, emotional intensity, metaphors, and consistency.
-- **final_analysis.md** – Publication/readiness bar and sign-off criteria.
+- **AIproof_plan.md** – End-to-end, phase-based protocol that can be executed on any narrative input. 18 tasks across 6 phases.
+- **AIproofcheck.md** – Quick verification checklist (14 checkboxes) to apply after revisions.
+- **manuscript_analysis.md** – Intake workflow that builds working context from an untagged file; outputs sentence-length variance and flatness flag.
+- **automation_playbook.md** – Drop-in instructions a coding agent can follow when asked to "AI proof the following .md file." Includes an active 5-check Detection Resistance Gate.
+- **ai_tell_checklist.md** – Fast scan for AI signals across structural, lexical, formulaic, and formatting categories.
+- **formatting_tell_analysis.md** – Dedicated protocol for structural/visual AI tells: em dash overuse, boldface overuse, inline-header lists, title-case headings, emojis.
+- **voice_injection_analysis.md** – Soul injection protocol: soullessness audit, opinion/complexity/mess injection, character-specific personality markers.
+- **Category Guides** – Focused analyses for vocabulary, idioms, sentence structure, POS balance, modality, readability, formulaic patterns (including negative parallelisms, rule of three, synonym cycling, false ranges), burstiness, character voice, emotional intensity, metaphors, and consistency.
+- **final_analysis.md** – Publication/readiness bar, AI Detection Resistance Gate (5 sub-checks), and sign-off criteria.
 
 ## How to Use
 1. Place or reference any narrative `.md` file.
@@ -27,7 +29,9 @@ This folder provides a genre-agnostic AI proofing system that can be applied to 
 
 ## Success Criteria
 - No reliance on bespoke metadata—only the provided `.md` text.
-- Increased human-like variability (lexical, syntactic, and figurative).
+- Increased human-like variability (lexical, syntactic, and figurative); sentence-length SD meets genre threshold.
+- Formatting AI tells eliminated: em dash density below threshold, no unearned boldface, no inline-header lists, sentence-case headings, no emojis.
 - Clear, differentiated voices without repetitive templates.
 - Smooth pacing and readability that match the intended audience.
-- Final text resistant to common AI-detection heuristics while retaining authentic creative intent.
+- Soul markers present throughout: at least one opinion, acknowledged uncertainty, or moment of emotional complexity per 500 words — no section reads as neutral reportage.
+- Final text passes the AI Detection Resistance Gate (all 5 sub-checks) and feels authentically human in voice, not just technically clean.

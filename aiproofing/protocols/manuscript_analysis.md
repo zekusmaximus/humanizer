@@ -18,6 +18,8 @@ Create a working map of any narrative `.md` file without relying on external not
    - Capture nearby verbs/adjectives to infer voice traits (formal, slang-heavy, sensory, terse, expansive).
 4. **Rhythm Baseline**
    - Compute sentence length histogram (short/medium/long/very long) and the top 5 sentence-opening patterns.
+   - Calculate the mean sentence length, standard deviation (SD), minimum, and maximum.
+   - Set a **flatness flag** if SD < 5 words; this flag gates Task 11 (Burstiness) to run before Phase 3 sentence-structure work.
 5. **Tone and Setting Signals**
    - Extract recurring concrete nouns (objects, vehicles, foods, tools) and time markers (season, era, tech level) to anchor metaphors and idioms.
 6. **Dialogue vs. Narrative Balance**
@@ -27,7 +29,7 @@ Create a working map of any narrative `.md` file without relying on external not
 - Section map with word counts and transition notes.
 - POV/tense declaration and any detected shifts.
 - Provisional character/location/organization list with 2–3 voice cues each.
-- Sentence-length and opening-pattern distribution.
+- Sentence-length and opening-pattern distribution, including mean, SD, min/max, and flatness flag status.
 - Tone/setting signal list for figurative language grounding.
 - Dialogue/narrative balance summary.
 
@@ -35,3 +37,4 @@ Create a working map of any narrative `.md` file without relying on external not
 - All later guides can reference this intake without requesting extra metadata.
 - Character/setting lists are derived solely from the file.
 - Rhythm and voice baselines are quantifiable (counts or percentages) and repeatable.
+- Sentence-length SD and flatness flag are explicitly recorded for downstream use by **burstiness_analysis.md** and **final_analysis.md**.
