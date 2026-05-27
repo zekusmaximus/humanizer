@@ -5,6 +5,11 @@ Use this playbook verbatim when handing the job to a coding agent. It requires o
 ## Input
 - Path to the Markdown file to proof.
 - Optional: target audience/genre if known (agent should infer if not provided).
+- Optional: `--preset narrative|technical|academic|business` (see `presets/domain_presets.md`). Default = narrative. The chosen preset overrides generic thresholds for soul density, lexical tolerance, readability, and formatting strictness.
+- Optional edit-budget & faithfulness flags (enforced in final gate when supplied):
+  - `--max_edit_pct 10` (or 5–25): cap on percentage of sentences that may be substantively rewritten. Exceeding → Hold + "reduce edit scope".
+  - `--min_faithfulness_delta 0` (or 1–4): minimum human-rated faithfulness (1-5 scale) on the after text vs source. Below threshold → Hold.
+  - `--require_semantic_review true`: agent must produce an explicit claim-by-claim diff table (or use external diff) before final verdict; any potential drift must be human-approved.
 
 ## Step 1: Ingest and Normalize
 1. Load the file; strip Markdown formatting only for analysis (preserve headings for structure cues).
@@ -17,6 +22,8 @@ Use this playbook verbatim when handing the job to a coding agent. It requires o
 - **Setting Signals**: Extract concrete nouns (objects, locales) and time markers to ground metaphors and idioms.
 - **Voice Baseline**: For each major speaker/narrator, capture 3–5 distinctive traits (pacing, formality, slang markers, sensory focus).
 - **Rhythm Baseline**: Compute sentence-length histogram and most common opening patterns.
+
+If a preset was supplied, load the corresponding parameter block from `presets/domain_presets.md` and substitute the numeric targets (soul markers/500w, em-dash cap, FK range, AI-vocab tolerance) into the relevant later protocols and the final gate.
 
 ## Step 3: Run Category Guides (summaries)
 - **Vocabulary & Overuse**: `vocabulary_analysis.md`, `overused_vocabulary_analysis.md` *(run high-signal AI word scan first)*
@@ -58,6 +65,8 @@ Provide a final package containing:
 - Voice differentiation notes for the top 3 speakers/narrators.
 - Readability before/after (FK, sentence length spread).
 - Any Hold items with the guide to return to for remediation.
+- (High-stakes only) Structured provenance / edit log in JSON + Markdown table (see `provenance_log.md`).
+- Domain preset used (if any) and how it adjusted targets.
 
 ## Folder Convention
 
@@ -70,11 +79,13 @@ To use this protocol on a manuscript:
 The agent will save two output files to the **same folder** as the input:
 
 | Output file | Contents |
-|---|---|
+|---|---
 | `<filename>_revised.md` | The fully edited manuscript with all AI tells removed and voice/soul injected |
 | `<filename>_report.md` | Analysis report: category summaries, gate results, voice notes, before/after counts, verdict |
+| `<filename>_provenance.json` (optional) | Structured edit log for high-stakes / auditable use (see `provenance_log.md`). Only produced when user requests "audit mode", "high-stakes", or "provenance". |
+| `<filename>_edit_log.md` (optional) | Human-readable table derived from the JSON. |
 
-Example: input `my_story/chapter_one.md` → outputs `my_story/chapter_one_revised.md` and `my_story/chapter_one_report.md`.
+Example: input `my_story/chapter_one.md` → outputs `my_story/chapter_one_revised.md` and `my_story/chapter_one_report.md`. For high-stakes also produce the two provenance files.
 
 If the verdict is **Hold**, the report lists each failing gate sub-check and the protocol guide to return to. Rerun the prompt on the revised file to generate a fresh report.
 

@@ -1,6 +1,6 @@
 ---
 name: humanizer
-version: 2.1.1
+version: 2.2.0
 description: |
   Remove signs of AI-generated writing from text. Use when editing or reviewing
   text to make it sound more natural and human-written. Based on Wikipedia's
@@ -458,6 +458,20 @@ Provide:
 - Removed generic positive conclusion ("the future looks bright", "exciting times lie ahead")
 - Replaced media name-dropping with specific claims from specific sources
 - Used simple sentence structures and concrete examples
+
+---
+
+## Limitations & Responsible Use
+
+This skill reduces visible AI-writing patterns and can inject more human-like voice and variability. **It does not guarantee evasion of any AI detector or classifier.**
+
+- Modern detectors are unstable across domains, lengths, and model versions. Performance on one family does not predict others.
+- Over-application of patterns risks producing "reverse-formulaic" or homogenized text and can drift from original meaning or intent.
+- For high-stakes use (academic, legal, policy, journalistic, medical), retain full human authorship responsibility. Do not present automated output as solely human without disclosure and provenance.
+- The bundled benchmark harness (`aiproofing/benchmark/`) provides a way to measure pre/post outcomes with uncertainty; always run your own detector suite rather than relying on claims.
+- Guidance is English-centric and optimized for general prose and narrative. Results on technical writing, multilingual text, ESL registers, or highly constrained genres are unvalidated.
+
+Cross-reference `aiproofing/benchmark/README.md` for explicit measurement disclaimers and usage notes. Always keep pre-edit snapshots and apply human judgment to every recommendation.
 
 ---
 

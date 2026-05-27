@@ -130,8 +130,21 @@ Based on [Wikipedia's "Signs of AI writing"](https://en.wikipedia.org/wiki/Wikip
 - [Wikipedia: Signs of AI writing](https://en.wikipedia.org/wiki/Wikipedia:Signs_of_AI_writing) - Primary source
 - [WikiProject AI Cleanup](https://en.wikipedia.org/wiki/Wikipedia:WikiProject_AI_Cleanup) - Maintaining organization
 
+## Limitations & Responsible Use
+
+This skill reduces visible AI-writing patterns and can inject more human-like voice and variability. **It does not guarantee evasion of any AI detector or classifier.**
+
+- Modern detectors are unstable across domains, lengths, and model versions. Performance on one family does not predict others.
+- Over-application of patterns risks producing "reverse-formulaic" or homogenized text and can drift from original meaning or intent.
+- For high-stakes use (academic, legal, policy, journalistic, medical), retain full human authorship responsibility. Do not present automated output as solely human without disclosure and provenance.
+- The bundled benchmark harness (`aiproofing/benchmark/`) provides a way to measure pre/post outcomes with uncertainty; always run your own detector suite rather than relying on claims.
+- Guidance is English-centric and optimized for general prose and narrative. Results on technical writing, multilingual text, ESL registers, or highly constrained genres are unvalidated.
+
+See the `aiproofing/benchmark/README.md` for explicit measurement disclaimers. Always keep pre-edit snapshots and apply human judgment to every recommendation.
+
 ## Version History
 
+- **2.2.0** - Added prominent "Limitations & Responsible Use" section to SKILL.md and README.md (cross-references benchmark disclaimers; no detector guarantees)
 - **2.1.1** - Fixed pattern #18 example (curly quotes vs straight quotes)
 - **2.1.0** - Added before/after examples for all 24 patterns
 - **2.0.0** - Complete rewrite based on raw Wikipedia article content

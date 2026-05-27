@@ -103,6 +103,7 @@ class AIProofingOrchestrator:
         self.output_dir = Path(output_dir)
         self.output_dir.mkdir(parents=True, exist_ok=True)
         self.workflow_log = []
+        self.provenance_log = []
         self.current_phase = 1
         self.current_task_index = 0
         self.timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
@@ -203,23 +204,92 @@ class AIProofingOrchestrator:
         seen = set()
         return [p for p in protocols if not (p in seen or seen.add(p))]
 
+    def append_provenance_edit(self, edit: Dict):
+        """Append a single edit record to the provenance log.
+        Call this from agent-driven edit steps when provenance mode is active.
+        Expected keys: id, location, before, after, pattern, rationale, confidence, category, human_approved.
+        """
+        self.provenance_log.append(edit)
+
+    def save_provenance_log(self, manuscript_name: str = "manuscript"):
+        """Save the collected provenance/edit log as JSON (and a simple MD table).
+        Only call when the user has requested high-stakes / audit mode.
+        """
+        if not self.provenance_log:
+            return None
+        base = f"{manuscript_name}_provenance_{self.timestamp}"
+        json_path = self.output_dir / f"{base}.json"
+        with open(json_path, 'w', encoding='utf-8') as f:
+            json.dump({
+                "manuscript": str(self.manuscript_path),
+                "revision_date": datetime.now().isoformat(),
+                "humanizer_version": "aiproofing + humanizer 2.2.0",
+                "overall_confidence": None,  # agent or human fills
+                "edits": self.provenance_log,
+                "notes": "Populate human_approved and overall_confidence during final review. See protocols/provenance_log.md for schema."
+            }, f, indent=2)
+
+        # Simple Markdown table
+        md_path = self.output_dir / f"{base}.md"
+        lines = ["# Edit Provenance Log\n", f"**Manuscript:** {self.manuscript_path}\n\n"]
+        lines.append("| # | Location | Pattern | Rationale (short) | Conf | Approved |\n")
+        lines.append("|---|----------|---------|-------------------|------|----------|\n")
+        for e in self.provenance_log:
+            short_rationale = (e.get("rationale", "")[:60] + "...") if len(e.get("rationale", "")) > 60 else e.get("rationale", "")
+            approved = "✓" if e.get("human_approved") else ""
+            lines.append(f"| {e.get('id', '')} | {e.get('location', '')} | {e.get('pattern', '')} | {short_rationale} | {e.get('confidence', '')} | {approved} |\n")
+        with open(md_path, 'w', encoding='utf-8') as f:
+            f.writelines(lines)
+        return json_path, md_path
+
 
 def main():
     """Example usage of the orchestrator."""
     if len(sys.argv) < 2:
-        print("Usage: aiproof_runner.py <manuscript_path> [output_directory]")
-        print("\nExample:")
+        print("Usage: aiproof_runner.py <manuscript_path> [output_directory] [--preset ...] [--max_edit_pct N] [--min_faithfulness N] [--require_semantic_review]")
+        print("\nExamples:")
         print("  python aiproof_runner.py story.md ./output")
-        print("\nThis script helps manage AI proofing workflow execution.")
+        print("  python aiproof_runner.py chapter.md . --preset technical --max_edit_pct 12")
+        print("\nNew flags (edit-budget / faithfulness enforcement):")
+        print("  --max_edit_pct 15           # cap % of sentences rewritten (default off)")
+        print("  --min_faithfulness_delta 4  # min 1-5 faithfulness rating (default off)")
+        print("  --require_semantic_review   # force explicit drift table + human sign-off")
+        print("\nSee protocols/automation_playbook.md and final_analysis.md for gate behavior.")
         sys.exit(1)
 
     manuscript_path = sys.argv[1]
-    output_dir = sys.argv[2] if len(sys.argv) > 2 else "."
+    output_dir = "."
+    preset = None
+    max_edit_pct = None
+    min_faithfulness = None
+    require_semantic = False
 
-    orchestrator = AIProofingOrchestrator(manuscript_path, output_dir)
+    # Very lightweight arg parsing (no argparse for minimal deps)
+    args = sys.argv[2:]
+    i = 0
+    while i < len(args):
+        if args[i] in ("--preset", "-p") and i+1 < len(args):
+            preset = args[i+1]; i += 2
+        elif args[i] == "--max_edit_pct" and i+1 < len(args):
+            max_edit_pct = float(args[i+1]); i += 2
+        elif args[i] in ("--min_faithfulness_delta", "--min_faithfulness"):
+            min_faithfulness = float(args[i+1]); i += 2
+        elif args[i] == "--require_semantic_review":
+            require_semantic = True; i += 1
+        elif not args[i].startswith("--"):
+            output_dir = args[i]; i += 1
+        else:
+            i += 1
 
     # Print workflow structure
     orchestrator.print_workflow_summary()
+
+    # Print constraints (edit budget / faithfulness / preset) if any
+    if hasattr(orchestrator, "constraints") and any(orchestrator.constraints.values()):
+        print("Active constraints:")
+        for k, v in orchestrator.constraints.items():
+            if v is not None and v is not False:
+                print(f"  {k}: {v}")
 
     # Print current status
     orchestrator.print_current_status()
@@ -229,9 +299,13 @@ def main():
     if task:
         print(f"Next task ready: {task['task_name']}")
 
-    # Save initial log
+    # Save initial log (constraints are available on the instance for later steps)
     log_path = orchestrator.save_workflow_log()
     print(f"Workflow log saved to: {log_path}\n")
+
+    # Example: how an agent or later step would record a budget violation
+    # orchestrator.append_provenance_edit({...}) then at end:
+    # if constraints active: orchestrator.save_provenance_log(...)
 
 
 if __name__ == "__main__":

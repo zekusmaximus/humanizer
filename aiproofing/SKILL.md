@@ -69,6 +69,8 @@ This skill includes 20 specialized analysis protocols in the `protocols/` direct
 - `metaphor_analysis.md` – Figurative language and cliché replacement
 - `consistency_check.md` – Continuity and tone cohesion
 - `final_analysis.md` – Publication-readiness validation
+- `provenance_log.md` – Optional structured edit audit for high-stakes / attributable use (JSON + Markdown table)
+- `presets/domain_presets.md` – Lightweight tuning profiles (narrative, technical, academic, business) that adjust soul density, lexical aggression, readability targets, and formatting tolerance
 
 Consult specific reference files as needed during the 6-phase workflow. Cross-references between files enable drilling into relevant analyses without loading everything at once.
 
@@ -99,3 +101,18 @@ Consult specific reference files as needed during the 6-phase workflow. Cross-re
 The skill includes `scripts/aiproof_runner.py`, a Python orchestration script that helps sequence tasks and manage outputs if running via automation.
 
 Protocol files reference each other to maintain cross-references, enabling you to jump to relevant analyses without re-reading the entire workflow.
+
+## Limitations & Responsible Use
+
+This skill provides a structured workflow to identify AI-generated signals in narrative text and to revise toward more authentic human voice, rhythm, and emotional depth. **It does not guarantee that revised text will evade any particular AI detector or pass any classifier as human-written.**
+
+- Detector behavior is volatile across models, domains, lengths, and languages. The included benchmark harness measures outcomes with confidence intervals but the example data is illustrative only; users must run their own controlled experiments against current detectors.
+- The 6-phase protocol and "AI Detection Resistance Gate" (sentence variance, vocabulary, formatting, soul markers, structural patterns) reduce common tells and inject variability, but over-editing can flatten voice, introduce new artifacts, or cause semantic drift from the source.
+- Optimized for English-language narrative prose (fiction, short stories, novels). Performance and appropriate soul-marker density for technical documentation, academic writing, legal/policy text, business communication, multilingual, or ESL registers have not been validated.
+- For any high-stakes or attributed publication (scholarship, journalism, corporate comms, legal filings), a qualified human author must retain final responsibility, maintain provenance of edits, and disclose AI assistance where required by policy or ethics.
+
+See `aiproofing/benchmark/README.md` (and the "AI Detection Resistance Gate" in `final_analysis.md` / `automation_playbook.md`) for measurement guidance and the explicit stance against over-claiming detector resistance. Always retain pre-edit snapshots and review all recommendations against the original intent and facts.
+
+## Publication Readiness
+
+The skill outputs a verdict (Ready / Ready with minor tweaks / Hold) based on the 5-sub-check gate. "Ready" means the text has passed internal consistency and anti-tell checks within this framework; it is not a claim of external detector immunity or publication fitness under any third-party standard.

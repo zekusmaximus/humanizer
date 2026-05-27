@@ -18,6 +18,7 @@ Run this checklist after drafting or revising any narrative Markdown file. It as
 - [ ] **Formatting tells** – Em dash density below 1 per 100 words; no unearned boldface; no inline-header bullet lists in narrative sections; all headings in sentence case; no emojis in structural positions.
 - [ ] **Soul markers** – The text contains evidence of genuine perspective: at least one opinion, acknowledged uncertainty, or moment of emotional complexity per 500 words; no section reads as neutral reportage.
 - [ ] **Detection resistance** – All 5 sub-checks from the **final_analysis.md** AI Detection Resistance Gate pass.
+- [ ] **Edit budget & faithfulness** (when flags supplied) – % sentences changed ≤ max_edit_pct; faithfulness rating ≥ min_faithfulness_delta; semantic drift table produced and human-approved if required. (See final_analysis.md Edit Budget & Faithfulness Gate.)
 
 ## Detail Prompts (for humans or agents)
 - Where do 3–5 most frequent verbs cluster? Are they action-heavy or static?
