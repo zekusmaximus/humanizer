@@ -1,95 +1,161 @@
-# AI Proofing Plan (Neutral Edition)
+# Editorial Pattern and Quality Plan
 
-## Overview
-This plan delivers a complete AI proofing workflow that operates on any narrative Markdown file without pre-existing metadata. Each task links to a supporting guide in this folder and includes automated context-building steps for agents.
+## Contract
 
-## Phase 1: Intake and Baseline
+This is the human-readable 6-phase, 18-task plan. Canonical task IDs are strings and remain in this literal order:
+
+`1, 2, 3, 4, 5, 6, 6.5, 7, 8, 9, 10, 11, 12, 13, 14, 14.5, 15, 16`
+
+Do not replace them with ordinal IDs 1-18. `../scripts/task_manifest.json` is the machine-readable source used by the runner. Every task below states its direct dependencies and file roles. The runner scaffolds and records work; manuscript revisions are performed by an agent or person and require review.
+
+## Phase 1: Intake and baseline
 
 ### Task 1: Manuscript Intake and Structure
-- Run the **manuscript_analysis.md** workflow on the provided `.md` file.
-- Auto-extract: section/scene boundaries, chapter markers, headings, estimated word counts.
-- Detect narrative mode (POV, person, tense) and list top recurring proper nouns as provisional characters/places.
-- Compute sentence-length SD and set the **flatness flag** if SD < 5 words.
-- Output a brief structural map and glossary for downstream tasks.
-- **Gating rule:** If the flatness flag is set, run Task 11 (Burstiness Enhancement) immediately after Task 2 — before any Phase 3 work.
 
-### Task 2: AI Tell Checklist Assembly
-- Use **AIproofcheck.md** and **ai_tell guidance** in the category docs to form a working checklist tied to the extracted glossary.
-- Mark any obvious AI tells found during intake (formulaic openings, repetitive cadences, abrupt transitions, filler adverbs).
+- **Primary guide:** `manuscript_analysis.md`
+- **Dependencies:** none
+- **Evidence role:** `MEASURED_FEATURE` for configured counts; provisional context for inferred POV, entities, and voice cues
+- Segment the supplied file, record declared measurements, and produce a provisional context map. Do not infer identity or background from capitalization alone.
 
-## Phase 2: Lexical Depth
+### Task 2: Editorial Pattern Checklist Assembly
+
+- **Primary checklist:** `ai_tell_checklist.md` (legacy filename retained for compatibility)
+- **Shared checklist:** `AIproofcheck.md`
+- **Dependencies:** Task `1`
+- **Evidence role:** `STYLE_HEURISTIC` plus `HUMAN_REVIEW_REQUIRED` for sourcing, meaning, and author approval
+- Configure the checks for the manuscript and mark disabled preferences explicitly. A checked pattern is an editorial observation, not origin evidence.
+
+## Phase 2: Lexical depth
 
 ### Task 3: Vocabulary Diversity Analysis
-- Follow **vocabulary_analysis.md** to assess lexical variety at the document and section level.
-- Highlight clustered repetition and provide swap lists with context-preserving replacements.
+
+- **Primary guide:** `vocabulary_analysis.md`
+- **Dependencies:** Task `2`
+- **Evidence role:** `STYLE_HEURISTIC`; configured counts may be `MEASURED_FEATURE`
+- Review clustered repetition without forcing synonym substitution or changing domain terminology.
 
 ### Task 4: Idiomatic Expression Review
-- Use **idiomatic_analysis.md** to detect flat or generic phrasing.
-- Add regionally appropriate, character- or narrator-aligned idioms derived from setting cues detected in intake.
 
-### Task 5: Overused/Bureaucratic Vocabulary Replacement
-- Apply **overused_vocabulary_analysis.md** to trim bureaucratic, tech, or academic drift.
-- Run the **High-Signal AI Vocabulary** scan first (specific word list in the guide) before general bureaucratic sweep.
-- Check for copula avoidance constructions (*serves as, boasts, features* replacing *is/has*).
-- Generate replacements tuned to the dominant tone (humorous, lyrical, procedural, etc.).
+- **Primary guide:** `idiomatic_analysis.md`
+- **Dependencies:** Task `3`
+- **Evidence role:** `STYLE_HEURISTIC` and `HUMAN_REVIEW_REQUIRED`
+- Preserve idioms already supported by the manuscript or an author-approved voice guide. Propose, rather than insert, any new regional, cultural, or character-specific phrasing.
 
-## Phase 3: Syntax and Grammar Flexibility
+### Task 5: Lexical and Bureaucratic Pattern Review
+
+- **Primary guide:** `overused_vocabulary_analysis.md`
+- **Dependencies:** Task `4`
+- **Evidence role:** `STYLE_HEURISTIC`
+- Review the frozen watch list and abstract phrasing in context. No word is a high-confidence detector signal or subject to a universal ban.
+
+## Phase 3: Syntax and grammar flexibility
 
 ### Task 6: Sentence Structure Analysis
-- Use **sentence_structure_analysis.md** to break SVO ruts, vary clause order, and adjust rhythm per scene intensity.
 
-### Task 6.5: Formatting Tell Analysis
-- Apply **formatting_tell_analysis.md** to clear structural and visual AI tells.
-- Flag and resolve: em dash overuse, unearned boldface, inline-header bullet lists, title-case headings, emojis in structural positions.
-- Run before sentence-structure work is finalized so formatting changes don't conflict with rhythm edits.
+- **Primary guide:** `sentence_structure_analysis.md`
+- **Dependencies:** Task `5`
+- **Evidence role:** `STYLE_HEURISTIC`; declared pattern counts may be `MEASURED_FEATURE`
+- Preserve intentional cadence and make optional rhythm suggestions where clarity or scene intent benefits.
 
-### Task 7: Part-of-Speech Balance
-- Follow **part_of_speech_analysis.md** to balance nouns/verbs/adjectives/adverbs; reduce nominalizations; add texture where voice permits.
+### Task 6.5: Formatting and Typography Review
+
+- **Primary guide:** `formatting_tell_analysis.md` (legacy filename retained for compatibility)
+- **Dependencies:** Task `6`
+- **Evidence role:** `STYLE_HEURISTIC`
+- Apply a requested house style. Typography, headings, lists, and emojis do not establish text origin.
+
+### Task 7: Part-of-Speech Diagnostics
+
+- **Primary guide:** `part_of_speech_analysis.md`
+- **Dependencies:** Task `6.5`
+- **Evidence role:** `MEASURED_FEATURE` only with a named tagger/version; otherwise `STYLE_HEURISTIC`
+- Treat POS ratios as diagnostics, not targets or detector scores.
 
 ### Task 8: Modal and Epistemic Nuance
-- Apply **modal_epistemic_analysis.md** to weave uncertainty, subjectivity, and perspective-appropriate hedging without undercutting stakes.
 
-## Phase 4: Readability and Flow
+- **Primary guide:** `modal_epistemic_analysis.md`
+- **Dependencies:** Task `7`
+- **Evidence role:** `HUMAN_REVIEW_REQUIRED`
+- Preserve factual force and calibrated uncertainty. Never add doubt, certainty, or viewpoint merely to create variation.
+
+## Phase 4: Readability and flow
 
 ### Task 9: Readability and Complexity
-- Use **readability_analysis.md** to calibrate density to audience/genre and smooth comprehension bottlenecks.
 
-### Task 10: Formulaic Pattern Breaking
-- Apply **formulaic_pattern_analysis.md** to disrupt repetitive openings, transitions, and clause templates.
-- Includes new checks for negative parallelisms, rule of three, synonym cycling, and false ranges.
+- **Primary guide:** `readability_analysis.md`
+- **Dependencies:** Task `8`
+- **Evidence role:** `MEASURED_FEATURE` only with a named formula/extractor; recommendations are `STYLE_HEURISTIC`
+- Compare configured measurements with the intended audience without treating a score as origin evidence.
 
-### Task 11: Burstiness Enhancement
-- Follow **burstiness_analysis.md** to add controlled surprise in diction and rhythm while keeping clarity.
+### Task 10: Formulaic Pattern Review
 
-## Phase 5: Voice, Emotion, and Soul
+- **Primary guide:** `formulaic_pattern_analysis.md`
+- **Dependencies:** Task `9`
+- **Evidence role:** `STYLE_HEURISTIC`
+- Review repeated templates while preserving rhetoric, motifs, and deliberate repetition.
+
+### Task 11: Sentence-Rhythm Diagnostics
+
+- **Primary guide:** `burstiness_analysis.md` (legacy filename retained for compatibility)
+- **Dependencies:** Task `10`
+- **Evidence role:** sentence-length statistics are `MEASURED_FEATURE` only with a declared extractor; revision advice is `STYLE_HEURISTIC`
+- No sentence-length band is a general detector threshold. Run the review only when enabled by the selected configuration.
+
+## Phase 5: Voice, emotion, and source-supported specificity
 
 ### Task 12: Character Voice Consistency
-- Use **character_voice_analysis.md** to differentiate voices, including narrators; rely on intake-derived speaker lists.
+
+- **Primary guide:** `character_voice_analysis.md`
+- **Dependencies:** Task `11`
+- **Evidence role:** `STYLE_HEURISTIC` and `HUMAN_REVIEW_REQUIRED`
+- Preserve author-controlled voice. Distinguish speakers only when the manuscript or brief supports that goal.
 
 ### Task 13: Emotional Intensity and Sensory Grounding
-- Apply **emotional_intensity_analysis.md** to anchor emotions in physicality and sensory detail; match to scene stakes.
-- Flag and address emotional ambivalence candidates (single clean emotion at high-stakes moments).
+
+- **Primary guide:** `emotional_intensity_analysis.md`
+- **Dependencies:** Task `12`
+- **Evidence role:** `HUMAN_REVIEW_REQUIRED`
+- Do not manufacture emotion, bodily response, trauma, or ambivalence. Offer source-compatible candidates for approval.
 
 ### Task 14: Metaphor and Figurative Language
-- Follow **metaphor_analysis.md** to replace clichés with specific, context-aware imagery sourced from the story world.
 
-### Task 14.5: Voice and Perspective Injection
-- Apply **voice_injection_analysis.md** after all other Phase 5 tasks.
-- Run the soullessness audit; flag passages scoring 3+ out of 6 signs.
-- Inject opinion, acknowledged complexity, productive mess, and character-specific personality markers.
-- Target: at least 1 soul-injection marker per 500 words. Verify injections are voice-consistent and do not cross-contaminate character voices.
+- **Primary guide:** `metaphor_analysis.md`
+- **Dependencies:** Task `13`
+- **Evidence role:** `STYLE_HEURISTIC` and `HUMAN_REVIEW_REQUIRED`
+- Preserve intentional imagery and require approval for new story-world facts or voice-bearing metaphors.
 
-## Phase 6: Quality Assurance
+### Task 14.5: Voice and Perspective Craft Review
+
+- **Primary guide:** `voice_injection_analysis.md` (legacy filename retained for compatibility)
+- **Dependencies:** Task `14`
+- **Evidence role:** `HUMAN_REVIEW_REQUIRED`
+- Preserve source-supported voice. Never inject opinions, experience, emotion, quirks, or first-person stance without explicit support or approval.
+
+## Phase 6: Quality assurance
 
 ### Task 15: Consistency and Continuity Check
-- Use **consistency_check.md** to confirm continuity, tone cohesion, and integration of all edits.
 
-### Task 16: Final Read-Through and Sign-Off
-- Apply **final_analysis.md** to validate that AI tells are removed, voice is preserved, and the text feels naturally human.
-- Run the AI Detection Resistance Gate (5 sub-checks); record pass/fail for each.
-- Issue verdict: Ready (0 failing) / Ready with minor tweaks (1–2) / Hold (3+).
+- **Primary guide:** `consistency_check.md`
+- **Dependencies:** Task `14.5`
+- **Evidence role:** `HUMAN_REVIEW_REQUIRED`
+- Resolve factual, naming, timeline, POV, and source-faithfulness issues or record them as open.
 
-## Workflow Tips
-- Run tasks in sequence but allow iterations when later steps reveal earlier issues.
-- Keep snapshots after major phases for rollback and comparison.
-- When using a coding agent, hand it the **automation_playbook.md** so it can gather context and execute these tasks autonomously.
+### Task 16: Final Editorial Review and Sign-Off
+
+- **Primary guide:** `final_analysis.md`
+- **Shared checklist:** `AIproofcheck.md`
+- **Dependencies:** Task `15`
+- **Evidence role:** `HUMAN_REVIEW_REQUIRED`; completion is an internal workflow status only
+- Run the **Editorial Pattern & Quality Review**. Report **Internal editorial checks complete** only when required fidelity and safety checks are resolved. Keep optional style preferences separate and never aggregate them into an AI likelihood.
+
+## Workflow rules
+
+- Keep snapshots after major phases.
+- Record every enabled/disabled style preference and every extractor configuration.
+- Iterate when a later review reveals an earlier source-faithfulness issue.
+- Use `automation_playbook.md` for the agent execution contract.
+- Use `provenance_log.md` only as an unsigned revision-audit record.
+
+## Legacy aliases
+
+The established integer IDs and task names remain readable aliases for earlier 16-task logs. The retired names for Tasks `2`, `5`, `6.5`, `10`, `11`, `14.5`, and `16` may appear only in a versioned migration map. The two fractional tasks had no entry in the legacy runner and therefore have no legacy sequential alias.

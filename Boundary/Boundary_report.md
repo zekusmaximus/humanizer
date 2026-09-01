@@ -1,5 +1,7 @@
 # AI Proofing Report: Boundary.md
 
+> **HISTORICAL NON-REPRODUCIBLE NOTICE — 2026-08-31:** This file is preserved in place as a historical editorial record. Every detector/authorship implication, estimated metric, threshold, pass/fail gate, and publication verdict below predates Benchmark Schema v2 and is not reproducible evidence. The estimates were not computed by the current harness and must not be used to infer authorship, detector performance, misconduct, or publication fitness. The source and revised manuscripts remain separate artifacts and were not changed by this notice.
+
 **Input file:** `Boundary/Boundary.md`
 **Output file:** `Boundary/Boundary_revised.md`
 **Word count:** ~1,200 words

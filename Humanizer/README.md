@@ -1,6 +1,6 @@
 # Humanizer
 
-A Claude Code skill that removes signs of AI-generated writing from text, making it sound more natural and human.
+A Claude Code skill for editorial pattern review, clarity, and source-faithful revision. It does not detect or prove authorship.
 
 ## Installation
 
@@ -38,66 +38,68 @@ Please humanize this text: [your text]
 
 ## Overview
 
-Based on [Wikipedia's "Signs of AI writing"](https://en.wikipedia.org/wiki/Wikipedia:Signs_of_AI_writing) guide, maintained by WikiProject AI Cleanup. This comprehensive guide comes from observations of thousands of instances of AI-generated text.
+The numbered catalog was adapted from [Wikipedia's "Signs of AI writing"](https://en.wikipedia.org/wiki/Wikipedia:Signs_of_AI_writing), maintained by WikiProject AI Cleanup. The page is a mutable discovery catalog, not standalone validation for detection or authorship claims.
 
-### Key Insight from Wikipedia
+### Evidence and decision boundary
 
-> "LLMs use statistical algorithms to guess what should come next. The result tends toward the most statistically likely result that applies to the widest variety of cases."
+All 24 IDs are stable editorial checks. Their default evidence label is `STYLE_HEURISTIC`; they may guide a revision but may not contribute to an AI score or authorship conclusion. Sourcing, meaning, factual uncertainty, and author-voice questions are `HUMAN_REVIEW_REQUIRED`. Typography is a house-style choice. Any new fact, quotation, experience, feeling, opinion, or stance requires source support or explicit author approval.
 
-## 24 Patterns Detected (with Before/After Examples)
+## 24 Editorial Patterns (with Before/After Examples)
 
 ### Content Patterns
 
 | # | Pattern | Before | After |
 |---|---------|--------|-------|
-| 1 | **Significance inflation** | "marking a pivotal moment in the evolution of..." | "was established in 1989 to collect regional statistics" |
-| 2 | **Notability name-dropping** | "cited in NYT, BBC, FT, and The Hindu" | "In a 2024 NYT interview, she argued..." |
-| 3 | **Superficial -ing analyses** | "symbolizing... reflecting... showcasing..." | Remove or expand with actual sources |
-| 4 | **Promotional language** | "nestled within the breathtaking region" | "is a town in the Gonder region" |
-| 5 | **Vague attributions** | "Experts believe it plays a crucial role" | "according to a 2019 survey by..." |
-| 6 | **Formulaic challenges** | "Despite challenges... continues to thrive" | Specific facts about actual challenges |
+| 1 | **Undue Emphasis on Significance, Legacy, and Broader Trends** | "marking a pivotal moment in the evolution of..." | State the supported fact directly |
+| 2 | **Undue Emphasis on Notability and Media Coverage** | "cited in NYT, BBC, FT, and The Hindu" | Tie a specific supported source to a specific claim |
+| 3 | **Superficial Analyses with -ing Endings** | "symbolizing... reflecting... showcasing..." | Remove or explain the supported relationship |
+| 4 | **Promotional and Advertisement-like Language** | "nestled within the breathtaking region" | Use factual wording appropriate to the brief |
+| 5 | **Vague Attributions and Weasel Words** | "Experts believe it plays a crucial role" | Name and verify the source, or remove the attribution |
+| 6 | **Outline-like "Challenges and Future Prospects" Sections** | "Despite challenges... continues to thrive" | Use supported facts about the actual challenges |
 
 ### Language Patterns
 
 | # | Pattern | Before | After |
 |---|---------|--------|-------|
-| 7 | **AI vocabulary** | "Additionally... testament... landscape... showcasing" | "also... remain common" |
-| 8 | **Copula avoidance** | "serves as... features... boasts" | "is... has" |
-| 9 | **Negative parallelisms** | "It's not just X, it's Y" | State the point directly |
-| 10 | **Rule of three** | "innovation, inspiration, and insights" | Use natural number of items |
-| 11 | **Synonym cycling** | "protagonist... main character... central figure... hero" | "protagonist" (repeat when clearest) |
-| 12 | **False ranges** | "from the Big Bang to dark matter" | List topics directly |
+| 7 | **Overused "AI Vocabulary" Words** | "Additionally... testament... landscape... showcasing" | Review clustered repetition; keep precise terms |
+| 8 | **Avoidance of "is"/"are" (Copula Avoidance)** | "serves as... features... boasts" | "is... has" when meaning is unchanged |
+| 9 | **Negative Parallelisms** | "It's not just X, it's Y" | State the point directly when the rhetoric is unhelpful |
+| 10 | **Rule of Three Overuse** | "innovation, inspiration, and insights" | Use the number of items the content requires |
+| 11 | **Elegant Variation (Synonym Cycling)** | "protagonist... main character... central figure... hero" | Repeat the clearest term when consistency helps |
+| 12 | **False Ranges** | "from the Big Bang to dark matter" | List topics directly when no scale exists |
 
 ### Style Patterns
 
 | # | Pattern | Before | After |
 |---|---------|--------|-------|
-| 13 | **Em dash overuse** | "institutions—not the people—yet this continues—" | Use commas or periods |
-| 14 | **Boldface overuse** | "**OKRs**, **KPIs**, **BMC**" | "OKRs, KPIs, BMC" |
-| 15 | **Inline-header lists** | "**Performance:** Performance improved" | Convert to prose |
-| 16 | **Title Case Headings** | "Strategic Negotiations And Partnerships" | "Strategic negotiations and partnerships" |
-| 17 | **Emojis** | "🚀 Launch Phase: 💡 Key Insight:" | Remove emojis |
-| 18 | **Curly quotes** | `said “the project”` | `said "the project"` |
+| 13 | **Em Dash Overuse** | "institutions—not the people—yet this continues—" | Follow the requested house style; no universal cap |
+| 14 | **Overuse of Boldface** | "**OKRs**, **KPIs**, **BMC**" | Preserve only useful hierarchy |
+| 15 | **Inline-Header Vertical Lists** | "**Performance:** Performance improved" | Use prose when labels add no value |
+| 16 | **Title Case in Headings** | "Strategic Negotiations And Partnerships" | Follow genre and house style |
+| 17 | **Emojis** | "🚀 Launch Phase: 💡 Key Insight:" | Follow the requested tone and house style |
+| 18 | **Curly Quotation Marks** | `said “the project”` | Normalize only when house style requires straight quotes |
 
 ### Communication Patterns
 
 | # | Pattern | Before | After |
 |---|---------|--------|-------|
-| 19 | **Chatbot artifacts** | "I hope this helps! Let me know if..." | Remove entirely |
-| 20 | **Cutoff disclaimers** | "While details are limited in available sources..." | Find sources or remove |
-| 21 | **Sycophantic tone** | "Great question! You're absolutely right!" | Respond directly |
+| 19 | **Collaborative Communication Artifacts** | "I hope this helps! Let me know if..." | Remove when accidentally pasted into content |
+| 20 | **Knowledge-Cutoff Disclaimers** | "While details are limited in available sources..." | Verify the claim or retain an honest limitation |
+| 21 | **Sycophantic/Servile Tone** | "Great question! You're absolutely right!" | Respond directly when agreement adds no value |
 
 ### Filler and Hedging
 
 | # | Pattern | Before | After |
 |---|---------|--------|-------|
-| 22 | **Filler phrases** | "In order to", "Due to the fact that" | "To", "Because" |
-| 23 | **Excessive hedging** | "could potentially possibly" | "may" |
-| 24 | **Generic conclusions** | "The future looks bright" | Specific plans or facts |
+| 22 | **Filler Phrases** | "In order to", "Due to the fact that" | "To", "Because" |
+| 23 | **Excessive Hedging** | "could potentially possibly" | "may" while preserving meaningful uncertainty |
+| 24 | **Generic Positive Conclusions** | "The future looks bright" | Use supported plans, facts, or a purposeful ending |
 
 ## Full Example
 
-**Before (AI-sounding):**
+This is a fictional editing fixture. Its claims are intentionally unsourced and are not evidence.
+
+**Before (fictional fixture before editorial review):**
 > Great question! Here is an essay on this topic. I hope this helps!
 >
 > AI-assisted coding serves as an enduring testament to the transformative potential of large language models, marking a pivotal moment in the evolution of software development. In today's rapidly evolving technological landscape, these groundbreaking tools—nestled at the intersection of research and practice—are reshaping how engineers ideate, iterate, and deliver, underscoring their vital role in modern workflows.
@@ -114,36 +116,31 @@ Based on [Wikipedia's "Signs of AI writing"](https://en.wikipedia.org/wiki/Wikip
 >
 > In conclusion, the future looks bright. Exciting times lie ahead as we continue this journey toward excellence. Let me know if you’d like me to expand on any section!
 
-**After (Humanized):**
-> AI coding assistants speed up some tasks. In a 2024 study by Google, developers using Codex completed simple functions 55% faster than a control group, but showed no improvement on debugging or architectural decisions.
+**After (source-faithful editorial revision):**
+> AI coding assistants can generate documentation, tests, and refactors. The source also claims that they improve speed, quality, and adoption, but it supplies no evidence for those claims. Verify or remove them before publication.
 >
-> The tools are good at boilerplate: config files, test scaffolding, repetitive refactors. They are bad at knowing when they are wrong. I have mass-accepted suggestions that compiled, passed lint, and still did the wrong thing because I stopped paying attention.
->
-> Mira, an engineer at a fintech startup I interviewed, said she uses Copilot "like autocomplete for boring code" but reviews every line before committing. Jake, a senior dev at a larger company, disabled it after it kept suggesting patterns from a deprecated internal library.
->
-> The productivity claims are hard to verify. GitHub says Copilot users "accept 30% of suggestions," but acceptance is not correctness, and correctness is not value. The 2024 Uplevel study found no statistically significant difference in pull-request throughput between teams with and without AI assistants.
->
-> None of this means the tools are useless. It means they are tools. They do not replace judgment, and they do not eliminate the need for tests. If you do not have tests, you cannot tell whether the suggestion is right.
+> The source identifies hallucinations, bias, and accountability as concerns but gives no examples or citations, so those points also need support.
 
 ## References
 
-- [Wikipedia: Signs of AI writing](https://en.wikipedia.org/wiki/Wikipedia:Signs_of_AI_writing) - Primary source
+- [Wikipedia: Signs of AI writing](https://en.wikipedia.org/wiki/Wikipedia:Signs_of_AI_writing) - Mutable discovery catalog; not detector validation
 - [WikiProject AI Cleanup](https://en.wikipedia.org/wiki/Wikipedia:WikiProject_AI_Cleanup) - Maintaining organization
 
 ## Limitations & Responsible Use
 
-This skill reduces visible AI-writing patterns and can inject more human-like voice and variability. **It does not guarantee evasion of any AI detector or classifier.**
+This skill performs an editorial pattern, clarity, and source-faithfulness review. It is not an AI detector and does not determine authorship. **It does not guarantee evasion of any AI detector or classifier.**
 
 - Modern detectors are unstable across domains, lengths, and model versions. Performance on one family does not predict others.
 - Over-application of patterns risks producing "reverse-formulaic" or homogenized text and can drift from original meaning or intent.
-- For high-stakes use (academic, legal, policy, journalistic, medical), retain full human authorship responsibility. Do not present automated output as solely human without disclosure and provenance.
-- The bundled benchmark harness (`aiproofing/benchmark/`) provides a way to measure pre/post outcomes with uncertainty; always run your own detector suite rather than relying on claims.
+- For high-stakes use (academic, legal, policy, journalistic, medical), retain qualified human responsibility. Do not use this review as the sole basis for an authorship, misconduct, or other high-consequence decision, and disclose assistance where policy requires it.
+- The legacy benchmark example emits exploratory intervals from synthetic rows. They are not statistically valid clustered uncertainty or external evidence. Benchmark v2 validates versioned inputs and keeps detector outputs separate from editorial quality.
 - Guidance is English-centric and optimized for general prose and narrative. Results on technical writing, multilingual text, ESL registers, or highly constrained genres are unvalidated.
 
 See the `aiproofing/benchmark/README.md` for explicit measurement disclaimers. Always keep pre-edit snapshots and apply human judgment to every recommendation.
 
 ## Version History
 
+- **2.3.0** - Reframed all 24 patterns as editorial checks, added source-faithfulness and author-approval safeguards, and replaced the fabricated evidence example
 - **2.2.0** - Added prominent "Limitations & Responsible Use" section to SKILL.md and README.md (cross-references benchmark disclaimers; no detector guarantees)
 - **2.1.1** - Fixed pattern #18 example (curly quotes vs straight quotes)
 - **2.1.0** - Added before/after examples for all 24 patterns

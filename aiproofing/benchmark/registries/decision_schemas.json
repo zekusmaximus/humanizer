@@ -1,0 +1,41 @@
+{
+  "schema_version": "2.0.0",
+  "registry": "decision_schemas",
+  "registry_version": "2026-08-31.1",
+  "snapshot_hash_scope": "SHA-256 of each task-specific decision-schema ID.",
+  "entries": [
+    {
+      "id": "decision:A.document_binary-v1",
+      "owner": "Humanizer maintainers",
+      "version": "1.0.0",
+      "status": "contract_only_no_active_threshold",
+      "source_reference": "aiproofing/benchmark/schema_v2.py",
+      "reviewed_at": "2026-08-31T00:00:00Z",
+      "snapshot_hash": "4013bff357fb9837c5d9b75175532c214037b0459f9adb9b170c75aea46c47bf",
+      "task_id": "A.document_binary",
+      "allowed_labels": ["human", "machine", "abstain", "unsupported"]
+    },
+    {
+      "id": "decision:C.mixed-v1",
+      "owner": "Humanizer maintainers",
+      "version": "1.0.0",
+      "status": "contract_only_no_active_threshold",
+      "source_reference": "aiproofing/benchmark/schema_v2.py",
+      "reviewed_at": "2026-08-31T00:00:00Z",
+      "snapshot_hash": "92dff82709e9b0b3a44d63b898c46e7a06a8748f33b41f82a96907d8501c7154",
+      "task_id": "C.mixed_localization",
+      "allowed_labels": ["human", "machine", "mixed", "assisted", "abstain", "unsupported"]
+    },
+    {
+      "id": "decision:attribution.closed-v1",
+      "owner": "Humanizer maintainers",
+      "version": "1.0.0",
+      "status": "contract_only_no_active_threshold",
+      "source_reference": "aiproofing/benchmark/schema_v2.py",
+      "reviewed_at": "2026-08-31T00:00:00Z",
+      "snapshot_hash": "9c3424be6f23ec834d917f5e6d86a2e0433bda955b11dc94fb3c62db08c831a3",
+      "task_id": "A.closed_set_attribution",
+      "allowed_labels": ["unknown_model", "abstain", "unsupported"]
+    }
+  ]
+}

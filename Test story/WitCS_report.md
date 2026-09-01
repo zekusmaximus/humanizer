@@ -1,4 +1,6 @@
 # AI Proofing Report — WitCS
+
+> **HISTORICAL NON-REPRODUCIBLE NOTICE — 2026-08-31:** This file is preserved in place as a historical editorial record. Every detector/authorship implication, estimated metric, threshold, pass/fail gate, and publication verdict below predates Benchmark Schema v2 and is not reproducible evidence. Some calculations used estimates or a condensed manuscript rather than the required full text; for example, 15 markers in about 9,000 words is 1 per 600 words, not at least 1 per 500. These claims must not be used to infer authorship, detector performance, misconduct, or publication fitness. The source and revised manuscripts were not changed by this notice.
 **Input file:** `Test story/WitCS`
 **Output:** `Test story/WitCS_revised.md`
 **Protocol:** aiproofing/protocols/automation_playbook.md

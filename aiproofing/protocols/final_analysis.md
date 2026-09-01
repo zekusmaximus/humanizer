@@ -1,56 +1,60 @@
-# Final Analysis and Sign-Off
+# Final Editorial Review and Sign-Off
 
 ## Objective
-Validate that the AI proofing pass has removed AI-like signals while preserving or enhancing narrative quality.
+Verify source faithfulness, consistency, and the selected editorial configuration. Style observations remain separate and are never aggregated into an AI or authorship likelihood.
 
 ## Inputs
-- Revised manuscript.
-- Outputs from all category guides and **consistency_check.md**.
+- Original and revised manuscripts.
+- Outputs from all enabled task guides and `consistency_check.md`.
+- Validated constraints and the selected preset/configuration.
+- Author approvals and unresolved review items, if any.
 
 ## Steps
 1. **Holistic Read-Through**
    - Read continuously; note any passages that feel mechanical, over-smoothed, or newly awkward.
 2. **Voice Spot Checks**
-   - Sample three distant sections to ensure voices remain identifiable and metaphors stay aligned with setting.
-3. **AI Detection Resistance Gate**
-   Run all five sub-checks below. Each is a pass/fail. Record the result explicitly.
+   - Review separated sections selected for the manuscript's length and structure. Confirm that voice and metaphor choices remain consistent with source evidence or an author-approved guide; distinct voices are not required.
+3. **Source-Faithfulness Review**
+   - Compare every substantive factual claim, quotation, attribution, scope statement, uncertainty marker, experience, emotion, and author position with the source.
+   - Record each issue as `resolved`, `author_approved`, or `open`. An open item blocks internal editorial completion.
+4. **Editorial Pattern & Quality Review**
+   - Record each component independently. Do not total, weight, or convert the components into an origin score.
 
-   | # | Sub-check | Pass condition |
+   | Component | Evidence role | Completion rule |
    |---|---|---|
-   | 1 | Sentence-length variance | Post-edit SD ≥ genre threshold from **burstiness_analysis.md** |
-   | 2 | High-signal AI vocabulary | Zero unresolved instances of the flagged word list from **overused_vocabulary_analysis.md** |
-   | 3 | Formatting tells | Em dash density < 1/100 words; no unearned bold; no inline-header lists; no title-case headings; no emojis in structure |
-   | 4 | Soul-injection markers | At least 1 soul marker per 500 words (opinion, fragment for emphasis, acknowledged uncertainty, productive mess, or ambivalence) |
-   | 5 | Structural AI patterns | No synonym cycling, no false ranges, no negative parallelisms, no forced triads remaining |
+   | Source and claim faithfulness | `HUMAN_REVIEW_REQUIRED` | Required; no open material issue |
+   | Consistency and continuity | `HUMAN_REVIEW_REQUIRED` | Required; no unresolved contradiction |
+   | Requested audience/accessibility constraints | configured editorial requirement | Required only when supplied |
+   | Sentence-rhythm feature | `MEASURED_FEATURE` plus optional `STYLE_HEURISTIC` | Report extractor/configuration; `disabled` when unset |
+   | Lexical watch list | optional `STYLE_HEURISTIC` | Review or retain with reason; `disabled` when unset |
+   | Formatting and typography | optional `STYLE_HEURISTIC` | Apply the selected house style; `disabled` when unset |
+   | Formulaic-pattern review | optional `STYLE_HEURISTIC` | Review or retain intentional rhetoric |
+   | Voice and perspective | `HUMAN_REVIEW_REQUIRED` for additions | Every addition source-supported or approved |
 
-   **Verdict thresholds:**
-   - **Ready** — 0 sub-checks failing
-   - **Ready with minor tweaks** — 1–2 sub-checks failing
-   - **Hold** — 3 or more sub-checks failing; return to the relevant phase guides before sign-off
-
-4. **Edit Budget & Faithfulness Gate (active only when user supplied --max_edit_pct, --min_faithfulness_delta, or --require_semantic_review)**
-   - **Edit percentage check**: Count sentences that were substantively rewritten (not just punctuation or minor word swaps). Compute (changed / total) * 100. If > max_edit_pct → record as failing sub-check "Edit budget exceeded".
-   - **Faithfulness check**: Perform (or simulate via careful reading + external diff tool) a claim-by-claim comparison. Rate the revised text 1–5 for faithfulness. If below the supplied min_faithfulness_delta → failing sub-check "Faithfulness below threshold".
-   - **Semantic review flag**: When `--require_semantic_review` is true, the agent must output a short "Semantic Diff Summary" table (original claim vs revised claim, drift risk: none/low/medium/high, human sign-off). Any "medium" or "high" without human approval → Hold.
-   - These extra checks are added to the total failing count for the overall verdict. They can push a marginal "Ready with tweaks" into "Hold".
-
-   Recommended conservative defaults when user does not specify: max_edit_pct=20, min_faithfulness_delta=4.
-4. **Readability & Flow Recheck**
-   - Re-run quick readability metrics and compare to pre-edit baselines. Verify pacing is intentional.
-5. **Check Against AIproofcheck**
-   - Run through **AIproofcheck.md** and confirm all boxes can be checked with evidence.
+5. **Configured Edit-Budget and Faithfulness Checks**
+   - Run only constraints explicitly supplied by the user or validated preset. Omission disables a constraint; do not invent defaults.
+   - `--max-edit-pct`: compute the declared edit-budget measure and record its extractor/method. Exceeding the supplied value leaves a required issue open. The deprecated alias `--max_edit_pct` remains accepted.
+   - `--min-faithfulness`: compare the human review score with the supplied absolute 1-5 minimum. The deprecated aliases `--min_faithfulness` and `--min_faithfulness_delta` are accepted for compatibility; neither represents a delta.
+   - `--require-semantic-review`: output a semantic-diff table with original claim, revised claim, risk (`none|low|medium|high`), and human approval. Unapproved `medium` or `high` risk remains open. The deprecated alias `--require_semantic_review` remains accepted.
+6. **Readability and Flow Recheck**
+   - Re-run only enabled readability features with the same named extractor/configuration. Report differences descriptively.
+7. **Shared Checklist Review**
+   - Apply `AIproofcheck.md`; record required, optional, disabled, and human-review states with evidence.
 
 ## Deliverables
-- Short report summarizing residual risks, mitigations applied, and remaining to-dos (if any).
-- AI Detection Resistance Gate results: explicit pass/fail for each of the 5 sub-checks.
-- (When budget/faithfulness flags active) Edit Budget & Faithfulness Gate results including % sentences changed, faithfulness rating, and semantic-drift summary.
-- 3 strongest passages to keep unchanged (voice anchors) and 3 areas to monitor in future edits.
-- Publication-readiness verdict (Ready / Ready with minor tweaks / Hold) with gate score as justification.
-- (Optional, high-stakes) Provenance/edit log (see `provenance_log.md`) if requested by user.
+- Short report of required issues, optional style observations, disabled checks, approvals, and remaining work.
+- Independent Editorial Pattern & Quality Review component statuses with no aggregate score.
+- Configured edit-budget, faithfulness, and semantic-review results, when enabled.
+- Voice anchors to preserve and source-supported areas to monitor.
+- **Internal editorial checks complete** only when every required issue is resolved or explicitly approved.
+- Optional unsigned revision audit (see `provenance_log.md`) when requested.
 
 ## Acceptance Criteria
-- No open issues from prior steps remain.
-- AI Detection Resistance Gate scores 0 failing sub-checks for a Ready verdict.
-- When edit-budget or faithfulness flags were supplied, the Edit Budget & Faithfulness Gate also scores 0 failures (or all human-approved with documented sign-off).
-- Narrative voice feels human, varied, and context-aware.
-- The text can be handed off without additional metadata or clarification requests.
+- No required source-faithfulness, consistency, or configured-constraint issue remains open.
+- Optional style checks are reported separately and may be `disabled`, `reviewed`, or `retained`.
+- Every measurement names its extractor and configuration; estimates are labeled exploratory rather than measured.
+- No authorship, misconduct, detector-resistance, policy, or publication conclusion is issued.
+
+## Legacy migration note
+
+Earlier reports used a five-part "AI Detection Resistance Gate" and the verdicts "Ready," "Ready with minor tweaks," and "Hold." Those labels are historical only. Migration may retain the original strings in a dated notice, but active output uses the component review and completion status defined above.

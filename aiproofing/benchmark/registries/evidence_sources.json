@@ -1,0 +1,17 @@
+{
+  "schema_version": "2.0.0",
+  "registry": "evidence_sources",
+  "registry_version": "2026-08-31.1",
+  "snapshot_hash_scope": "SHA-256 of the reviewed report identifier, not of an external paper or webpage.",
+  "entries": [
+    {
+      "id": "research-review-2026-08-31",
+      "owner": "Humanizer research review",
+      "version": "2026-08-31",
+      "status": "implementation_specification",
+      "source_reference": "AI_TEXT_DETECTION_RESEARCH_REVIEW_2026-08-31.md (external read-only specification)",
+      "reviewed_at": "2026-08-31T00:00:00Z",
+      "snapshot_hash": "60c16c23c1ac1e86166836f749c3c383a97f8ce6da3244dc614e66116bf98ac3"
+    }
+  ]
+}

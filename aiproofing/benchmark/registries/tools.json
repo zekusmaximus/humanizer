@@ -1,0 +1,27 @@
+{
+  "schema_version": "2.0.0",
+  "registry": "tools",
+  "registry_version": "2026-08-31.1",
+  "snapshot_hash_scope": "SHA-256 of the local tool/version label.",
+  "entries": [
+    {
+      "id": "humanizer-local-tool",
+      "owner": "Humanizer maintainers",
+      "version": "2.0.0",
+      "status": "offline_standard_library",
+      "source_reference": "aiproofing/benchmark/",
+      "reviewed_at": "2026-08-31T00:00:00Z",
+      "snapshot_hash": "6295c1d0101d354fe8d773bdbf6627ac5db08539e7215f2dc5f8631d7411b586"
+    },
+    {
+      "id": "fixture-provenance",
+      "owner": "Humanizer fixture maintainers",
+      "version": "1",
+      "status": "synthetic_fixture_only",
+      "source_reference": "tests/fixtures/track_d_valid.jsonl",
+      "reviewed_at": "2026-08-31T00:00:00Z",
+      "snapshot_hash": "4b99426758cbe93f3743eb5149782a2667f38abcb31efb94f283fb877e5dfa6c",
+      "allowed_versions": ["1"]
+    }
+  ]
+}
