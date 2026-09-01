@@ -208,14 +208,16 @@ def cluster_bootstrap(
 ) -> dict[str, Any]:
     """Deterministically bootstrap the declared highest dependency cluster.
 
-    Rows are canonically sorted before clusters are built. Each selected
-    cluster carries all nested rows together. Clusters are sampled within the
-    declared strata; conflicting strata inside one cluster are rejected.
+    Rows are canonically sorted before clusters are built. Repeated detector
+    records with the same validated ``run_id`` are counted once, so an
+    accidental duplicate cannot change the estimate. Each selected cluster
+    carries all nested rows together. Clusters are sampled within the declared
+    strata; conflicting strata inside one cluster are rejected.
     """
 
     if replicates < 1:
         raise ValueError("replicates must be at least 1")
-    canonical = sorted(
+    ordered = sorted(
         rows,
         key=lambda row: (
             str(row.get(cluster_field, "")),
@@ -224,6 +226,15 @@ def cluster_bootstrap(
             repr(sorted(row.items())),
         ),
     )
+    canonical: list[Mapping[str, Any]] = []
+    seen_run_ids: set[str] = set()
+    for row in ordered:
+        run_id = row.get("run_id")
+        if isinstance(run_id, str) and run_id:
+            if run_id in seen_run_ids:
+                continue
+            seen_run_ids.add(run_id)
+        canonical.append(row)
     clusters: dict[str, list[Mapping[str, Any]]] = defaultdict(list)
     for row in canonical:
         cluster = row.get(cluster_field)

@@ -59,7 +59,15 @@ class DependenceTests(unittest.TestCase):
         )
         first = metrics.cluster_bootstrap(self.rows, metric, cluster_field="source_group_id", replicates=80, seed=17)
         second = metrics.cluster_bootstrap(list(reversed(self.rows)), metric, cluster_field="source_group_id", replicates=80, seed=17)
+        duplicated = metrics.cluster_bootstrap(
+            self.rows + [dict(self.rows[0])],
+            metric,
+            cluster_field="source_group_id",
+            replicates=80,
+            seed=17,
+        )
         self.assertEqual(first, second)
+        self.assertEqual(first, duplicated)
         self.assertEqual(first["independent_cluster_count"], 4)
 
     def test_highest_complete_dependency_field_is_selected(self):
