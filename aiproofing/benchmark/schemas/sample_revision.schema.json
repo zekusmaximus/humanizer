@@ -42,8 +42,8 @@
     "raw_hash_scope": {"enum": ["exact_file_bytes", null]},
     "char_count": {"type": ["integer", "null"], "minimum": 0},
     "word_count": {"type": ["integer", "null"], "minimum": 0},
-    "created_at": {"type": ["string", "null"], "format": "date-time"},
-    "migrated_at": {"type": ["string", "null"], "format": "date-time"}
+    "created_at": {"type": ["string", "null"], "format": "date-time", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(?:[.][0-9]+)?(?:Z|[+]00:00)$"},
+    "migrated_at": {"type": ["string", "null"], "format": "date-time", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(?:[.][0-9]+)?(?:Z|[+]00:00)$"}
   },
   "allOf": [
     {
@@ -58,7 +58,7 @@
           "annotation_normalization": {"type": "string", "minLength": 1},
           "char_count": {"type": "integer", "minimum": 0},
           "word_count": {"type": "integer", "minimum": 0},
-          "created_at": {"type": "string", "format": "date-time"}
+          "created_at": {"type": "string", "format": "date-time", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(?:[.][0-9]+)?(?:Z|[+]00:00)$"}
         },
         "anyOf": [
           {"required": ["text_ref"], "properties": {"text_ref": {"type": "string", "minLength": 1}}},

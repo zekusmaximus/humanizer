@@ -1,6 +1,7 @@
 import importlib.util
 import sys
 import unittest
+from collections import Counter
 from pathlib import Path
 
 
@@ -69,6 +70,31 @@ class DependenceTests(unittest.TestCase):
         self.assertEqual(first, second)
         self.assertEqual(first, duplicated)
         self.assertEqual(first["independent_cluster_count"], 4)
+
+    def test_cluster_bootstrap_keeps_cross_stratum_clusters_intact(self):
+        rows = [dict(row) for row in self.rows]
+        rows[1]["source_group_id"] = rows[0]["source_group_id"]
+        rows[1]["domain"] = "different-domain"
+
+        def metric(sampled):
+            counts = Counter(row["source_group_id"] for row in sampled)
+            self.assertEqual(counts["s1"] % 2, 0)
+            return metrics.average_precision(
+                [row["label"] for row in sampled],
+                [row["score"] for row in sampled],
+                "higher_machine",
+            )
+
+        result = metrics.cluster_bootstrap(
+            rows,
+            metric,
+            cluster_field="source_group_id",
+            replicates=20,
+            seed=17,
+        )
+        self.assertEqual(result["mixed_stratum_cluster_count"], 1)
+        self.assertEqual(result["independent_cluster_count"], 3)
+        self.assertIn("cluster_composition", result["stratum_assignment_policy"])
 
     def test_highest_complete_dependency_field_is_selected(self):
         samples = [

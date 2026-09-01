@@ -1,0 +1,31 @@
+{
+  "card_schema_version": "2.0.0",
+  "card_type": "detector",
+  "card_id": "detector-fixture-verifier-1",
+  "evidence_status": "synthetic_fixture_no_external_evidence",
+  "claim_boundary": "This fictional verifier exists only to exercise Track D schemas; it supplies no watermark, provenance, or authorship evidence.",
+  "detector_id": "fixture-verifier",
+  "detector_version": "1",
+  "adapter_version": "1",
+  "task_id": "D.watermark_verification",
+  "config_hash": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+  "native_signals": [
+    "explicit unsupported/no-key control state; no numeric verification statistic"
+  ],
+  "supported_scope": "Schema and state-transition tests only.",
+  "eligible_denominator_policy": "All attempted synthetic verification controls remain in the status denominator.",
+  "calibration_ids": [],
+  "threshold_ids": [],
+  "hardware": null,
+  "latency": null,
+  "cost": null,
+  "policy_snapshot": "not applicable; offline fixture",
+  "drift_retest_date": "rerun after benchmark contract changes",
+  "contact": "Humanizer fixture maintainers",
+  "limitations": [
+    "no key",
+    "no text",
+    "no empirical verification",
+    "no provenance trust evidence"
+  ]
+}

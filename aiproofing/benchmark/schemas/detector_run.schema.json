@@ -15,7 +15,7 @@
     "provider": {"type": "string", "minLength": 1},
     "detector_version": {"type": "string", "minLength": 1},
     "adapter_version": {"type": "string", "minLength": 1},
-    "queried_at": {"type": "string", "format": "date-time", "pattern": "(?:Z|[+]00:00)$"},
+    "queried_at": {"type": "string", "format": "date-time", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(?:[.][0-9]+)?(?:Z|[+]00:00)$"},
     "config_hash": {"type": ["string", "null"], "pattern": "^[0-9a-f]{64}$"},
     "raw_signals": {
       "type": ["array", "null"],

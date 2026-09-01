@@ -1,0 +1,34 @@
+{
+  "card_schema_version": "2.0.0",
+  "card_type": "detector",
+  "card_id": "detector-detB-unknown",
+  "evidence_status": "synthetic_fixture_no_external_evidence",
+  "claim_boundary": "detB is a fictional fixture identifier, not a product or validated detector.",
+  "detector_id": "detB",
+  "detector_version": "unknown",
+  "adapter_version": "legacy-v1-migration",
+  "task_id": "A.document_binary",
+  "config_hash": null,
+  "native_signals": [
+    {
+      "name": "legacy_score",
+      "value_type": "number",
+      "direction": "higher_machine",
+      "provider_meaning": "legacy_claimed_normalized_0_1"
+    }
+  ],
+  "supported_scope": "None established.",
+  "eligible_denominator_policy": "Software-fixture rows only; no confirmatory denominator.",
+  "calibration_ids": [],
+  "threshold_ids": [],
+  "hardware": null,
+  "latency": null,
+  "cost": null,
+  "policy_snapshot": null,
+  "drift_retest_date": null,
+  "contact": "Humanizer fixture maintainers",
+  "limitations": [
+    "unknown detector version and configuration",
+    "provisional analysis-ineligible samples"
+  ]
+}
