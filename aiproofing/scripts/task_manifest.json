@@ -1,0 +1,417 @@
+{
+  "schema_version": "1.0.0",
+  "workflow_id": "editorial-pattern-quality-review",
+  "workflow_version": "2.0.0",
+  "display_name": "Editorial Pattern & Quality Review",
+  "execution_mode": "scaffolding_only",
+  "phases": [
+    {
+      "phase_id": 1,
+      "name": "Intake and Baseline"
+    },
+    {
+      "phase_id": 2,
+      "name": "Lexical Depth"
+    },
+    {
+      "phase_id": 3,
+      "name": "Syntax and Grammar Flexibility"
+    },
+    {
+      "phase_id": 4,
+      "name": "Readability and Flow"
+    },
+    {
+      "phase_id": 5,
+      "name": "Voice, Emotion, and Source-Supported Specificity"
+    },
+    {
+      "phase_id": 6,
+      "name": "Quality Assurance"
+    }
+  ],
+  "tasks": [
+    {
+      "task_id": "1",
+      "sequence": 1,
+      "legacy_task_number": 1,
+      "legacy_aliases": ["legacy-task-number-1", "task-1"],
+      "legacy_names": [],
+      "evidence_role": "MEASURED_FEATURE",
+      "name": "Manuscript Intake and Structure",
+      "phase_id": 1,
+      "dependencies": [],
+      "protocols": ["aiproofing/protocols/manuscript_analysis.md"],
+      "shared_checklists": [],
+      "enabled": true
+    },
+    {
+      "task_id": "2",
+      "sequence": 2,
+      "legacy_task_number": 2,
+      "legacy_aliases": ["legacy-task-number-2", "task-2"],
+      "legacy_names": ["AI Tell Checklist Assembly"],
+      "evidence_role": "STYLE_HEURISTIC",
+      "name": "Editorial Pattern Checklist Assembly",
+      "phase_id": 1,
+      "dependencies": ["1"],
+      "protocols": [],
+      "shared_checklists": [
+        "aiproofing/protocols/AIproofcheck.md",
+        "aiproofing/protocols/ai_tell_checklist.md"
+      ],
+      "enabled": true
+    },
+    {
+      "task_id": "3",
+      "sequence": 3,
+      "legacy_task_number": 3,
+      "legacy_aliases": ["legacy-task-number-3", "task-3"],
+      "legacy_names": [],
+      "evidence_role": "STYLE_HEURISTIC",
+      "name": "Vocabulary Diversity Analysis",
+      "phase_id": 2,
+      "dependencies": ["2"],
+      "protocols": ["aiproofing/protocols/vocabulary_analysis.md"],
+      "shared_checklists": [],
+      "enabled": true
+    },
+    {
+      "task_id": "4",
+      "sequence": 4,
+      "legacy_task_number": 4,
+      "legacy_aliases": ["legacy-task-number-4", "task-4"],
+      "legacy_names": [],
+      "evidence_role": "HUMAN_REVIEW_REQUIRED",
+      "name": "Idiomatic Expression Review",
+      "phase_id": 2,
+      "dependencies": ["3"],
+      "protocols": ["aiproofing/protocols/idiomatic_analysis.md"],
+      "shared_checklists": [],
+      "enabled": true
+    },
+    {
+      "task_id": "5",
+      "sequence": 5,
+      "legacy_task_number": 5,
+      "legacy_aliases": ["legacy-task-number-5", "task-5"],
+      "legacy_names": ["Overused/Bureaucratic Vocabulary Replacement"],
+      "evidence_role": "STYLE_HEURISTIC",
+      "name": "Lexical and Bureaucratic Pattern Review",
+      "phase_id": 2,
+      "dependencies": ["4"],
+      "protocols": ["aiproofing/protocols/overused_vocabulary_analysis.md"],
+      "shared_checklists": [],
+      "enabled": true
+    },
+    {
+      "task_id": "6",
+      "sequence": 6,
+      "legacy_task_number": 6,
+      "legacy_aliases": ["legacy-task-number-6", "task-6"],
+      "legacy_names": [],
+      "evidence_role": "STYLE_HEURISTIC",
+      "name": "Sentence Structure Analysis",
+      "phase_id": 3,
+      "dependencies": ["5"],
+      "protocols": ["aiproofing/protocols/sentence_structure_analysis.md"],
+      "shared_checklists": [],
+      "enabled": true
+    },
+    {
+      "task_id": "6.5",
+      "sequence": 7,
+      "legacy_task_number": null,
+      "legacy_aliases": ["task-6-5"],
+      "legacy_names": ["Formatting Tell Analysis"],
+      "evidence_role": "STYLE_HEURISTIC",
+      "name": "Formatting and Typography Review",
+      "phase_id": 3,
+      "dependencies": ["6"],
+      "protocols": ["aiproofing/protocols/formatting_tell_analysis.md"],
+      "shared_checklists": [],
+      "enabled": true
+    },
+    {
+      "task_id": "7",
+      "sequence": 8,
+      "legacy_task_number": 7,
+      "legacy_aliases": ["legacy-task-number-7", "task-7"],
+      "legacy_names": ["Part-of-Speech Balance"],
+      "evidence_role": "MEASURED_FEATURE",
+      "name": "Part-of-Speech Diagnostics",
+      "phase_id": 3,
+      "dependencies": ["6.5"],
+      "protocols": ["aiproofing/protocols/part_of_speech_analysis.md"],
+      "shared_checklists": [],
+      "enabled": true
+    },
+    {
+      "task_id": "8",
+      "sequence": 9,
+      "legacy_task_number": 8,
+      "legacy_aliases": ["legacy-task-number-8", "task-8"],
+      "legacy_names": [],
+      "evidence_role": "HUMAN_REVIEW_REQUIRED",
+      "name": "Modal and Epistemic Nuance",
+      "phase_id": 3,
+      "dependencies": ["7"],
+      "protocols": ["aiproofing/protocols/modal_epistemic_analysis.md"],
+      "shared_checklists": [],
+      "enabled": true
+    },
+    {
+      "task_id": "9",
+      "sequence": 10,
+      "legacy_task_number": 9,
+      "legacy_aliases": ["legacy-task-number-9", "task-9"],
+      "legacy_names": [],
+      "evidence_role": "MEASURED_FEATURE",
+      "name": "Readability and Complexity",
+      "phase_id": 4,
+      "dependencies": ["8"],
+      "protocols": ["aiproofing/protocols/readability_analysis.md"],
+      "shared_checklists": [],
+      "enabled": true
+    },
+    {
+      "task_id": "10",
+      "sequence": 11,
+      "legacy_task_number": 10,
+      "legacy_aliases": ["legacy-task-number-10", "task-10"],
+      "legacy_names": ["Formulaic Pattern Breaking"],
+      "evidence_role": "STYLE_HEURISTIC",
+      "name": "Formulaic Pattern Review",
+      "phase_id": 4,
+      "dependencies": ["9"],
+      "protocols": ["aiproofing/protocols/formulaic_pattern_analysis.md"],
+      "shared_checklists": [],
+      "enabled": true
+    },
+    {
+      "task_id": "11",
+      "sequence": 12,
+      "legacy_task_number": 11,
+      "legacy_aliases": ["legacy-task-number-11", "task-11"],
+      "legacy_names": ["Burstiness Enhancement"],
+      "evidence_role": "MEASURED_FEATURE",
+      "name": "Sentence-Rhythm Diagnostics",
+      "phase_id": 4,
+      "dependencies": ["10"],
+      "protocols": ["aiproofing/protocols/burstiness_analysis.md"],
+      "shared_checklists": [],
+      "enabled": true
+    },
+    {
+      "task_id": "12",
+      "sequence": 13,
+      "legacy_task_number": 12,
+      "legacy_aliases": ["legacy-task-number-12", "task-12"],
+      "legacy_names": [],
+      "evidence_role": "HUMAN_REVIEW_REQUIRED",
+      "name": "Character Voice Consistency",
+      "phase_id": 5,
+      "dependencies": ["11"],
+      "protocols": ["aiproofing/protocols/character_voice_analysis.md"],
+      "shared_checklists": [],
+      "enabled": true
+    },
+    {
+      "task_id": "13",
+      "sequence": 14,
+      "legacy_task_number": 13,
+      "legacy_aliases": ["legacy-task-number-13", "task-13"],
+      "legacy_names": [],
+      "evidence_role": "HUMAN_REVIEW_REQUIRED",
+      "name": "Emotional Intensity and Sensory Grounding",
+      "phase_id": 5,
+      "dependencies": ["12"],
+      "protocols": ["aiproofing/protocols/emotional_intensity_analysis.md"],
+      "shared_checklists": [],
+      "enabled": true
+    },
+    {
+      "task_id": "14",
+      "sequence": 15,
+      "legacy_task_number": 14,
+      "legacy_aliases": ["legacy-task-number-14", "task-14"],
+      "legacy_names": [],
+      "evidence_role": "HUMAN_REVIEW_REQUIRED",
+      "name": "Metaphor and Figurative Language",
+      "phase_id": 5,
+      "dependencies": ["13"],
+      "protocols": ["aiproofing/protocols/metaphor_analysis.md"],
+      "shared_checklists": [],
+      "enabled": true
+    },
+    {
+      "task_id": "14.5",
+      "sequence": 16,
+      "legacy_task_number": null,
+      "legacy_aliases": ["task-14-5"],
+      "legacy_names": ["Voice and Perspective Injection"],
+      "evidence_role": "HUMAN_REVIEW_REQUIRED",
+      "name": "Voice and Perspective Craft Review",
+      "phase_id": 5,
+      "dependencies": ["14"],
+      "protocols": ["aiproofing/protocols/voice_injection_analysis.md"],
+      "shared_checklists": [],
+      "enabled": true
+    },
+    {
+      "task_id": "15",
+      "sequence": 17,
+      "legacy_task_number": 15,
+      "legacy_aliases": ["legacy-task-number-15", "task-15"],
+      "legacy_names": [],
+      "evidence_role": "HUMAN_REVIEW_REQUIRED",
+      "name": "Consistency and Continuity Check",
+      "phase_id": 6,
+      "dependencies": ["14.5"],
+      "protocols": ["aiproofing/protocols/consistency_check.md"],
+      "shared_checklists": [],
+      "enabled": true
+    },
+    {
+      "task_id": "16",
+      "sequence": 18,
+      "legacy_task_number": 16,
+      "legacy_aliases": ["legacy-task-number-16", "task-16"],
+      "legacy_names": ["Final Read-Through and Sign-Off"],
+      "evidence_role": "HUMAN_REVIEW_REQUIRED",
+      "name": "Final Editorial Review and Sign-Off",
+      "phase_id": 6,
+      "dependencies": ["15"],
+      "protocols": ["aiproofing/protocols/final_analysis.md"],
+      "shared_checklists": ["aiproofing/protocols/AIproofcheck.md"],
+      "enabled": true
+    }
+  ],
+  "file_roles": [
+    {
+      "path": "aiproofing/protocols/README.md",
+      "role": "documentation",
+      "enabled": true
+    },
+    {
+      "path": "aiproofing/protocols/AIproof_plan.md",
+      "role": "workflow_spec",
+      "enabled": true
+    },
+    {
+      "path": "aiproofing/protocols/automation_playbook.md",
+      "role": "execution_guide",
+      "enabled": true
+    },
+    {
+      "path": "aiproofing/protocols/provenance_log.md",
+      "role": "revision_audit_spec",
+      "enabled": true
+    },
+    {
+      "path": "aiproofing/protocols/latent_aiproof_report.md",
+      "role": "historical_fixture",
+      "enabled": false
+    },
+    {
+      "path": "aiproofing/protocols/AIproofcheck.md",
+      "role": "shared_checklist",
+      "enabled": true
+    },
+    {
+      "path": "aiproofing/protocols/ai_tell_checklist.md",
+      "role": "shared_checklist",
+      "enabled": true
+    },
+    {
+      "path": "aiproofing/protocols/manuscript_analysis.md",
+      "role": "task_protocol",
+      "enabled": true
+    },
+    {
+      "path": "aiproofing/protocols/vocabulary_analysis.md",
+      "role": "task_protocol",
+      "enabled": true
+    },
+    {
+      "path": "aiproofing/protocols/idiomatic_analysis.md",
+      "role": "task_protocol",
+      "enabled": true
+    },
+    {
+      "path": "aiproofing/protocols/overused_vocabulary_analysis.md",
+      "role": "task_protocol",
+      "enabled": true
+    },
+    {
+      "path": "aiproofing/protocols/sentence_structure_analysis.md",
+      "role": "task_protocol",
+      "enabled": true
+    },
+    {
+      "path": "aiproofing/protocols/formatting_tell_analysis.md",
+      "role": "task_protocol",
+      "enabled": true
+    },
+    {
+      "path": "aiproofing/protocols/part_of_speech_analysis.md",
+      "role": "task_protocol",
+      "enabled": true
+    },
+    {
+      "path": "aiproofing/protocols/modal_epistemic_analysis.md",
+      "role": "task_protocol",
+      "enabled": true
+    },
+    {
+      "path": "aiproofing/protocols/readability_analysis.md",
+      "role": "task_protocol",
+      "enabled": true
+    },
+    {
+      "path": "aiproofing/protocols/formulaic_pattern_analysis.md",
+      "role": "task_protocol",
+      "enabled": true
+    },
+    {
+      "path": "aiproofing/protocols/burstiness_analysis.md",
+      "role": "task_protocol",
+      "enabled": true
+    },
+    {
+      "path": "aiproofing/protocols/character_voice_analysis.md",
+      "role": "task_protocol",
+      "enabled": true
+    },
+    {
+      "path": "aiproofing/protocols/emotional_intensity_analysis.md",
+      "role": "task_protocol",
+      "enabled": true
+    },
+    {
+      "path": "aiproofing/protocols/metaphor_analysis.md",
+      "role": "task_protocol",
+      "enabled": true
+    },
+    {
+      "path": "aiproofing/protocols/voice_injection_analysis.md",
+      "role": "task_protocol",
+      "enabled": true
+    },
+    {
+      "path": "aiproofing/protocols/consistency_check.md",
+      "role": "task_protocol",
+      "enabled": true
+    },
+    {
+      "path": "aiproofing/protocols/final_analysis.md",
+      "role": "task_protocol",
+      "enabled": true
+    },
+    {
+      "path": "aiproofing/presets/domain_presets.md",
+      "role": "configuration",
+      "enabled": true
+    }
+  ]
+}

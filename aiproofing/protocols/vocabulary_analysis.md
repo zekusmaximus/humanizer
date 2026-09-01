@@ -1,30 +1,32 @@
-# Vocabulary Analysis and Diversification
+# Vocabulary Diversity Analysis
 
 ## Objective
-Increase lexical diversity and reduce AI-style repetition using only the source text and intake data.
+Review repetition and word choice while preserving meaning, terminology, motifs, and established voice.
 
 ## Inputs
 - Section map and frequency lists from **manuscript_analysis.md**.
-- Target audience/genre (inferred if not given).
+- Author-supplied target audience/genre, or `unknown` when not provided.
 
 ## Steps
 1. **Frequency Scan**
-   - Compute top 50 lemmas overall and per section. Flag clusters where a lemma appears >3 times within 150 words.
+   - If configured, compute lemma or token frequencies with a named extractor/version and declared window/count settings. `null` disables the diagnostic.
+   - A frequency is a `MEASURED_FEATURE`, not evidence of text origin.
 2. **Contextual Replacements**
-   - For each flagged cluster, propose 2–3 substitutions that match tone and POV. Preserve domain vocabulary that is plot-critical.
+   - For a cluster that impairs clarity or rhythm, propose source-faithful alternatives. Repeating the clearest term is often preferable to synonym cycling.
+   - Preserve domain vocabulary, names, motifs, technical terms, and intentional anaphora.
 3. **Register Balancing**
-   - Swap bureaucratic/technical jargon for concrete verbs and sensory nouns when not required for accuracy.
+   - Review bureaucratic or technical wording against the supplied audience. Propose a clearer source-faithful verb when it preserves precision; do not add sensory detail merely to vary vocabulary.
 4. **Character-Specific Lexicon**
-   - Using provisional character list, ensure repeated terms differ across speakers (e.g., "car" vs. "ride" vs. "sedan").
+   - Compare speaker diction only when distinct voice is an author-supported goal. Never force different synonyms merely to make speakers diverge.
 5. **Density Check**
-   - Keep specialized terms but ensure no paragraph leans on a single abstract noun or verb stem.
+   - When enabled, review local clusters of an abstract noun or verb stem. Retain necessary terminology and deliberate repetition.
 
 ## Deliverables
 - Table of overused words with locations and suggested swaps.
-- 3–5 rewritten snippets demonstrating improved variety.
+- Source-faithful proposals for enabled findings; no minimum proposal count.
 - Notes on protected vocabulary that should remain consistent.
 
 ## Acceptance Criteria
-- No high-frequency word clusters remain unaddressed without justification.
+- Enabled frequency findings are reviewed or explicitly retained with a reason.
 - Substitutions maintain meaning and align with voice/genre.
-- Variations are distributed across sections, not isolated to one area.
+- No substitution changes a fact, referent, quotation, or calibrated uncertainty.

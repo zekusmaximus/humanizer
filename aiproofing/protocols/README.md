@@ -1,48 +1,58 @@
-# Neutral AI Proofing Protocol
+# AI Proofing Protocols
 
 ## Purpose
-This folder provides a genre-agnostic AI proofing system that can be applied to any narrative Markdown file—full manuscripts, chapters, scenes, short stories, or excerpts. It ships with ready-to-run guidance and workflows so a coding agent can execute the entire protocol without relying on pre-filled character sheets, outlines, or story metadata.
 
-## What Makes This Neutral
-- Works with any narrative length, genre, tense, or point of view.
-- Every document includes built-in heuristics for automatically deriving needed context (characters, locations, tone, pacing cues) from the source text.
-- All tasks can be run directly against a supplied `.md` file; no prior tagging or manual annotations are required.
-- Prompts and checklists are phrased for agents or humans to execute in a repeatable way.
+This folder supports an English-narrative-first editorial workflow. It derives provisional context from the supplied Markdown, records configured measurements, and separates optional style review from required consistency and source-faithfulness checks. It does not detect text origin or verify authorship.
 
-## Core Components
-- **AIproof_plan.md** – End-to-end, phase-based protocol that can be executed on any narrative input. 18 tasks across 6 phases.
-- **AIproofcheck.md** – Quick verification checklist (14 checkboxes) to apply after revisions.
-- **manuscript_analysis.md** – Intake workflow that builds working context from an untagged file; outputs sentence-length variance and flatness flag.
-- **automation_playbook.md** – Drop-in instructions a coding agent can follow when asked to "AI proof the following .md file." Includes an active 5-check Detection Resistance Gate.
-- **ai_tell_checklist.md** – Fast scan for AI signals across structural, lexical, formulaic, and formatting categories.
-- **formatting_tell_analysis.md** – Dedicated protocol for structural/visual AI tells: em dash overuse, boldface overuse, inline-header lists, title-case headings, emojis.
-- **voice_injection_analysis.md** – Soul injection protocol: soullessness audit, opinion/complexity/mess injection, character-specific personality markers.
-- **Category Guides** – Focused analyses for vocabulary, idioms, sentence structure, POS balance, modality, readability, formulaic patterns (including negative parallelisms, rule of three, synonym cycling, false ranges), burstiness, character voice, emotional intensity, metaphors, and consistency.
-- **final_analysis.md** – Publication/readiness bar, AI Detection Resistance Gate (5 sub-checks), and sign-off criteria.
-- **provenance_log.md** – Optional structured provenance / edit log (JSON schema + human table) for high-stakes or audited workflows.
-- **presets/domain_presets.md** – Four ready-to-use domain profiles (narrative default, technical, academic, business) with concrete targets for soul markers, AI-vocab tolerance, readability, and formatting strictness.
+## Canonical contract
 
-## How to Use
-1. Place or reference any narrative `.md` file.
-2. Run **manuscript_analysis.md** to auto-derive characters, locations, POV, tense, pacing markers, and stylistic baselines. Optionally supply a domain preset (`narrative` | `technical` | `academic` | `business`) from `presets/domain_presets.md` to bias thresholds.
-3. Follow **AIproof_plan.md** phase by phase. Each step points to the category guide that spells out inputs, actions, and deliverables.
-4. Use **automation_playbook.md** if handing the job to a coding agent; it contains ready-to-run prompts and extraction routines.
-5. After edits, apply **AIproofcheck.md** and **final_analysis.md** to confirm that AI tells were removed without flattening voice or flow.
-6. For high-stakes or attributable work, also generate the provenance / edit log per **provenance_log.md**.
+The workflow has 6 phases and 18 stable task IDs in this literal order:
 
-## Success Criteria
-- No reliance on bespoke metadata—only the provided `.md` text.
-- Increased human-like variability (lexical, syntactic, and figurative); sentence-length SD meets genre threshold.
-- Formatting AI tells eliminated: em dash density below threshold, no unearned boldface, no inline-header lists, sentence-case headings, no emojis.
-- Clear, differentiated voices without repetitive templates.
-- Smooth pacing and readability that match the intended audience.
-- Soul markers present throughout: at least one opinion, acknowledged uncertainty, or moment of emotional complexity per 500 words — no section reads as neutral reportage.
-- Final text passes the AI Detection Resistance Gate (all 5 sub-checks) and feels authentically human in voice, not just technically clean.
+`1, 2, 3, 4, 5, 6, 6.5, 7, 8, 9, 10, 11, 12, 13, 14, 14.5, 15, 16`
 
-## Limitations & Responsible Use
+`AIproof_plan.md` is the human-readable projection. `../scripts/task_manifest.json` is the machine-readable contract. Keep the fractional IDs; a sequential 1-18 renumbering would change the meaning of established integer IDs.
 
-This protocol reduces common AI signals in narrative prose and supports voice injection while preserving story intent. **It provides no guarantee that output will be classified as human by any external AI detector.**
+The directory contains 24 Markdown files:
 
-See the parent `aiproofing/SKILL.md` "Limitations & Responsible Use" section and `aiproofing/benchmark/README.md` for the full stance on detector volatility, appropriate use, high-stakes requirements (human oversight + provenance), and English/narrative optimization. The "AI Detection Resistance Gate" is an internal quality bar only.
+- 19 task-linked guides or shared checklists serving the 18 tasks;
+- 3 support files (`AIproof_plan.md`, `automation_playbook.md`, and `provenance_log.md`);
+- this README; and
+- 1 inactive historical report (`latent_aiproof_report.md`).
 
-Users should run the benchmark harness against their target detectors with real corpora before making any robustness claims.
+`AIproofcheck.md` is a declared shared checklist. Task 2 uses it to assemble the review, and Task 16 uses it during final review. `ai_tell_checklist.md` is a compatibility filename for the editorial-pattern checklist; its filename is not an evidence claim.
+
+## Evidence labels
+
+- `STYLE_HEURISTIC`: optional and configurable; never an authorship or origin score
+- `MEASURED_FEATURE`: produced by a named extractor/configuration; never a verdict
+- `HUMAN_REVIEW_REQUIRED`: factual, sourcing, meaning, voice, or approval decision
+
+Every hard style value is either a named, configurable experimental default or disabled with `null`. No style heuristic contributes to an AI/authorship score.
+
+## How to use
+
+1. Supply an English narrative `.md` file and any known audience, genre, or author-approved voice guidance.
+2. Run `manuscript_analysis.md`; treat inferred entities, POV, and voice cues as provisional.
+3. Select an optional preset from `../presets/domain_presets.md`. A missing preset does not create a detector policy.
+4. Follow `AIproof_plan.md` and the declared manifest dependencies.
+5. Apply `AIproofcheck.md` and `final_analysis.md`; unresolved source-faithfulness issues block editorial completion, while disabled style preferences do not.
+6. If an audit trail is requested, produce the unsigned revision audit described in `provenance_log.md`.
+
+## Completion boundary
+
+The final status is **Internal editorial checks complete**. It means the selected internal checks were reviewed and required fidelity issues were resolved. It is not a statement about authorship, detector resistance, publication readiness, policy compliance, or misconduct.
+
+## Limitations and responsible use
+
+- Never fabricate a fact, source, quotation, experience, emotion, opinion, or author stance.
+- Keep intentional repetition, typography, dialect, and genre conventions when they serve the manuscript.
+- Treat counts and readability features as measured only when the extractor and configuration are recorded.
+- The workflow is English-narrative-first. Other domains and languages are experimental.
+- The revision audit is unsigned self-report, not authenticated provenance.
+- Do not use this workflow as the sole basis for a high-consequence decision.
+
+See `../SKILL.md` and `../benchmark/README.md` for the full claim boundary.
+
+## Legacy terminology
+
+Historical reports may contain the retired gate and verdict labels used before this contract. Those strings are permitted only inside a dated historical or migration notice. Active documents use **Editorial Pattern & Quality Review** and **Internal editorial checks complete**.

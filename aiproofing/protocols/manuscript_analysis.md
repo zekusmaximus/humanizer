@@ -1,40 +1,41 @@
-# Manuscript Intake and Structural Analysis (Metadata-Free)
+# Manuscript Intake and Structural Analysis
 
 ## Objective
-Create a working map of any narrative `.md` file without relying on external notes. This baseline fuels all other guides.
+Create a provisional working map of an English narrative `.md` file. Separate directly observed structure and configured measurements from inferred context.
 
 ## Inputs
 - The raw Markdown file.
-- Optional: desired audience/genre (infer if absent).
+- Optional: author-supplied audience, genre, voice guide, and measurement configuration. Unknown values remain unknown.
 
 ## Steps
 1. **Segment the Text**
    - Use headings, scene breaks (***, ---), and blank lines to define sections.
    - Record word counts and sentence counts per section.
 2. **Narrative Mode Detection**
-   - Sample the first and middle sections to determine POV (1st/2nd/3rd) and tense (past/present). Note any shifts.
+   - Sample the opening, middle, and closing sections to propose POV and tense. Mark the result provisional and note shifts.
 3. **Entity Harvesting**
-   - Identify capitalized tokens beyond sentence starts to draft lists of characters, locations, and organizations.
-   - Capture nearby verbs/adjectives to infer voice traits (formal, slang-heavy, sensory, terse, expansive).
+   - Identify repeated names and noun phrases as entity candidates. Capitalization alone cannot determine whether a token is a character, location, or organization.
+   - Record nearby diction as provisional voice evidence. Do not infer protected traits, background, education, class, or identity.
 4. **Rhythm Baseline**
-   - Compute sentence length histogram (short/medium/long/very long) and the top 5 sentence-opening patterns.
-   - Calculate the mean sentence length, standard deviation (SD), minimum, and maximum.
-   - Set a **flatness flag** if SD < 5 words; this flag gates Task 11 (Burstiness) to run before Phase 3 sentence-structure work.
+   - When measurement is enabled, record the extractor name/version, Markdown-stripping rule, sentence splitter, token definition, and configuration.
+   - Compute the configured sentence-length and opening-pattern features. If no pinned extractor is available, record the feature as unavailable rather than estimating it.
+   - A configured sentence-SD review is a `MEASURED_FEATURE` plus an optional `STYLE_HEURISTIC`; it is not an origin threshold or workflow gate.
 5. **Tone and Setting Signals**
    - Extract recurring concrete nouns (objects, vehicles, foods, tools) and time markers (season, era, tech level) to anchor metaphors and idioms.
 6. **Dialogue vs. Narrative Balance**
-   - Estimate dialogue proportion and note tag styles (said vs. action beats vs. free indirect).
+   - If enabled, measure dialogue proportion with a named, reproducible quotation/dialogue rule and record its limitations; otherwise mark it unavailable. Note observed tag styles without inferring intent.
 
 ## Outputs
 - Section map with word counts and transition notes.
 - POV/tense declaration and any detected shifts.
-- Provisional character/location/organization list with 2–3 voice cues each.
-- Sentence-length and opening-pattern distribution, including mean, SD, min/max, and flatness flag status.
+- Provisional character/location/organization list with any source-supported voice cues; use `unknown` when the text supplies none.
+- Configured sentence-length and opening-pattern features, extractor metadata, and explicit unavailable states.
 - Tone/setting signal list for figurative language grounding.
 - Dialogue/narrative balance summary.
 
 ## Acceptance Criteria
-- All later guides can reference this intake without requesting extra metadata.
+- Later guides can reference this intake while preserving explicit unknown and unavailable states.
 - Character/setting lists are derived solely from the file.
-- Rhythm and voice baselines are quantifiable (counts or percentages) and repeatable.
-- Sentence-length SD and flatness flag are explicitly recorded for downstream use by **burstiness_analysis.md** and **final_analysis.md**.
+- Any numeric baseline is repeatable from the named extractor and configuration.
+- Inferred entities, POV, tense, and voice cues are marked provisional for human confirmation.
+- Sentence-length features, when enabled, are passed to `burstiness_analysis.md` without an authorship or detector interpretation.

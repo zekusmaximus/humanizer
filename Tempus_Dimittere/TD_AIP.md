@@ -1,5 +1,7 @@
 # AI Proofing Report & Revised Manuscript: Tempus Dimittere
 
+> **HISTORICAL NON-REPRODUCIBLE NOTICE — 2026-08-31:** This file is preserved in place as a historical editorial record. The signal labels, percentages, averages, thresholds, and publication conclusions in the surrounding analysis were not produced by the current benchmark harness and are not reproducible evidence. They must not be used to infer authorship, detector performance, misconduct, or publication fitness. The creative text embedded in this file is retained unchanged.
+
 ## Part 1: Analysis Report
 
 ### 1.1 Phase 1: Intake & Baseline
