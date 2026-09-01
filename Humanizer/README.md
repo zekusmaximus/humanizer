@@ -4,21 +4,27 @@ A Claude Code skill for editorial pattern review, clarity, and source-faithful r
 
 ## Installation
 
-### Recommended (clone directly into Claude Code skills directory)
+The skill lives in the `Humanizer/` folder of this repository, so cloning the whole repository into `~/.claude/skills/` does not place `SKILL.md` where Claude Code expects it. Copy the folder contents instead.
+
+### Claude Code (personal skill)
 
 ```bash
-mkdir -p ~/.claude/skills
-git clone https://github.com/blader/humanizer.git ~/.claude/skills/humanizer
-```
-
-### Manual install/update (only the skill file)
-
-If you already have this repo cloned (or you downloaded `SKILL.md`), copy the skill file into Claude Code’s skills directory:
-
-```bash
+git clone https://github.com/zekusmaximus/humanizer.git
 mkdir -p ~/.claude/skills/humanizer
-cp SKILL.md ~/.claude/skills/humanizer/
+cp humanizer/Humanizer/SKILL.md ~/.claude/skills/humanizer/
 ```
+
+If you already have this repository cloned, copy `Humanizer/SKILL.md` into `~/.claude/skills/humanizer/` to update.
+
+### claude.ai (custom skill upload)
+
+claude.ai accepts a zip archive whose single top-level folder is named after the skill (`humanizer`) and contains `SKILL.md`. Build both skill archives from the repository root:
+
+```bash
+python scripts/package_skills.py
+```
+
+Upload `dist/humanizer.zip` (and `dist/aiproofing-text.zip`) in the Skills section of claude.ai Settings. Custom skills are per user and do not sync between claude.ai, the API, and Claude Code, so re-upload after each skill change.
 
 ## Usage
 

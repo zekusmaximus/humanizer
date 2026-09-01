@@ -38,6 +38,7 @@ humanizer/
 │       ├── schemas/              #   JSON Schemas
 │       ├── registries/           #   governed metadata registries
 │       └── data/                 #   synthetic fixtures and starter corpus
+├── scripts/package_skills.py    # zips both skills for claude.ai upload
 ├── tests/                       # standard-library unit and parity tests
 ├── ENHANCEMENTS.md             # Living roadmap (consolidates archived reviews)
 ├── archive/reviews/            # Historical repo reviews (preserved verbatim)
@@ -76,9 +77,9 @@ A structured workflow for English narrative Markdown. It uses **6 phases and 18 
 ### Editing skill behavior
 
 - **`SKILL.md` is always the source of truth.** When you change skill behavior or content, update `SKILL.md` first, then propagate to `README.md` (and `WARP.md` for the Humanizer) so they stay consistent.
-- **Preserve YAML frontmatter** exactly — `name`, `version`, `description`, `allowed-tools`. Keep indentation valid.
+- **Preserve YAML frontmatter** exactly — `name`, `description`, `allowed-tools`, and `metadata` (which holds `version`). Only keys from the Agent Skills spec (`name`, `description`, `license`, `allowed-tools`, `metadata`, `compatibility`) may appear at the top level; claude.ai upload validation rejects others. Keep indentation valid.
 - **Keep pattern numbering stable.** The 24 patterns are referenced by number in `Humanizer/README.md`'s table and examples. Don't renumber unless you intend to update every reference.
-- **Bump versions in sync.** `Humanizer/SKILL.md` has a `version:` field; `Humanizer/README.md` has a "Version History" section. If you bump one, update the other and add a one-line history entry describing what changed and why.
+- **Bump versions in sync.** `Humanizer/SKILL.md` records its version under `metadata.version` in the frontmatter; `Humanizer/README.md` has a "Version History" section. If you bump one, update the other and add a one-line history entry describing what changed and why.
 
 ### Running the Python tooling
 
@@ -102,6 +103,17 @@ python -m json.tool tmp/benchmark_v2/summary.json
 ```
 
 Textless legacy rows migrate as unavailable/provisional/excluded stubs. They do not become benchmark-eligible samples. Raw thresholds are never invented, and rank-only mode does not emit confusion-matrix metrics.
+
+### Packaging the skills for claude.ai
+
+claude.ai and the Skills API accept a zip whose single top-level folder is named after the skill's `name` and contains `SKILL.md`. The repository folders do not use those names (`Humanizer/` vs `humanizer`, `aiproofing/` vs `aiproofing-text`), so use the packager rather than zipping the folders directly:
+
+```bash
+python scripts/package_skills.py            # writes dist/humanizer.zip and dist/aiproofing-text.zip
+python scripts/package_skills.py --check    # validate frontmatter and layout without writing archives
+```
+
+The `aiproofing` runner resolves the manifest's `aiproofing/...` paths against whichever folder holds `SKILL.md`, so the packaged copy works under the `aiproofing-text` folder name.
 
 ### Verifying changes
 

@@ -12,7 +12,7 @@ The “runtime” artifact is `SKILL.md`: Claude Code reads the YAML frontmatter
 ## Key files (and how they relate)
 - `SKILL.md`
   - The actual skill definition.
-  - Starts with YAML frontmatter (`---` … `---`) containing `name`, `version`, `description`, and `allowed-tools`.
+  - Starts with YAML frontmatter (`---` … `---`) containing `name`, `description`, `allowed-tools`, and `metadata` (which holds `version`). Only keys from the Agent Skills spec (`name`, `description`, `license`, `allowed-tools`, `metadata`, `compatibility`) are allowed at the top level; claude.ai upload validation rejects others.
   - After the frontmatter is the editor prompt: the canonical, detailed pattern list with examples.
 - `README.md`
   - Installation and usage instructions.
@@ -30,17 +30,19 @@ When changing behavior/content, treat `SKILL.md` as the source of truth, and upd
 
 ## Common commands
 ### Install the skill into Claude Code
-Recommended (clone directly into Claude Code skills directory):
+The skill lives in the `Humanizer/` subfolder, so copy the skill file rather than cloning the whole repository into the skills directory:
 ```bash
-mkdir -p ~/.claude/skills
-git clone https://github.com/blader/humanizer.git ~/.claude/skills/humanizer
+git clone https://github.com/zekusmaximus/humanizer.git
+mkdir -p ~/.claude/skills/humanizer
+cp humanizer/Humanizer/SKILL.md ~/.claude/skills/humanizer/
 ```
 
-Manual install/update (only the skill file):
+### Package both skills for claude.ai upload
+From the repository root:
 ```bash
-mkdir -p ~/.claude/skills/humanizer
-cp SKILL.md ~/.claude/skills/humanizer/
+python scripts/package_skills.py
 ```
+This writes `dist/humanizer.zip` and `dist/aiproofing-text.zip`, each with a single top-level folder named after the skill.
 
 ## How to “run” it (Claude Code)
 Invoke the skill:
@@ -48,7 +50,7 @@ Invoke the skill:
 
 ## Making changes safely
 ### Versioning (keep in sync)
-- `SKILL.md` has a `version:` field in its YAML frontmatter.
+- `SKILL.md` records the version under `metadata.version` in its YAML frontmatter.
 - `README.md` has a “Version History” section.
 
 If you bump the version, update both.
