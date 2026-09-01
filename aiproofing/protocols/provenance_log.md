@@ -1,44 +1,68 @@
-# Unsigned revision-audit protocol
+# Provenance and Edit Log Protocol
 
 ## Purpose
+For high-stakes, attributed, or auditable use (academic, legal, policy, journalism, corporate), produce a machine-readable and human-reviewable log of every substantive edit. This provides the "provenance-safe mode" missing from earlier versions of the workflow.
 
-Record what an editorial workflow proposed or changed so a human can review the revision. This artifact is an **unsigned revision audit**. It is not authenticated provenance, proof of authorship, a disclosure record, or proof that a named person approved the text.
+The log is **optional** by default and **recommended** whenever the final text will be published under a human name or submitted where disclosure or audit may be required.
 
-The runner creates an empty scaffold during initialization. It does not edit the manuscript or claim that any edit occurred.
+## Output Files (placed next to the revised manuscript)
+- `<filename>_provenance.json` — Structured, machine-readable (primary artifact)
+- `<filename>_edit_log.md` — Human-readable Markdown table (optional, generated from the JSON)
 
-## Runner output
+## JSON Schema (provenance.json)
 
-The runner writes versioned, exclusive-create files in the selected output directory:
+```json
+{
+  "manuscript": "path/to/original.md",
+  "revision_date": "2026-05-27T14:30:00-04:00",
+  "humanizer_version": "aiproofing 1.x / humanizer 2.2.0",
+  "overall_confidence": 0.85,
+  "edits": [
+    {
+      "id": 1,
+      "location": "paragraph 3, sentence 2 (approx lines 12-13)",
+      "before": "The initiative was part of a broader movement across Spain to decentralize administrative functions and enhance regional governance.",
+      "after": "The initiative allowed the institute to collect and publish regional statistics independently from Spain's national statistics office.",
+      "pattern": "Significance inflation + vague attribution (pattern 1, 5)",
+      "rationale": "Removed unsupported claim of 'broader movement' and 'enhance regional governance' without evidence. Replaced with concrete, sourced function of the institute. Prevents factual drift while preserving intent.",
+      "confidence": 4,
+      "category": "content",
+      "human_approved": true
+    }
+  ],
+  "notes": "All edits reviewed by lead author. No claim drift detected on factual statements. Soul markers added only in reflective passages."
+}
+```
 
-- `revision_audit_v2_<run-id>_rNNN.json`
-- `revision_audit_v2_<run-id>_rNNN.md`
-- `aiproof_workflow_state_v2_<run-id>_rNNN.json`
+Fields per edit:
+- `id`: sequential
+- `location`: line numbers, paragraph ref, or distinctive quote (first 8 words)
+- `before` / `after`: exact strings (keep short; elide if >120 chars)
+- `pattern`: which AI tell or voice gap (reference Humanizer pattern # or protocol name)
+- `rationale`: why the change improves authenticity or removes a tell, and why it does not alter meaning
+- `confidence`: 1-5 (5 = certain this improves without risk)
+- `category`: one of content|language|style|formatting|voice|continuity|other
+- `human_approved`: boolean (default false until human signs off)
 
-Each record includes a UTC timestamp, source path and raw-byte SHA-256 digest, run identifier, schema/version fields, configured constraints, and explicit statements about whether edits were performed. Existing files are never overwritten.
+## Markdown Table Format (edit_log.md)
 
-## Edit entry contract
+| # | Location | Pattern | Before → After (summary) | Rationale | Conf | Approved |
+|---|----------|---------|---------------------------|-----------|------|----------|
+| 1 | para 3 | #1 significance | "...pivotal moment..." → "established in 1989 to..." | Concrete fact replaces puffery | 4 | ✓ |
+| 2 | ... | voice injection | neutral report → "I keep thinking about..." | Adds acknowledged uncertainty | 5 | ✓ |
 
-When a later, separately authorized editorial step makes a substantive change, record:
+## Integration Points
 
-- a stable edit ID;
-- a source location or anchor;
-- exact or safely truncated before/after text;
-- the relevant task or checklist item;
-- a source-faithfulness rationale;
-- whether facts, attribution, modality, quotations, citations, or chronology could change;
-- review status and the identity supplied by the reviewer, if any;
-- a UTC review timestamp, if reviewed.
+- During **Phase 4 (Voice and Emotion)** and **Phase 6 (Quality Assurance)**, the agent should collect edits into the log while generating rewrites.
+- `final_analysis.md` and `AIproofcheck.md` now include a gate item: "Provenance log produced and reviewed (high-stakes only)".
+- `automation_playbook.md` instructs agents to emit the files when the user requests "high-stakes" or "audit" mode.
+- The `aiproof_runner.py` can be extended to accept an `--provenance` flag and merge agent-provided edits into the saved JSON.
 
-Do not set approval fields merely because an automated check completed. If review evidence is unavailable, record `unreviewed` or `unknown`.
+## Best Practices
 
-## Source-faithfulness rules
+- Only log **substantive** rewrites (sentence-level or larger). Trivial punctuation or single-word swaps can be summarized in the "notes" field.
+- When confidence < 3, leave the passage unchanged or flag for human decision.
+- For factual or citation-bearing text, add an extra `fact_check` field or note in rationale.
+- Never auto-approve the log for high-stakes output; require explicit human review of both the JSON and the revised manuscript.
 
-- Do not add facts, experience, opinions, sensory details, emotions, speaker quirks, or citations that are absent from the source unless the author explicitly supplies or approves them.
-- Preserve quoted material and citation bindings.
-- Record unresolved semantic-drift risks for human review; do not disguise them as style choices.
-- Treat confidence ratings as reviewer judgments, not probabilities.
-- Keep mechanical counts and human judgments distinguishable.
-
-## High-consequence use
-
-For academic, legal, policy, journalism, employment, or compliance contexts, this audit may assist review but cannot replace the applicable disclosure, records, authentication, or sign-off process. A cryptographic signature, trusted timestamp, identity attestation, and custody controls would require a separate system that this repository does not provide.
+This mechanism directly addresses the "No provenance-safe mode" gap identified in the May 2026 repository review.

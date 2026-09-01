@@ -1,65 +1,125 @@
-# Benchmark v2: Offline Validation and Rank-Only Evaluation
+# Detector-Aware Benchmark Harness (Phase 2)
 
-> **Evidence boundary:** The checked-in corpus, v1 CSV, and legacy summary are synthetic fixtures for parser and arithmetic tests. They are not external evidence and support no detector, authorship, misconduct, editorial-success, or publication claim.
+This harness provides a reproducible way to measure pre/post humanization outcomes.
 
-Benchmark v2 is a standard-library contract for preserving records, validating them, and computing scoped metrics. It does not contain a detector, call an external service, select a production threshold, or combine unrelated evidence into a single score.
+## Goals
+- Compare **before** vs **after** text on detector signals across multiple detectors.
+- Track quality dimensions (voice, clarity, faithfulness) alongside detector outcomes.
+- Produce uncertainty-aware summaries via bootstrap confidence intervals.
 
-## Four separate tracks
+## Input Format
+Create a CSV (example: `data/example_runs.csv`) with one row per detector run:
 
-| Track | Question | Ground truth and output boundary |
-|---|---|---|
-| A: detector validity | Can one detector/version/configuration rank verified full-surface human and machine items in a declared population? | Versioned raw signals and eligible verified/adjudicated labels; never authorship proof |
-| B: editorial quality and faithfulness | Did a paired revision help while preserving facts, meaning, and voice? | Individual blinded ratings and source review; a lower detector score is not success |
-| C: mixed/assisted localization | Can a system localize adjudicated machine or assisted spans? | Text-hash-bound spans and task-specific labels; no forced document origin |
-| D: cooperative provenance | Does a declared watermark or provenance verifier report its granular states? | Known configuration/trust records; never content classification or truth |
+Columns:
+- `sample_id` (string)
+- `split` (`human`, `ai`, `hybrid`)
+- `stage` (`before` or `after`)
+- `detector` (string)
+- `score` (float, normalized so larger means "more likely AI")
+- `label_ai` (0 or 1; optional)
+- `voice_score` (1-5; optional)
+- `clarity_score` (1-5; optional)
+- `faithfulness_score` (1-5; optional)
 
-These tracks may not be collapsed into a "human," "authenticity," or publication-readiness score.
+## Command
+From repo root:
 
-## Normative v2 records
-
-JSONL schema version `2.0.0` is the analysis contract. `schema_v2.py` validates sample revisions, lineage events, ground-truth spans, detector runs, revision pairs, human ratings, calibrators, thresholds, watermark runs, provenance verification, and generation records. JSON schemas in `schemas/` document those contracts; the runtime validator uses only the Python standard library.
-
-Detector outputs retain their native typed `raw_signals[]`, scale, class, and direction. Categorical values stay categorical. Missing, error, abstain, unsupported, policy-expired, and not-run states stay explicit. No missing value becomes numeric zero, and no score direction is silently inverted.
-
-Versioned registries cover datasets, annotation schemes, detectors, licenses, consents, tools, evidence sources, task-specific decision schemas, and the explicit internal-oversight-to-C2PA crosswalk. Crosswalk cases that are not declared remain absent or unknown; the validator does not guess a C2PA oversight value.
-
-## Migrate the synthetic v1 fixture
-
-From the repository root:
-
-```powershell
-python aiproofing/benchmark/migrate_v1.py --input aiproofing/benchmark/data/example_runs.csv --output-dir tmp/benchmark_v2 --strict
+```bash
+python aiproofing/benchmark/evaluate.py \
+  --input aiproofing/benchmark/data/example_runs.csv \
+  --output aiproofing/benchmark/results/example_summary.json
 ```
 
-The v1 CSV has no source text. Valid rows therefore become provisional, analysis-ineligible `unavailable_legacy` sample stubs. This is valid strict migration, not an error. A validated `--text-map` is the only supported way to populate exact-byte and normalized annotation hashes. Legacy `label_ai` remains an audit field and never becomes eligible ground truth.
+## Outputs
+JSON report fields:
+- `n_rows`
+- `detectors`
+- `delta_ai_score` (after - before; negative is better)
+- `delta_ai_score_ci95`
+- `delta_quality` for each quality metric where provided
+- `delta_ai_score_by_split` (`human`/`ai`/`hybrid`)
+- `delta_ai_score_by_detector`
+- `threshold_metrics` (FPR/FNR at threshold=0.5)
+- `detector_disagreement` (pairwise stage disagreement)
+- `notes`
 
-## Validate and evaluate
+## Interpretation
+- **Detector metric target:** negative `delta_ai_score` for AI/hybrid subsets with minimal drift for human subsets.
+- **Quality target:** non-negative deltas on voice/clarity/faithfulness.
+- **Classification target:** reduce FNR on AI/hybrid while avoiding FPR spikes on human text.
+- Track detector disagreement; high disagreement means claims should be conservative.
+- Do not claim guaranteed detector bypass; report uncertainty and detector disagreement.
 
-```powershell
-python aiproofing/benchmark/evaluate.py --mode validate-rank-only --input tmp/benchmark_v2/detector_runs.jsonl --samples tmp/benchmark_v2/sample_revisions.jsonl --output tmp/benchmark_v2/summary.json --seed 20260831
-python -m json.tool tmp/benchmark_v2/summary.json
-```
+## Scaling the Harness: Starter Corpus and Real-Detector Workflow
 
-`validate-rank-only` validates before computing and groups results by detector ID, detector version, configuration, task, signal name, and native direction. It reports eligible denominators, every status, missingness, coverage, independent dependency groups, and cluster-aware ranking intervals when eligible ground truth exists. It emits no confusion or decision metric because P0 defines no active threshold or risk policy.
+The example data in `data/example_runs.csv` is synthetic and tiny. To make credible claims about humanization effectiveness you must run the harness against **real detectors** on a meaningful corpus.
 
-The JSON summary gives each detector group its dataset-card and detector-card references. The top-level `result_card_ref` is deliberately a `required-before-claim:` reference until a versioned result card is rendered; a missing card cannot be silently treated as permission to publish a claim.
+### Starter Corpus
 
-The evaluator also accepts `--schema-version v1` as an explicit compatibility reader. That path is labeled legacy/synthetic and does not revive the old universal `0.5` threshold.
+`data/starter_corpus/` contains short, labeled example passages (human, AI-generated, hybrid) for initial experimentation:
 
-## Dependence and ratings
+- `human_001.md` — Natural, varied, specific prose (low AI-like signals).
+- `ai_001.md` — Classic LLM output with significance inflation, AI vocabulary, promotional tone, formulaic structures.
+- `hybrid_001.md` — Mostly human with a few injected AI-typical phrases at the end.
 
-Splits and resampling use the highest declared dependency unit needed for the estimand: collection batch, author, prompt family, or source group. Revisions, chunks, transformations, detector rows, and repeated ratings do not create independent samples. Human ratings remain individual `human_rating` records. A `revision_pair` record supplies the source/candidate foreign keys; pass its JSONL file with `--pairs` alongside optional `--ratings` to report paired editorial outcomes. Raters are averaged within a pair before pairs are averaged.
+Use these (or your own domain-specific texts) as the raw material. Run each full text through your chosen detectors in both "before" and "after" states.
 
-## Thresholds and decisions
+### Real-Detector Workflow (Repeatable Process)
 
-P0 does not choose a threshold. A future decision metric requires a versioned, active, frozen, in-scope threshold artifact, a task-specific decision schema, eligible ground truth, and a selection-valid risk method. Raw thresholds forbid a calibrator ID. Calibrated thresholds require an applicable active calibrator. Style defaults are never origin thresholds.
+1. **Select detectors**
+   - Free/public: GPTZero, ZeroGPT, Originality.ai (free tier), Content at Scale, Winston AI, etc.
+   - Academic/institutional: Turnitin (if available), Copyleaks, etc.
+   - Note exact version/date of each tool (detectors update frequently).
 
-## Cards and claims
+2. **Normalize scores**
+   - Convert every detector output to a 0.0–1.0 float where **higher = more likely AI-generated**.
+   - Most tools already provide a percentage or "AI score"; divide by 100.
+   - For binary or qualitative outputs, map conservatively (e.g., "likely AI" = 0.8, "uncertain" = 0.5, "likely human" = 0.2).
 
-Every new result must reference a versioned dataset card and detector card and should have a result card generated by `cards.py`. Cards state independent group counts, versions/configuration, status denominators, coverage, exclusions, threshold/calibration applicability, uncertainty method, unsupported cells, rights, and limitations.
+3. **Collect quality ratings (human judgment)**
+   - After humanization, rate the revised text 1–5 on:
+     - voice_score (distinct personality, rhythm, opinion)
+     - clarity_score
+     - faithfulness_score (no claim drift, no loss of intent/facts from source)
+   - Use at least two raters when possible; average the scores.
 
-Allowed language is scoped to a named snapshot, detector version, task, population, and metric. Disallowed claims include "detects AI writing," "proves human/AI authorship," "bias-free," "detector-resistant," "publication ready," or any probability claim without applicable local calibration.
+4. **Build / extend the CSV**
+   - One row per (sample, detector, stage).
+   - `label_ai`: 1 if the source was known AI or hybrid with substantial AI content, 0 for pure human baseline.
+   - Example row:
+     ```
+     s4,ai,before,ZeroGPT,0.87,1,2,3,4
+     s4,ai,after,ZeroGPT,0.41,1,4,4,4
+     ```
 
-## External tools
+5. **Run the evaluator**
+   ```bash
+   python aiproofing/benchmark/evaluate.py \
+     --input aiproofing/benchmark/data/your_real_runs.csv \
+     --output aiproofing/benchmark/results/your_real_summary.json
+   ```
 
-No external detector or model is bundled or called by default. Any future local-model or service adapter is separate P1/P2 work requiring explicit approval, version/license/privacy review, opt-in configuration, mocked offline tests, and its own card. Never submit repository manuscripts to a service without authorization.
+6. **Publish responsibly**
+   - Release only **anonymized aggregate statistics** (the JSON summary), never raw detector scores tied to specific texts if the corpus is not public domain.
+   - Always include: date of experiment, exact detector names + versions/URLs, corpus description/size, and the full disclaimer text from the "Interpretation" section.
+   - Example public result files live in `results/`.
+
+### Growing a Real Corpus
+
+- Start with public-domain human text (Project Gutenberg short excerpts, government reports, old newspapers) as the "human" split.
+- Generate "AI" versions by feeding the same human text to multiple LLMs with neutral prompts ("Rewrite the following in a clear, engaging style").
+- Create hybrids by having an LLM lightly edit human text or vice-versa.
+- Aim for balance across length, genre, and topic.
+- For narrative work, draw from the `Test story/` and `Boundary/` artifacts already in this repo as additional real-world before/after pairs (label appropriately).
+
+### Recommended Minimum for Credible Claims (2026)
+
+- ≥ 20–30 distinct samples per split (human/ai/hybrid)
+- ≥ 3 independent detectors
+- Pre/post pairs for every sample
+- Human quality ratings on a random 30% subset (or all, if small)
+- Full CSV + summary JSON + one-paragraph methodology note
+
+Without this scale and transparency, any "X% reduction in AI score" claim is marketing, not evidence.
+
+The harness exists precisely to make such evidence possible. Use it.

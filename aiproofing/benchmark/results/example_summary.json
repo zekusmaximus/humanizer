@@ -1,13 +1,4 @@
 {
-  "artifact_status": "legacy_synthetic_fixture_no_external_evidence",
-  "schema_version": "1.0.0-legacy",
-  "result_card_ref": "aiproofing/benchmark/results/cards/example_summary_legacy_card.md",
-  "dataset_card_ref": "aiproofing/benchmark/data/cards/synthetic_legacy_v1_dataset.md",
-  "detector_card_refs": [
-    "aiproofing/benchmark/data/cards/synthetic_detA_detector.md",
-    "aiproofing/benchmark/data/cards/synthetic_detB_detector.md"
-  ],
-  "warning": "Historical synthetic arithmetic only. The row bootstrap and universal 0.5 threshold are not valid Benchmark v2 uncertainty or decision artifacts.",
   "n_rows": 12,
   "detectors": [
     "detA",

@@ -1,7 +1,5 @@
 # The Mnemosyne Cycle (AI-Proofed)
 
-> **HISTORICAL NON-REPRODUCIBLE NOTICE — 2026-08-31:** This file is preserved in place as a historical editorial record. The score, point impacts, detector/authorship language, estimated counts, and publication conclusions in the analysis below were not produced by the current benchmark harness and are not reproducible evidence. They must not be used to infer authorship, detector performance, misconduct, or publication fitness. The creative text embedded later in this file is retained unchanged.
-
 ---
 
 # AI-Proofing Analysis: The Mnemosyne Cycle

@@ -1,98 +1,118 @@
 ---
 name: aiproofing-text
-description: Reviews English narrative Markdown for editorial patterns, readability, consistency, and source faithfulness through a structured 6-phase, 18-task workflow. Use for careful narrative revision, internal quality review, and auditable edit planning. The workflow is not an AI detector and does not verify authorship or publication readiness.
+description: Analyzes narrative Markdown files to identify and remove AI-generated signals while preserving authentic voice and style through systematic analysis of vocabulary, syntax, character voice, emotional depth, and readability. Use when proofing narrative content against AI detection patterns, humanizing AI-assisted writing, verifying manuscript authenticity before publication, or enhancing narrative consistency and emotional depth.
 ---
 
 # AI Proofing Text
 
 ## Overview
 
-This skill provides an English-narrative-first editorial workflow for Markdown. It derives provisional context from the supplied text, records measured features only when an extractor is declared, and separates optional style preferences from required source-faithfulness checks. Other languages and domains are experimental until reviewed under a separate preset and evidence record.
+This skill provides a complete AI proofing workflow for narrative Markdown files of any length and genre. It operates without requiring pre-existing metadata or manual annotations, automatically extracting narrative context and applying a systematic 6-phase protocol to identify and remove AI-generated signals while preserving authentic voice and style.
 
-## Evidence and decision boundary
+## Core Workflow
 
-Use the following labels consistently:
+The skill executes a structured 6-phase analysis:
 
-- `STYLE_HEURISTIC`: a configurable editorial preference that cannot contribute to an origin or authorship score
-- `MEASURED_FEATURE`: a reproducible observation with a named extractor and configuration, not a verdict
-- `HUMAN_REVIEW_REQUIRED`: a factual, sourcing, meaning, voice, or approval question that a person must resolve
-
-Never infer authorship from a style pattern. Never invent facts, quotations, citations, experience, emotion, or author stance. Voice additions must already be supported by the manuscript or explicitly approved by the author.
-
-## Canonical workflow
-
-The canonical contract has 6 phases and 18 stable task IDs. The literal IDs preserve the documented insertions `6.5` and `14.5`; they must not be silently renumbered to 1-18.
-
-1. **Intake and Baseline**: Tasks `1` and `2`
-2. **Lexical Depth**: Tasks `3`, `4`, and `5`
-3. **Syntax and Grammar Flexibility**: Tasks `6`, `6.5`, `7`, and `8`
-4. **Readability and Flow**: Tasks `9`, `10`, and `11`
-5. **Voice, Emotion, and Source-Supported Specificity**: Tasks `12`, `13`, `14`, and `14.5`
-6. **Quality Assurance**: Tasks `15` and `16`
-
-`protocols/AIproof_plan.md` documents the ordered names and responsibilities. `scripts/task_manifest.json` is the machine-readable contract used by the runner. Integer task IDs and their established names remain compatibility aliases; the two fractional IDs have no legacy 16-task equivalent.
+1. **Intake and Baseline** – Extract narrative structure, POV, tone, characters, and establish baseline metrics
+2. **Lexical Depth** – Analyze vocabulary diversity, idioms, and overused patterns
+3. **Syntax and Grammar Flexibility** – Evaluate sentence structure, part-of-speech balance, and modal variety
+4. **Readability and Flow** – Check complexity calibration, formulaic patterns, and rhythmic burstiness
+5. **Voice and Emotion** – Assess character voice consistency, emotional intensity, and figurative language
+6. **Quality Assurance** – Validate consistency, continuity, and publication readiness
 
 ## Input
 
 Provide either:
-
-- a path to an English narrative Markdown file (`manuscript.md`); or
-- narrative text inline in the request.
-
-Optional audience, genre, preset, edit-budget, and review constraints must be treated as user inputs, not inferred policy. Missing context remains unknown or is sent for human review.
+- A path to a narrative Markdown file (`manuscript.md`)
+- Narrative text inline in your request
+- Any narrative length from flash fiction to full-length novels
 
 ## Output
 
-The workflow can produce:
+The skill generates:
+- **Revised manuscript** with improvements across all analysis categories
+- **Analysis report** summarizing findings for each protocol area
+- **Specific recommendations** for remaining concerns
+- **Publication readiness verdict** (Ready / Ready with tweaks / Hold)
 
-- a proposed revised manuscript;
-- a task-by-task editorial report;
-- unresolved source-faithfulness and human-review items; and
-- the status **Internal editorial checks complete** only when every required fidelity and safety check is resolved.
+## Key Features
 
-That status does not establish human authorship, detector resistance, publication readiness, or policy compliance. Optional style preferences may remain unresolved without blocking completion when the selected configuration disables them.
+- **Neutral and Genre-Agnostic** – Works with any narrative length, genre, tense, or POV
+- **No Metadata Required** – Auto-derives context from the source text alone
+- **Systematic and Thorough** – 16 sequential analysis tasks covering linguistic, structural, and stylistic dimensions
+- **Voice-Preserving** – Enhances authenticity without flattening character or narrative style
+- **Iterative-Friendly** – Allows refinement and rollback between phases
 
-## Protocol inventory
+## Bundled Protocols
 
-The `protocols/` directory contains 24 Markdown files with distinct roles:
+This skill includes 20 specialized analysis protocols in the `protocols/` directory:
 
-- 19 task-linked guides or shared checklists serving the 18 tasks;
-- 3 workflow support files: `AIproof_plan.md`, `automation_playbook.md`, and `provenance_log.md`;
-- 1 directory `README.md`; and
-- 1 inactive historical report, `latent_aiproof_report.md`.
+**Core Workflow:**
+- `AIproof_plan.md` – Master workflow organizing all 16 tasks
+- `manuscript_analysis.md` – Automated intake and context extraction
+- `automation_playbook.md` – Detailed agent execution guide
+- `AIproofcheck.md` – Quick verification checklist
+- `ai_tell_checklist.md` – Fast scan for common AI signals
 
-Task 2 and Task 16 may both reference `AIproofcheck.md` as a declared shared checklist. `ai_tell_checklist.md` is retained as a legacy filename for the active editorial-pattern checklist. The preset file lives at `presets/domain_presets.md`, outside the protocol directory.
+**Category Guides:**
+- `vocabulary_analysis.md` – Lexical variety and clustering
+- `idiomatic_analysis.md` – Phrase authenticity
+- `overused_vocabulary_analysis.md` – Bureaucratic/tech drift removal
+- `sentence_structure_analysis.md` – SVO pattern breaking
+- `part_of_speech_analysis.md` – Noun/verb/adjective balance
+- `modal_epistemic_analysis.md` – Uncertainty and perspective nuance
+- `readability_analysis.md` – Density and comprehension calibration
+- `formulaic_pattern_analysis.md` – Template disruption
+- `burstiness_analysis.md` – Controlled stylistic surprise
+- `character_voice_analysis.md` – Voice differentiation and consistency
+- `emotional_intensity_analysis.md` – Sensory and emotional grounding
+- `metaphor_analysis.md` – Figurative language and cliché replacement
+- `consistency_check.md` – Continuity and tone cohesion
+- `final_analysis.md` – Publication-readiness validation
+- `provenance_log.md` – Optional structured edit audit for high-stakes / attributable use (JSON + Markdown table)
+- `presets/domain_presets.md` – Lightweight tuning profiles (narrative, technical, academic, business) that adjust soul density, lexical aggression, readability targets, and formatting tolerance
 
-## Best practices
+Consult specific reference files as needed during the 6-phase workflow. Cross-references between files enable drilling into relevant analyses without loading everything at once.
 
-- Read the full source and retain pre-edit snapshots.
-- Treat automatically derived characters, entities, and voice cues as provisional.
-- Record extractor names and configurations for any reported count or score.
-- Keep style suggestions optional and preserve intentional repetition, typography, and rhythm.
-- Require human approval for a new viewpoint, emotional reaction, anecdote, quotation, or factual claim.
-- Resolve source-faithfulness warnings before reporting editorial completion.
+## Example Workflow
 
-## Runner scope
+**Input:** A 5,000-word short story with AI-assisted passages
 
-`scripts/aiproof_runner.py` validates inputs and constraints, loads the canonical manifest, and writes workflow state plus an unsigned revision-audit record. It scaffolds and records task transitions; it does not itself rewrite a manuscript or authenticate provenance.
+**Processing flow:**
+1. Extract 4 characters, 3 locations, present tense, third-person limited POV
+2. Scan vocabulary against overuse clusters; flag 12 repetition hotspots
+3. Analyze sentence rhythms; identify 3 formulaic openings and 5 SVO patterns
+4. Review emotional intensity; add sensory grounding to 4 climactic moments
+5. Check voice consistency across 4 POV sections; differentiate narrator tone
+6. Verify all changes integrate; confirm readability metrics match intent
 
-## Editorial Pattern & Quality Review
+**Output:** Revised manuscript + detailed report addressing each of 16 task categories
 
-The final review keeps style, clarity, consistency, and source faithfulness separate. It never combines them into an AI likelihood. Completion means only that the selected internal editorial checks were reviewed and all required source-faithfulness issues were resolved.
+## Best Practices
+
+- Provide full narrative context (chapters, scenes, backstory references) for most accurate analysis
+- Allow all 6 phases to complete before drawing conclusions
+- Review and selectively accept recommendations; preserve intentional stylistic choices
+- Use the "Ready with tweaks" verdict to identify areas for human refinement
+- Keep pre-edit snapshots for comparison and rollback
+
+## Technical Details
+
+The skill includes `scripts/aiproof_runner.py`, a Python orchestration script that helps sequence tasks and manage outputs if running via automation.
+
+Protocol files reference each other to maintain cross-references, enabling you to jump to relevant analyses without re-reading the entire workflow.
 
 ## Limitations & Responsible Use
 
-This workflow is not a general AI-text detector. It does not determine authorship, misconduct, detector resistance, or publication fitness, and it must not be the sole basis for a high-consequence decision.
+This skill provides a structured workflow to identify AI-generated signals in narrative text and to revise toward more authentic human voice, rhythm, and emotional depth. **It does not guarantee that revised text will evade any particular AI detector or pass any classifier as human-written.**
 
-- Detector behavior changes across models, domains, lengths, languages, prompts, and time.
-- The legacy benchmark example emits exploratory intervals from synthetic rows. Those intervals are not statistically valid clustered uncertainty or external evidence; Benchmark v2 is required for validated, highest-dependency-cluster-aware analysis.
-- Style preferences such as sentence-length variation, watch-list words, typography, or voice texture are unvalidated as general origin signals.
-- The workflow is optimized for English narrative prose. Other domains and languages require explicit experimental configuration and review.
-- A qualified person retains responsibility for facts, citations, meaning, policy compliance, disclosure, and final publication decisions.
-- The revision audit log is an unsigned self-report. It is not authenticated provenance.
+- Detector behavior is volatile across models, domains, lengths, and languages. The included benchmark harness measures outcomes with confidence intervals but the example data is illustrative only; users must run their own controlled experiments against current detectors.
+- The 6-phase protocol and "AI Detection Resistance Gate" (sentence variance, vocabulary, formatting, soul markers, structural patterns) reduce common tells and inject variability, but over-editing can flatten voice, introduce new artifacts, or cause semantic drift from the source.
+- Optimized for English-language narrative prose (fiction, short stories, novels). Performance and appropriate soul-marker density for technical documentation, academic writing, legal/policy text, business communication, multilingual, or ESL registers have not been validated.
+- For any high-stakes or attributed publication (scholarship, journalism, corporate comms, legal filings), a qualified human author must retain final responsibility, maintain provenance of edits, and disclose AI assistance where required by policy or ethics.
 
-See `benchmark/README.md` for the four non-interchangeable evaluation tracks and their claim boundaries.
+See `aiproofing/benchmark/README.md` (and the "AI Detection Resistance Gate" in `final_analysis.md` / `automation_playbook.md`) for measurement guidance and the explicit stance against over-claiming detector resistance. Always retain pre-edit snapshots and review all recommendations against the original intent and facts.
 
-## Legacy terminology compatibility
+## Publication Readiness
 
-Reports created before the current contract may use the historical labels "AI Detection Resistance Gate" and "Ready / Ready with minor tweaks / Hold." Readers and migration tools may preserve those strings only when the artifact is clearly marked historical. Active workflow output uses **Editorial Pattern & Quality Review** and **Internal editorial checks complete**.
+The skill outputs a verdict (Ready / Ready with minor tweaks / Hold) based on the 5-sub-check gate. "Ready" means the text has passed internal consistency and anti-tell checks within this framework; it is not a claim of external detector immunity or publication fitness under any third-party standard.

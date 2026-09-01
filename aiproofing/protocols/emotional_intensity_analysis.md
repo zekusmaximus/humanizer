@@ -1,33 +1,32 @@
 # Emotional Intensity and Sensory Grounding Analysis
 
 ## Objective
-Review emotional and sensory continuity without manufacturing a reaction, experience, or bodily response.
+Ensure emotional beats feel earned, embodied, and varied rather than labeled or clinical.
 
 ## Inputs
-- Scene map plus any stakes explicitly stated in the manuscript or author brief; otherwise `unknown`.
-- Author-selected or source-explicit passages for intensity review, if supplied.
+- Scene map with stakes from **manuscript_analysis.md**.
+- Passages marking highs (conflict, revelation) and lows (quiet reflection).
 
 ## Steps
 1. **Label Sweep**
-   - Review emotion labels that may be too abstract for the selected style. Direct labels are valid and need no mandatory sensory accompaniment.
+   - Flag emotion labels (angry, sad, anxious) that lack physical or sensory accompaniment.
 2. **Embodiment**
-   - Preserve bodily and sensory cues already supported by the manuscript. New cues are proposals marked `HUMAN_REVIEW_REQUIRED`; never invent symptoms, trauma responses, disability details, or lived experience.
+   - Add bodily cues (breath, temperature, muscle tension), sensory details (sound, texture, smell), and micro-behaviors specific to the character.
 3. **Rhythm Matching**
-   - Offer optional rhythm changes when they serve an established emotional beat. Short-at-spike and long-in-aftermath patterns are not universal targets.
+   - Tighten sentence length and verbs during spikes; allow longer, more contemplative lines during aftermath.
 4. **Avoid Melodrama**
-   - Review exaggerated modifiers in context. Use only concrete observations already present in the source, or mark new details for author approval.
+   - Swap exaggerated modifiers for concrete observations; align intensity with stakes.
 5. **Emotional Complexity and Ambivalence**
-   - When the source already signals mixed feelings, preserve their tension. A single clear emotion is also valid.
-   - If additional complexity may help the scene, offer it as an author decision rather than assigning a feeling.
-   - See `voice_injection_analysis.md` for the related source-faithfulness review.
+   - Flag scenes where a character experiences a single clean emotion at a high-stakes moment (major decision, revelation, loss, confrontation).
+   - Real humans feel conflicting or contradictory things simultaneously — relief undercut by guilt, grief undercut by relief, anger undercut by affection.
+   - For each flagged scene, evaluate whether adding an unwanted or complicating feeling alongside the dominant one deepens authenticity. Do not force ambivalence into every beat; apply only where stakes are high enough to warrant it.
+   - See **voice_injection_analysis.md** Step 4 for further ambivalence techniques.
 
 ## Deliverables
-- List of reviewed emotional statements with source-supported proposals, if any.
-- Optional rhythm proposals for relevant scenes.
-- Guidance on source-supported default and stress responses.
-- Optional emotional-complexity candidates, each marked for author approval.
-
+- List of flat emotional statements with embodied rewrites.
+- Rhythm adjustments for key scenes.
+- Guidance on each major character’s default and stress responses.- List of ambivalence injection candidates with proposed revisions.
 ## Acceptance Criteria
-- Emotional wording matches source evidence and author-approved characterization.
-- Accepted changes match source evidence about stakes and character disposition.
-- Rewrites maintain POV/tense, avoid cliché reactions, and add no unapproved emotion or experience.
+- Emotional moments show change in body/setting, not only labels.
+- Intensity calibrates to stakes and character disposition.
+- Rewrites maintain POV/tense and avoid cliché reactions.

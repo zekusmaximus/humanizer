@@ -1,52 +1,74 @@
-# Domain presets
+# Domain Presets for AI Proofing
 
-These optional profiles adjust editorial attention within the supported scope: English narrative prose supplied for source-faithful review. They are guidance, not detector policies, authorship tests, or automatic rewrite targets. When no preset is supplied, the runner records `null`; it does not silently choose one.
+Lightweight, opinionated tuning profiles for the aiproofing workflow. Choose one at intake (manuscript_analysis or automation_playbook) to adjust targets for soul density, lexical tolerance, readability, and formatting strictness.
 
-## Preset summary
+The system remains genre-agnostic at core; presets only bias the numeric thresholds and the "how aggressively to rewrite" guidance the agent receives.
 
-| Preset | Primary emphasis | Optional diagnostics | Source-faithfulness rule |
-|---|---|---|---|
-| `narrative` | Scene flow, character distinction, continuity | Sentence rhythm, readability, figurative-language fit | Preserve established POV, tense, facts, and voice evidence. |
-| `technical` | Terminology, precision, instructional clarity inside narrative material | Readability and formatting checks appropriate to the house style | Never vary domain terms merely for lexical variety. |
-| `academic` | Attribution, qualification, citation fidelity | Readability and sentence-pattern diagnostics | Do not add claims, citations, certainty, or author stance. |
-| `business` | Clarity, scannability, action ownership | Formatting and lexical-pattern diagnostics | Do not invent organizational voice, commitments, or opinions. |
+## Preset Parameters (summary)
 
-Numeric diagnostics such as sentence-length spread, readability formulas, or punctuation counts are descriptive. They may prompt review, but no universal cutoff constitutes a pass condition. Style choices such as em dashes, heading case, bold text, fragments, or emoji are acceptable when supported by context or a supplied house style.
+| Preset      | Soul markers /500w | AI vocab tolerance | Readability target (FK) | Em dash max/100w | Formatting strictness | Lexical aggression | Notes |
+|-------------|--------------------|--------------------|-------------------------|------------------|-----------------------|--------------------|-------|
+| `narrative` (default) | 1.0 – 2.0         | Low                | 6–10 (story dependent) | 0.8              | High                  | Medium             | Fiction, memoir, long-form essays. Favors burstiness and voice differentiation. |
+| `technical` | 0.5 – 1.0         | Medium             | 10–14                   | 0.4              | Very high             | Low                | API docs, engineering blogs, specs. Protect domain terminology; minimize voice injection. |
+| `academic`  | 0.8 – 1.2         | Low                | 12–16                   | 0.3              | High                  | Low–Medium         | Papers, theses, reviews. Strong emphasis on faithfulness + citation fidelity. Cite sources explicitly rather than "experts say". |
+| `business`  | 0.6 – 1.0         | Medium             | 8–11                    | 0.6              | Medium                | Medium             | Emails, memos, proposals, PR. Balance clarity with light personality; avoid sycophantic tone. |
 
-## Invocation
+All presets still enforce the 5-sub-check AI Detection Resistance Gate. Presets only change the *target values* and the rewrite guidance prompt the agent sees in relevant protocols (e.g., overused_vocabulary_analysis, burstiness_analysis, voice_injection_analysis).
 
-```text
-python aiproofing/scripts/aiproof_runner.py story.md --preset narrative
+## How to Invoke a Preset
+
+In the initial request or via the runner:
+
+```
+AI proof the following using the "technical" preset:
+[path or text]
 ```
 
-The runner records the selected profile in its versioned state and unsigned revision-audit scaffold. It validates constraints and initializes the 18-task workflow; it does not edit the source manuscript.
+The agent should:
+1. Load the guidance from this file for the chosen preset.
+2. During manuscript_analysis, override the auto-derived thresholds with the preset values.
+3. In voice_injection_analysis and final_analysis, use the preset's soul-marker density.
+4. Record the preset used in the final report and (if enabled) provenance log.
 
-## Profile guidance
+## Detailed Guidance by Preset
 
-### `narrative`
+### narrative (default)
+- Prioritize rhythmic variety and character voice differentiation.
+- Allow more "productive mess" and first-person or free-indirect reflection.
+- Higher tolerance for figurative language if it fits the story world.
+- Soul target: at least one clear marker (opinion, uncertainty, emotional complexity, fragment) every 400–500 words.
 
-- Compare pacing and diction to evidence in the supplied text.
-- Keep character voices distinct where the manuscript establishes a distinction.
-- Treat rhythm and figurative-language observations as style heuristics.
+### technical
+- Protect all domain nouns, verbs, and acronyms (never "elegant variation" on "API", "latency", "throughput").
+- Very low soul injection — only where the human author voice is already present in source.
+- Short paragraphs, high information density. Favor "is / has / can" constructions.
+- Formatting: almost zero tolerance for em dashes, bold lists, emojis.
+- Soul target: optional; many sections may legitimately have zero.
 
-### `technical`
+### academic
+- Zero tolerance for "experts argue", "it is widely believed", "the literature shows" without citations.
+- Faithfulness gate is primary: any edit that could be read as changing a claim, scope, or attribution must be rejected or human-approved.
+- Soul markers only in discussion / limitations / future-work sections where the authors' stance is appropriate.
+- Heavy emphasis on modal_epistemic_analysis to keep hedging precise and source-aligned.
+- Provenance log strongly recommended.
 
-- Preserve domain nouns, verbs, acronyms, code, and literal constraints.
-- Prefer clarity where the source supports it; do not manufacture informality or personality.
-- Apply formatting preferences only when the source or house style supplies them.
+### business
+- Remove sycophantic or "Great question!" carry-over from LLM drafts.
+- Keep professional register but allow measured personality (dry wit, directness) if it matches the organization's known voice.
+- Prioritize scannability and actionability over literary burstiness.
+- Em dashes acceptable for parentheticals in longer memos, but still cap density.
+- Soul target: one marker per ~600–800 words in internal docs; lighter for external/client-facing.
 
-### `academic`
+## Implementation Notes for Agents & Runner
 
-- Flag uncited generalized attribution for human review.
-- Preserve modality, scope, citations, and quoted material exactly unless an approved edit says otherwise.
-- Require human approval for any change that could alter a factual or scholarly claim.
+- Presets are loaded as guidance text only; no complex config engine yet.
+- When a preset is active, the relevant protocol files (burstiness_analysis.md, voice_injection_analysis.md, overused_vocabulary_analysis.md, readability_analysis.md, final_analysis.md) should be re-read with the preset parameters substituted for the generic ones.
+- The `aiproof_runner.py` accepts an optional `--preset narrative|technical|academic|business` flag (future enhancement) and surfaces the chosen preset in all logs and reports.
+- Default when no preset is supplied: `narrative`.
 
-### `business`
+## Future Extensions (post 2026-05)
+- Per-preset prompt fragments that can be injected automatically.
+- Auto-detection of domain from the first 500 words + user override.
+- Exportable "tuning cards" for each preset that a human editor can tweak before a run.
 
-- Check whether actors, decisions, dates, and requested actions remain unchanged.
-- Preserve the organization's established tone rather than inventing wit or first-person stance.
-- Apply scannability preferences only when requested.
-
-## Constraint precedence
-
-Explicit user constraints and source fidelity take precedence over a preset. `--max-edit-pct`, `--min-faithfulness`, and `--require-semantic-review` are recorded separately and remain auditable. If a proposed edit lacks source support or approval, leave the text unchanged and record an unresolved human-review item.
+This addresses the "Add domain presets" recommendation from the May 2026 repository review.

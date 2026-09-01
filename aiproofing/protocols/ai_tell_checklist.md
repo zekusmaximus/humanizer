@@ -1,49 +1,51 @@
-# Editorial pattern checklist
+# AI Tell Checklist (Universal)
 
-The filename is retained for compatibility. This checklist identifies passages for editorial review in English narrative prose; it does not identify authorship. Every item is a style heuristic unless it records a measurable feature, and none is a universal defect.
+Use this list to flag common AI-like signals before or after edits. It is designed for any narrative without custom metadata.
 
-## Structural review
+## Structural Tells
+- Uniform sentence length or repeated cadence across pages.
+- Template paragraph structures (context → action → trailing clause) repeated verbatim.
+- Abrupt transitions lacking sensory or temporal anchors.
 
-- Repeated sentence cadence or paragraph templates that flatten a passage.
-- Abrupt transitions whose time, place, or point of view is unclear.
-- Repetition that appears accidental rather than purposeful.
+## Lexical Tells
+- Reused mid-frequency adjectives/adverbs (not vivid, flat) clustering in paragraphs.
+- Bureaucratic/academic phrasing in intimate or high-action scenes.
+- Over-reliance on hedges like "somewhat", "rather", "quite" without voice justification.
+- **High-signal AI vocabulary** present: *additionally, crucial, delve, emphasizing, enduring, enhance, fostering, garner, highlight (verb), interplay, intricate, key (adj.), landscape (abstract), pivotal, showcase, tapestry (abstract), testament, underscore (verb), valuable, vibrant, nestled, groundbreaking, breathtaking*.
+- **Copula avoidance**: *serves as / stands as / marks / represents [a]* or *boasts / features / offers [a]* where simple *is/has* would do.
 
-## Lexical review
+## Formulaic and Structural Tells
+- Negative parallelisms: *"Not only X but Y"*, *"It's not just X, it's Y"*.
+- Rule of three: forced triads where fewer items read more naturally.
+- Synonym cycling: same entity referred to by 3+ different labels within 200 words.
+- False ranges: *"from X to Y"* where X and Y share no meaningful scale.
 
-- Reused adjectives, adverbs, or abstract nouns that weaken precision in context.
-- Bureaucratic or academic phrasing that conflicts with the established scene voice.
-- Hedges whose scope or speaker is unclear.
-- Recurring vocabulary such as *additionally*, *crucial*, *delve*, *interplay*, *pivotal*, *showcase*, *tapestry*, or *underscore* when the local context makes it vague or repetitive.
-- Indirect constructions such as *serves as*, *stands as*, *represents*, *boasts*, or *features* when a simpler verb would preserve the intended meaning more clearly.
+## Formatting Tells
+- Em dash density above 1 per 100 words.
+- Inline bold on non-technical, non-proper-noun terms.
+- Bullet lists with bolded noun + colon opening each item.
+- Headings using Title Case instead of sentence case.
+- Emojis in headings or bullet points.
 
-Individual words are not evidence of model generation. Preserve necessary terminology and deliberate voice choices.
+## Figurative and Idiom Tells
+- Generic metaphors/similes detached from the setting.
+- Recycled idioms across multiple characters with different backgrounds.
+- Overly balanced comparisons that read like templates ("both X and Y" patterns).
 
-## Formula and syntax review
+## Voice and Emotion Tells
+- Dialogue that matches narrator diction instead of distinct voices.
+- Emotional labels without embodied reactions or consequences.
+- Sudden tonal shifts that reset to neutrality after intense beats.
 
-- Negative parallelism, triads, synonym variation, or range constructions that obscure meaning.
-- Repeated openings or clause patterns that sound unintended in context.
-- Sentence-level revisions that would alter emphasis, chronology, or causal claims.
+## Continuity Tells
+- POV or tense drift without signal.
+- Inconsistent naming or title usage; unexplained geography shifts.
+- Repetitive exposition reintroducing facts the narrative already established.
 
-## Formatting review
-
-- Em dashes, bold text, label-led bullets, heading case, or emoji that conflict with the supplied house style.
-- Formatting changes that would damage code, quotations, citations, or semantic structure.
-
-Counts may be reported as measured features. No fixed density is a universal pass threshold.
-
-## Figurative language, voice, and emotion
-
-- Metaphors or idioms that conflict with the established setting or speaker.
-- Dialogue voices that converge despite source evidence of distinct speakers.
-- Emotional labels that are unclear or unsupported by the surrounding action.
-- Proposed first-person opinions, sensory details, quirks, or emotional reactions that are absent from the source.
-
-Do not add the last category. Leave the passage unchanged or request author approval.
-
-## Continuity and fidelity
-
-- Unsignaled point-of-view or tense changes.
-- Inconsistent names, titles, geography, chronology, quantities, or relationships.
-- Revisions that change facts, claims, attribution, modality, or quoted material.
-
-Source-faithfulness issues require resolution or explicit human sign-off before the workflow can report **Internal editorial checks complete**. Optional style observations may remain open when the selected configuration does not require them.
+## Quick Actions
+- Break any repeated phrasing runs; diversify openings.
+- Add sensory grounding to transitions and emotional peaks.
+- Align metaphors and idioms with setting cues gathered from the text itself.
+- Retune modality to reflect what the character/narrator can truly know.
+- Run **overused_vocabulary_analysis.md** high-signal word list before any other lexical pass.
+- Run **formatting_tell_analysis.md** before final QA to clear structural and visual tells.

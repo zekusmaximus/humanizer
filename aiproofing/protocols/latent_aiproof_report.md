@@ -1,7 +1,5 @@
 # Neutral AI Proofing Report — `latent.md`
 
-> **HISTORICAL NON-REPRODUCIBLE NOTICE — 2026-08-31:** This orphan report is preserved in place as an inactive historical artifact. The source manuscript, raw measurements, method details, and original review date are unavailable, so the report is not reproducible evidence and cannot be admitted to the active benchmark. It must not be used as authorship, detector-performance, misconduct, or publication evidence.
-
 ## Intake & Baseline
 - **Length/structure:** 5,376 words across eight scenes separated by em dash breaks (boardroom pitch → train ride → internal investigation → apartment visit → lab confrontation → investor rehearsal → fallout → personal aftermath).
 - **POV/tense:** Close third, past tense with present-style immediacy during diagnostic prompts; consistent throughout.

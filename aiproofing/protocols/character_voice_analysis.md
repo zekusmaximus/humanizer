@@ -1,7 +1,7 @@
 # Character and Narrator Voice Analysis
 
 ## Objective
-Review voice consistency and differentiation against the manuscript and author-approved intent.
+Differentiate voices so readers can identify speakers without tags and so narration reflects a consistent perspective.
 
 ## Inputs
 - Provisional character/narrator list with voice cues from **manuscript_analysis.md**.
@@ -11,18 +11,18 @@ Review voice consistency and differentiation against the manuscript and author-a
 1. **Voice Profiles**
    - For each primary speaker/narrator, note diction level, pacing, idioms, sensory focus, and default emotional temperature.
 2. **Contrast Audit**
-   - Compare profiles for accidental flattening. Shared diction or rhythm may be intentional; do not force contrast without source support or author approval.
+   - Compare profiles to ensure no two major voices share the same rhythm + diction bundle. Introduce contrast (sentence length, imagery sources, formality).
 3. **Tag Minimization Test**
-   - Optionally sample dialogue without tags as a craft diagnostic. Do not revise until every line is tag-free; clear attribution and intentional similarity are valid.
+   - Select 2–3 dialogue exchanges; remove tags internally and verify voices remain distinguishable. Revise lines until they do.
 4. **Narration Alignment**
-   - Compare narrative summary or exposition with the established narrator baseline. Neutral reportage may be intentional; any new metaphor or judgment requires source support or approval.
+   - Ensure narrative summary or exposition uses the narrator’s lens (metaphors, judgments) rather than neutral reportage.
 
 ## Deliverables
-- Provisional profiles for the major supported speakers/narrators; do not force a fixed count.
-- Optional tag-minimization observations and source-faithful proposals.
-- Notes on imagery or idiom domains already supported for each voice.
+- Voice profiles for top 3–5 speakers/narrators.
+- Tag-minimization test results with adjusted dialogue.
+- Notes on imagery/idiom domains allocated per voice.
 
 ## Acceptance Criteria
-- Recorded traits cite manuscript evidence; similarity and limited evidence are valid outcomes.
-- Dialogue attribution and differentiation match the author's intent; tags are retained where useful.
-- Narration remains consistent with the source-supported perspective or records an intentional shift.
+- Distinctive traits per voice are evident in multiple samples.
+- Dialogue reads as identifiable without over-tagging.
+- Narration reflects a consistent perspective, not a generic AI tone.

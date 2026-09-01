@@ -1,29 +1,28 @@
-# Part-of-Speech Diagnostics
+# Part-of-Speech Balance Analysis
 
 ## Objective
-Use optional part-of-speech measurements to locate passages for editorial review. POS ratios are not detector signals or universal quality targets.
+Adjust POS distribution to avoid noun-heavy, static prose and AI-like uniformity.
 
 ## Inputs
-- POS distribution per section from a named tagger, tag set, tokenizer, and version; otherwise manual observations labeled non-measured.
+- POS distribution per section (can be computed via any tagger) or manual sampling.
 - Character voice cues from **manuscript_analysis.md**.
 
 ## Steps
 1. **Baseline Ratios**
-   - When enabled, track configured POS categories over the declared window. Store the extractor and configuration with every result.
-   - A preset may supply an experimental style-review range; `null` disables the comparison. Never interpret it as origin evidence.
+   - Track nouns, verbs, adjectives, adverbs per 200–400 words. Note sections where nouns exceed 35% or verbs fall below 15%.
 2. **Nominalization Reduction**
-   - Review nominalizations in context. Propose an active verb only when it preserves agency, register, and legal or technical precision.
+   - Convert nounified verbs/adjectives into active verbs ("made a decision" → "decided").
 3. **Adjective/Adverb Precision**
-   - Review stacked modifiers and intensifiers against the source-supported voice. Retain deliberate emphasis; do not invent a vivid detail as a substitute.
+   - Replace stacked modifiers with single vivid choices; remove empty intensifiers (really, very, quite) unless voice-driven.
 4. **Voice-Tuned Adjustments**
    - Characters with clinical voices may keep higher noun ratios; emotive voices can carry more adjectives/adverbs if specific.
 
 ## Deliverables
-- POS ratio table with extractor metadata and optional review notes.
+- POS ratio table with target adjustments per section.
 - List of nominalizations and proposed active rewrites.
-- Source-faithful proposals for enabled findings; no target balance or minimum sample count.
+- Sample passages showing improved balance.
 
 ## Acceptance Criteria
-- Enabled POS findings are reviewed in context; no ratio is optimized solely to reach a fixed band.
-- Enabled modifier findings are reviewed or deliberately retained.
-- Voice intent and meaning are preserved; no POS profile is treated as an optimization target.
+- POS ratios move toward balanced ranges suited to genre (verbs carry action; nouns stay concrete; modifiers stay purposeful).
+- Reduced reliance on filler adverbs and stacked modifiers.
+- Voice intent preserved while monotony decreases.

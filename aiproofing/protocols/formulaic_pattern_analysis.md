@@ -1,41 +1,40 @@
-# Formulaic Pattern Review
+# Formulaic Pattern Analysis
 
 ## Objective
-Review templated phrasing and repeated structures as contextual editorial patterns. They are not evidence of authorship.
+Detect and disrupt templated phrasing that often triggers AI-detection heuristics.
 
 ## Inputs
 - Opening-pattern list and dialogue tag styles from **manuscript_analysis.md**.
-- Configured repeated-phrase diagnostic, if enabled; its tokenizer, n-gram range, window, and review count must be declared.
+- Sample of repeated phrases (search for reused 4–8 word strings).
 
 ## Steps
 1. **N-gram Sweep**
-   - When enabled, identify recurring sequences with a named tokenizer, n-gram range, window, and configured review count. `null` disables the diagnostic.
-   - Repetition may be necessary for terminology, rhetoric, characterization, accessibility, or motif; there is no universal cap.
+   - Identify recurring 4–8 word sequences; cap any exact repetition to once unless it is a deliberate motif.
 2. **Opening Variety**
-   - Review clustered openings against scene needs. Offer a localized alternative only when it preserves emphasis and voice; no opening type or quota is required.
+   - Rotate sentence openings (subject-first, prepositional, participial, question, quoted, onomatopoeia) according to scene needs.
 3. **Transition Refresh**
-   - Review familiar transitions in context. Do not invent a setting beat or character perception merely to replace one.
+   - Replace stock transitions ("in the end", "as a result", "after a moment") with specific beats tied to setting or character perception.
 4. **Template Busting**
-   - Treat "X like Y" comparisons, "There was" existentials, and emotion labels as candidates only when clarity or the selected style benefits. Sensory-led revisions require source support or approval.
-5. **Legacy structural pattern catalog**
-   Review the following four patterns as `STYLE_HEURISTIC` candidates. No standalone or combined detector validity is claimed:
+   - Rework "X like Y" comparisons, "There was" existentials, and "He/She felt" constructions into more direct or sensory-led phrasing.
+5. **Structural AI-Tell Patterns**
+   Check for the following four patterns, which are statistically associated with AI generation and often survive surface-level vocabulary edits:
 
-   - **Negative parallelisms** — Review constructions such as *"Not only X but also Y"*, *"It's not just X, it's Y"*, and *"Not merely X, but Z"*. Retain purposeful rhetoric; propose a direct statement only when it improves the selected passage.
+   - **Negative parallelisms** — Flag constructions of the form *"Not only X but also Y"*, *"It's not just X, it's Y"*, *"Not merely X, but Z"*. These perform depth without earning it. Rewrite by stating the actual point directly.
 
-   - **Rule of three** — Review triads where the grouping appears imposed rather than purposeful. Retain deliberate rhythm and use the number of items the content warrants.
+   - **Rule of three** — Flag any triad (comma-separated list of exactly three items, or three parallel clauses) where the grouping is imposed rather than natural. Reduce to the number of items the context actually warrants.
 
-   - **Synonym cycling (elegant variation)** — With configured count/window settings, review passages where one entity is given several labels without a clear purpose. Consolidate when reference clarity improves; do not generalize about how humans or models write.
+   - **Synonym cycling (elegant variation)** — Flag passages where the same entity, concept, or action is referred to by three or more different labels within 200 words without stylistic purpose. AI systems avoid repetition mechanically; humans repeat naturally. Consolidate to the clearest single term.
 
-   - **False ranges** — Review *"from X to Y"* constructions where X and Y may not share a meaningful scale or spectrum. Propose a direct list or specific claim only when it preserves the source.
+   - **False ranges** — Flag *"from X to Y"* constructions where X and Y are not on a meaningful shared scale or spectrum (e.g., "from the Big Bang to dark matter", "from joy to despair to renewal"). Replace with a direct list or a single specific claim.
 
 Distinguish accidental templates from intentional motifs by checking whether the pattern is structurally identical (template) or thematically resonant across scenes (motif).
 
 ## Deliverables
-- Configured repeated-string inventory with optional source-faithful proposals.
-- Approved examples where an opening or transition changed for a stated reason.
+- List of top repeated strings with new variants.
+- Rewritten examples showing diversified openings and transitions.
 - Motifs documented separately to preserve intentional repetition.
 
 ## Acceptance Criteria
-- Enabled template findings are reviewed or retained with a reason.
+- No accidental templates recur enough to flatten voice.
 - Transitions feel contextual, not mechanical.
 - Motifs are explicitly noted and left intact where purposeful.

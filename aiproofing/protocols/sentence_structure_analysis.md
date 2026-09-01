@@ -1,7 +1,7 @@
 # Sentence Structure Analysis
 
 ## Objective
-Review cadence and syntactic variety without flattening intentional rhythm or changing meaning.
+Break repetitive cadences and increase syntactic variety without losing clarity or voice.
 
 ## Inputs
 - Sentence-length histogram and opening-pattern data from **manuscript_analysis.md**.
@@ -9,22 +9,20 @@ Review cadence and syntactic variety without flattening intentional rhythm or ch
 
 ## Steps
 1. **Cadence Audit**
-   - If configured, identify recurring openings with a named sentence splitter and declared window. A style default may flag concentration for review; `null` disables it.
-   - Do not treat an opening frequency as origin evidence or apply a universal cap.
+   - Identify the top 3 recurring openings (e.g., "He [verb]", "There was", participial lead-ins). Limit any single pattern to <25% per page.
 2. **Length Variation**
-   - Describe the observed length distribution. Suggest changes only when cadence conflicts with clarity, scene intent, or an author-approved style goal.
-   - Do not require every section to contain predefined sentence-length buckets or invented fragments.
+   - Ensure each section mixes short (<10 words), medium (10–20), long (20–35), and very long (>35) sentences. Add breathless fragments to high-intensity moments only.
 3. **Clause Reordering**
-   - Where an enabled finding impairs clarity or intended pacing, offer a localized clause-order option. Preserve emphasis, causality, chronology, and voice.
+   - Rotate dependent/independent clause order; vary conjunctions; use inversion or fronted adverbials sparingly for emphasis.
 4. **Dialogue/Narration Balance**
-   - Check dialogue tags and beats for distracting repetition. Preserve clear attribution and do not invent actions merely to avoid repeating "said."
+   - Check dialogue tags and beats for repetition. Replace repeated "said" frames with action beats or silence when voice makes speaker obvious.
 
 ## Deliverables
-- Configured counts with optional source-faithful proposals.
-- Approved examples where rhythm changed for a stated craft reason; no minimum count.
+- Count of dominant patterns with proposed rewrites to diversify.
+- Revised snippets demonstrating varied rhythm tailored to scene mood.
 - Notes on patterns intentionally retained for stylistic effect.
 
 ## Acceptance Criteria
-- Enabled cadence findings are reviewed or intentionally retained.
-- Accepted rhythm shifts serve the specific scene; no fixed length-to-intensity mapping is required.
+- No single opening pattern dominates a page.
+- Rhythm shifts align with scene intensity (longer for reflection, shorter for urgency).
 - Rewrites remain faithful to POV/tense and preserve clarity.

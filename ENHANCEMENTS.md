@@ -1,84 +1,121 @@
-# Humanizer and AI proofing evidence-status roadmap
+# Humanizer & AI Proofing Enhancements Roadmap
 
-**Status:** P0 offline foundation implemented; external validation is not claimed.
-**Last updated:** 2026-08-31.
+**Status**: Consolidated from the two historical repository reviews (April 30, 2026 and May 27, 2026) plus forward-looking items.  
+**Last updated**: 2026-05-27 (post-implementation of the May review's 5 priorities).
 
-## Historical context
+## Historical Context
 
-The April 30 and May 27, 2026 reviews are preserved under `archive/reviews/`. Their scores, detector-resistance language, delivery claims, and publication conclusions are dated historical opinions, not current evidence. The old Boundary, WitCS, Mnemosyne Cycle, Tempus Dimittere, and latent reports are likewise retained only as clearly labeled historical/non-reproducible artifacts.
+### April 30, 2026 Review (initial baseline)
+**Verdict**: Moderate-to-High for style-level humanization; Low-to-Moderate for robust detector resistance.
 
-This living roadmap uses evidence status rather than promotional verdicts:
+Key gaps identified:
+1. No empirical benchmark suite with pre/post measurement.
+2. No uncertainty calibration / confidence reporting.
+3. No explicit anti-overfitting / edit-budget safeguards.
+4. No provenance-safe mode for high-stakes use.
+5. Limited multilingual / register / domain coverage.
 
-- **Implemented and tested:** available offline in this repository and covered by the standard-library suite.
-- **Scaffolded:** contract or interface exists, but no outcome claim is supported.
-- **Historical/non-reproducible:** retained for context and excluded from active evidence.
-- **Future/optional:** not delivered and not required for the P0 offline workflow.
+Priority recommendations:
+- Reproducible evaluation harness (corpus + multi-detector + CI95 + quality rubrics).
+- Edit-budget controls + semantic-diff enforcement.
+- Domain presets (academic, technical, fiction, business...).
+- Faithfulness gate (claim/citation/scope drift).
+- Publish known limitations clearly.
 
-## P0 capabilities implemented on 2026-08-31
+### May 27, 2026 Review (progress snapshot)
+**Verdict**: High for narrative voice-level humanization & workflow rigor; Moderate for production-grade detector claims; Low for high-stakes factual use.
 
-### Editorial workflow
+Major progress since April:
+- Full reproducible benchmark harness (`aiproofing/benchmark/`) with bootstrap CI, quality + detector deltas, disagreement tracking, and strong "no guarantees" disclaimers.
+- Deep 6-phase / 20-protocol narrative AI-proofing system with "AI Detection Resistance Gate".
+- Real usage artifacts (WitCS, Boundary) demonstrating measurable voice/soul improvements.
 
-- Humanizer v2.3.0 retains 24 stable pattern IDs while separating style heuristics, measured features, and human-review requirements.
-- The aiproofing workflow has 18 canonical tasks with literal IDs `1` through `16`, including `6.5` and `14.5`. A machine-readable manifest governs order, dependencies, aliases, protocol ownership, shared checklists, and disabled historical files.
-- The runner validates inputs and constraints before output, hashes the source, writes versioned state and unsigned revision-audit scaffolds with UTC timestamps, and refuses overwrite. It does not edit manuscripts.
-- Required source-faithfulness and safety checks are distinct from optional style preferences. The completion status is **Internal editorial checks complete**; it is not an authorship or publication finding.
+Remaining gaps at that date (many addressed in the same session):
+- Edit-budget / aggressiveness controls.
+- Domain/register presets.
+- Provenance / revision logs.
+- Larger-scale real-detector validation.
+- Centralized limitations documentation.
 
-### Four-track benchmark contract
+## Current Strengths (as of 2026-05-27, post-implementation)
 
-1. **Track A: detector validity.** Verified or adjudicated fully human and fully machine surface text remains separate from provisional, mixed, and assisted strata. Native detector signals, versions, configurations, statuses, and task-specific decisions are preserved without conflating raw and calibrated values.
-2. **Track B: editorial quality and faithfulness.** Source/revision lineage, explicit revision pairs, and individual quality ratings support paired analysis without treating detector rows or repeated ratings as independent samples. A lower detector score is not an editorial endpoint.
-3. **Track C: mixed and assisted localization.** Text-hash-bound spans keep human, machine, assisted, and unknown regions separate from whole-document detector decisions. P0 defines and validates the records; it does not implement a localization model.
-4. **Track D: watermark and signed-provenance verification.** Watermark runs and provenance-verification records have separate schemas and statuses. The editorial revision audit is not authenticated provenance.
+- Mature 24-pattern Humanizer skill with strong "PERSONALITY AND SOUL" emphasis.
+- Comprehensive, agent-executable aiproofing workflow (auto context derivation, 5-sub-check gate, publication verdicts).
+- Implemented benchmark harness + starter corpus + real-detector workflow documentation.
+- Limitations & Responsible Use sections now prominent in Humanizer and aiproofing SKILL/readme files.
+- Domain presets (`narrative` default + `technical`/`academic`/`business`).
+- Optional structured provenance/edit logging (JSON schema + MD table + runner support).
+- Edit-budget + faithfulness enforcement (max_edit_pct, min_faithfulness_delta, require_semantic_review) integrated into final gate and CLI.
 
-### Offline benchmark tooling
+The repository now provides one of the more rigorous open editorial frameworks for reducing AI artifacts while actively injecting measurable human voice and variability.
 
-- Schema v2.0.0 validators cover record types, hashes, spans, lineage, pair completeness, leakage, detector signal semantics, ratings, calibrators, thresholds, Track D records, registries, and redaction profiles.
-- Strict v1 migration emits deterministic records and an issue ledger. Textless legacy rows become unavailable/provisional/excluded stubs; legacy labels are audit data, not newly verified truth.
-- Rank-only evaluation preserves native signal direction and categorical outputs, uses tie-aware average precision, reports explicit status denominators, clusters at the highest available dependency unit, and does not emit confusion metrics without an eligible frozen threshold.
-- Deterministic dependency-aware bootstrap and paired human-rating metrics avoid row and rating inflation.
-- Dataset, detector, and result cards record the scope and limitations of each artifact.
-- Synthetic fixture banners prevent starter examples from being mistaken for external validation.
+## Implemented in the 2026-05-27 Session
 
-## Evidence boundaries
+All five refined priorities from the May review were delivered:
 
-No P0 component calls external APIs, downloads dependencies, or reports live detector performance. No current result demonstrates detector evasion, human authorship, misconduct, policy compliance, or publication fitness. Detector thresholds are task-specific and must be registered; no universal `0.5` cutoff is supplied. Normalized scores cannot be substituted for native signals without an explicit, active calibrator.
+1. **Edit-budget and faithfulness enforcement** — Flags exposed in automation_playbook + runner CLI; new "Edit Budget & Faithfulness Gate" in final_analysis.md + AIproofcheck.md; drift review + Hold on violation.
+2. **Lightweight domain presets** — New `aiproofing/presets/domain_presets.md` with parameter table + invocation guidance; integrated into playbook, SKILL docs, and runner.
+3. **Provenance / revision log capability** — New `aiproofing/protocols/provenance_log.md` (full JSON schema + MD table); runner methods (append/save); referenced in automation_playbook, final_analysis, SKILLs, and checklists.
+4. **Scaled benchmark harness** — Added `data/starter_corpus/` (human/ai/hybrid examples); major new "Scaling the Harness" section in benchmark/README.md with repeatable real-detector workflow, normalization, quality rating, publication guidance, and recommended minimum corpus size.
+5. **Surface limitations at top level** — Added dedicated "Limitations & Responsible Use" sections (with cross-references to benchmark disclaimers) to Humanizer/SKILL.md, Humanizer/README.md, aiproofing/SKILL.md, and aiproofing/protocols/README.md. Also bumped Humanizer to v2.2.0.
 
-The revision audit is unsigned. It records source hashes, constraints, and review state, but it does not authenticate identity, consent, custody, disclosure, or approval.
+Additional supporting work:
+- Updated multiple protocols (final_analysis, automation_playbook, AIproofcheck) for the new gates and features.
+- Enhanced aiproof_runner.py with constraint tracking, provenance helpers, and improved CLI/usage text.
 
-## Future and optional work
+## Future Enhancements (Next Priorities & Long-Term Optimizations)
 
-### Track A
+These build on the now-solid foundation to move the repo from "excellent craft tool" toward "reference implementation for responsible, measurable AI-assisted writing workflows."
 
-- Add governed, rights-cleared, deployment-matched detector datasets with pre-registered hypotheses and full dependency metadata.
-- Add optional, isolated detector adapters only after endpoint terms, data handling, version capture, rate limits, and consent are documented.
-- Study local calibration on eligible development data and freeze task-specific thresholds before held-out evaluation.
+### High-Impact Near-Term (next 1-3 cycles)
+1. **Semantic / embedding-based faithfulness checker**  
+   Integrate a lightweight library (e.g., sentence-transformers or simhash) into the runner and a new `faithfulness_gate.py` helper. Provide objective cosine-similarity or claim-drift scores alongside the human 1-5 rating. Use as an automated pre-filter before the semantic-review flag.
 
-### Track B
+2. **CI / automated benchmark pipeline**  
+   Add a simple GitHub Action (or equivalent) that runs the evaluate.py harness on the starter corpus + any committed real runs, using free/public detector endpoints where possible (with caching, rate limits, and anonymization). Publish results as artifacts + a lightweight dashboard page.
 
-- Add human adjudication procedures for source-faithfulness and semantic-drift disputes.
-- Add blinded rating collection interfaces, inter-rater agreement reports, rater training records, and adjudication workflows.
-- Expand editorial evaluation beyond English narrative only after language/register-specific validation and documentation.
+3. **Expanded public corpus & results ledger**  
+   Grow `data/starter_corpus/` with more balanced public-domain human text + matched LLM generations. Maintain an `results/ledger/` of anonymized aggregate JSONs (with detector versions and dates) so the community can track trends over time.
 
-### Track C
+4. **Provenance export & disclosure templates**  
+   Add exporters from the provenance JSON to common formats: W3C PROV, academic "AI assistance disclosure" blocks, and simple Markdown "revision history" appendices suitable for papers or legal filings.
 
-- Add consented, text-hash-bound mixed and assisted span annotations with adjudication.
-- Add optional localization baselines only after their data, model, and operating contracts are approved.
-- Report machine and assisted spans separately, including coverage and boundary limitations.
+### Medium-Term (usability, breadth, robustness)
+5. **Multi-language & register expansion pilot**  
+   Create initial pattern extensions + detector behavior notes for at least Spanish and technical English (ESL/academic registers). Add a `multilingual/` subdir under presets with early guidance.
 
-### Track D
+6. **Adversarial red-teaming protocol**  
+   New dedicated protocol (`adversarial_testing.md`) that instructs agents/humans to deliberately try to make humanized text still detectable by current tools, then feed failures back into the pattern catalog (closed-loop improvement).
 
-- Add optional watermark-provider adapters and cryptographic verification integrations with explicit trust roots.
-- If authenticated provenance is pursued, specify signatures, trusted timestamps, identities, custody, revocation, and verification policy separately from editorial audit logs.
+7. **Human evaluation harness**  
+   Lightweight web or CLI tool (or integration with the existing benchmark CSV) for collecting expert or crowd ratings on voice, clarity, faithfulness, and "human-likeness." Store alongside detector scores for richer multi-dimensional analysis.
 
-### Cross-cutting
+8. **IDE / editor plugin surface**  
+   Provide thin wrappers or MCP-compatible entry points so the skills (especially the benchmark harness and provenance logger) can be invoked directly from VS Code, Cursor, or other editors without full Claude Code context.
 
-- Add continuous integration using only committed synthetic fixtures by default.
-- Add card/registry change review, schema compatibility checks, and evidence-ledger governance.
-- Add visualizations only after the underlying eligibility, dependency, and uncertainty contracts are stable.
+### Long-Term / Strategic
+9. **Pattern catalog versioning + automated mining**  
+   Treat the 24 patterns (and aiproofing protocol heuristics) as a versioned dataset. Add tooling to mine new high-signal tells from large recent detector-failure corpora.
 
-## Historical sources
+10. **Visualization & trend tooling**  
+    Simple scripts (or a tiny Streamlit/Observable notebook) that turn benchmark JSON outputs into plots (delta distributions, detector disagreement heatmaps, quality-vs-robustness scatter). Make it easy to include in reports or the public ledger.
 
+## Bottom Line
+
+As of 2026-05-27 the repository has closed the majority of the gaps identified in the two formal reviews. It is now a disciplined, measured, and responsible framework for narrative and prose humanization with strong internal guardrails.
+
+The future work above focuses on:
+- Objective automation of the remaining human judgment steps (faithfulness, edit budgets).
+- Scale and transparency of measurement.
+- Breadth (languages, registers, adversarial robustness).
+- Usability for both individual editors and larger responsible workflows.
+
+Continued incremental delivery against this roadmap will determine whether the project becomes the de-facto open standard for high-quality, auditable AI-assisted writing.
+
+---
+
+**Archived source reviews**:
 - `archive/reviews/REPO_REVIEW_2026-04-30.md`
 - `archive/reviews/REPO_REVIEW_2026-05-27.md`
 
-Those files remain verbatim historical inputs. A historical recommendation is not considered implemented unless the current code, documentation, fixtures, and tests support it.
+These two documents are preserved verbatim for historical reference. All actionable items have been migrated into this living ENHANCEMENTS.md.
