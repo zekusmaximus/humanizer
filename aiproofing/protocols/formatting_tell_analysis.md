@@ -1,7 +1,7 @@
-# Formatting Tell Analysis
+# Formatting and Typography Review
 
 ## Objective
-Detect and remove structural and visual patterns that are statistically associated with AI-generated text. These tells survive vocabulary and sentence-structure edits because they operate at the formatting layer — a reader may not consciously name them, but they create an unmistakable "AI-document" aesthetic.
+Review structural and visual conventions against the requested genre and house style. Formatting is a `STYLE_HEURISTIC`, not evidence of text origin. The legacy filename is retained for compatibility.
 
 ## Inputs
 - The raw Markdown file.
@@ -11,20 +11,20 @@ Detect and remove structural and visual patterns that are statistically associat
 
 ### 1. Em Dash Overuse
 - Count em dashes (—) across the manuscript.
-- Flag any passage with more than 1 em dash per 100 words.
-- For each flagged em dash, evaluate: does it replace a comma, a period, or parentheses? In most cases, revert to the appropriate punctuation. Reserve em dashes for genuine rhetorical interruption — where the break itself carries meaning.
+- If `em_dash_max_per_100_words` is configured, record the named value, rationale, and evidence status; `null` disables it. The count is a `MEASURED_FEATURE`, and the cap is only a house-style preference.
+- Review clusters for readability. Preserve an em dash when the interruption itself carries meaning.
 - **Before:** "The term is promoted by Dutch institutions—not by the people themselves—yet this mislabeling continues—even in official documents."
 - **After:** "The term is promoted by Dutch institutions, not by the people themselves. The mislabeling continues even in official documents."
 
 ### 2. Boldface Overuse
 - Scan for all instances of inline bold (`**text**`).
-- Flag bold applied to non-technical terms — product names, acronyms, and first-defined concepts are acceptable; abstract nouns and mid-sentence emphasis are not.
-- AI systems mechanically bold phrases to simulate structure. In narrative prose, bold should be absent entirely or reserved for rare in-world emphasis (a sign, a headline, a label the character reads).
-- Strip unearned bold; if the word needs emphasis, achieve it through sentence position or word choice instead.
+- Review bold applied to non-technical terms. Product names, acronyms, first-defined concepts, and deliberate emphasis may all be appropriate under the selected style.
+- In narrative prose, bold may be uncommon, while technical or reference material may use it for hierarchy. Follow the selected style instead of inferring origin.
+- Remove or restyle bold only when the requested genre or house style calls for it; preserve meaning and intentional emphasis.
 
 ### 3. Inline-Header Vertical Lists
-- Flag bullet or numbered lists where each item opens with a **bolded noun or phrase followed by a colon** (e.g., `**Performance:** Performance improved...`).
-- This structure is a direct artifact of AI formatting habits. Convert to prose wherever the items are related enough to form sentences.
+- Review bullet or numbered lists where each item opens with a **bolded noun or phrase followed by a colon** (e.g., `**Performance:** Performance improved...`).
+- Convert to prose only when labels add no navigational value. Tables, forms, instructions, and genuine reference lists may retain the structure.
 - **Before:**
   - **User Experience:** The interface was redesigned.
   - **Performance:** Load times dropped by 40%.
@@ -34,26 +34,23 @@ Detect and remove structural and visual patterns that are statistically associat
 
 ### 4. Title Case in Headings
 - Scan all Markdown headings (`#`, `##`, `###`, etc.).
-- Flag any heading that capitalizes all main words (Title Case).
-- Standardize to sentence case: capitalize only the first word and proper nouns.
+- Compare heading capitalization with the selected genre or house style. Fiction chapter titles and other conventions may legitimately use title case.
 - **Before:** `## Strategic Negotiations And Global Partnerships`
 - **After:** `## Strategic negotiations and global partnerships`
 
 ### 5. Emojis in Headings and Bullets
-- Flag any emoji appearing in a heading or at the start of a bullet point.
-- Remove. Emojis in structural positions are an unambiguous AI productivity-tool tell and are inappropriate in narrative prose contexts.
+- Inventory any emoji appearing in a heading or at the start of a bullet point when this review is selected.
+- Remove only when they conflict with the requested tone, accessibility needs, platform convention, or house style.
 - **Before:** `🚀 **Launch Phase:** The product launches in Q3`
 - **After:** `The product launches in Q3.`
 
 ## Deliverables
-- Flagged inventory: pattern type, location (section/paragraph), original text, proposed revision.
-- Before/after examples for each pattern type found.
+- Selected inventory: pattern type, location (section/paragraph), original text, and a proposed revision or retained-with-reason status.
+- Approved before/after examples where a change was warranted; no minimum example count.
 - Count of each pattern category (em dashes, bold instances, inline-header lists, title-case headings, emojis) for the pre-edit and post-edit passes.
 
 ## Acceptance Criteria
-- Em dash density below 1 per 100 words across all sections.
-- No unearned boldface on non-technical terms in narrative prose.
-- No inline-header bullet lists in narrative sections.
-- All headings in sentence case (proper nouns excepted).
-- No emojis in headings or bullets.
+- Enabled typography preferences are reviewed or intentionally retained.
+- Counts include extractor/configuration metadata and are never interpreted as authorship evidence.
+- Boldface, lists, heading case, and emojis match the selected genre and house style.
 - Removals have not introduced new awkwardness — each revised sentence reads naturally.

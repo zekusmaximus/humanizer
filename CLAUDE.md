@@ -4,7 +4,7 @@ This file guides Claude Code (and other AI assistants) when working in this repo
 
 ## What this repository is
 
-This is a **content and skills repository**, not a traditional software application. It packages two Claude Code skills for detecting and removing signs of AI-generated writing, plus a supporting benchmark harness, analysis protocols, and a collection of real before/after writing artifacts.
+This is a **content and skills repository**, not a traditional software application. It packages two editorial-review skills, an offline benchmark data contract and evaluator, analysis protocols, and historical writing artifacts. The skills review patterns and source faithfulness; they do not determine authorship.
 
 There is no build step, no package manifest, and no server. The "products" are Markdown skill definitions and a small amount of dependency-free Python. Treat Markdown as the primary source of truth.
 
@@ -17,21 +17,28 @@ humanizer/
 │   ├── README.md               #   Human-facing docs + 24-pattern table
 │   └── WARP.md                 #   Notes for the WARP editor (kept in sync)
 ├── aiproofing/                 # Skill 2: deep narrative AI-proofing workflow
-│   ├── SKILL.md                #   Source of truth (6-phase, 16-task workflow)
-│   ├── protocols/              #   20 analysis protocols + master plan
+│   ├── SKILL.md                #   Source of truth (6-phase, 18-task workflow)
+│   ├── protocols/              #   24 Markdown files with declared manifest roles
 │   │   ├── AIproof_plan.md      #     Master workflow (phases → tasks → protocols)
 │   │   ├── automation_playbook.md  # Agent execution guide
-│   │   ├── final_analysis.md    #     AI Detection Resistance Gate + verdict
-│   │   ├── provenance_log.md     #    JSON schema for high-stakes edit audit
+│   │   ├── final_analysis.md    #     Editorial Pattern & Quality Review
+│   │   ├── provenance_log.md     #    unsigned revision-audit contract
 │   │   └── ...                   #    per-category guides (vocabulary, voice, etc.)
 │   ├── presets/
 │   │   └── domain_presets.md     #   narrative/technical/academic/business tuning
 │   ├── scripts/
-│   │   └── aiproof_runner.py     #   workflow orchestrator (6 phases / 16 tasks)
-│   └── benchmark/                #   detector-aware measurement harness
-│       ├── evaluate.py           #   pre/post CSV → JSON summary w/ bootstrap CI
-│       ├── README.md             #   input format + real-detector workflow
-│       └── data/                 #   example_runs.csv + starter_corpus/
+│   │   ├── aiproof_runner.py     #   validates and creates workflow scaffolding
+│   │   └── task_manifest.json    #   canonical IDs, order, dependencies, and roles
+│   └── benchmark/                #   offline four-track measurement contract
+│       ├── schema_v2.py          #   validation, hashing, ledgers, and redaction
+│       ├── migrate_v1.py         #   strict v1 migration with exclusion status
+│       ├── metrics.py            #   dependency-aware rank and paired metrics
+│       ├── evaluate.py           #   validation-first, rank-only evaluator
+│       ├── cards.py              #   dataset/detector/result card renderer
+│       ├── schemas/              #   JSON Schemas
+│       ├── registries/           #   governed metadata registries
+│       └── data/                 #   synthetic fixtures and starter corpus
+├── tests/                       # standard-library unit and parity tests
 ├── ENHANCEMENTS.md             # Living roadmap (consolidates archived reviews)
 ├── archive/reviews/            # Historical repo reviews (preserved verbatim)
 └── <artifact dirs>/            # Real writing samples (see "Artifacts" below)
@@ -39,7 +46,7 @@ humanizer/
 
 ### Artifact directories
 
-`Boundary/`, `Test story/`, `Mnemosyne_Cycle/`, `Tempus_Dimittere/`, and `The_Meaning_Coefficient/` hold real manuscripts processed through the skills. They double as before/after evidence and as test corpus material. File-name suffixes encode the role of each file:
+`Boundary/`, `Test story/`, `Mnemosyne_Cycle/`, `Tempus_Dimittere/`, and `The_Meaning_Coefficient/` hold manuscripts and historical reports. They are examples, not validated benchmark evidence. Reports that predate Schema v2 must carry a dated historical/non-reproducible notice. File-name suffixes encode the role of each file:
 
 - `Name.md` — original source manuscript
 - `Name_AIP.md` — AI-proofing analysis report
@@ -52,17 +59,17 @@ Naming is not fully consistent across folders (`_HUM`/`_revised`, `_AIP`/`_repor
 
 ## The two skills
 
-### 1. Humanizer (`Humanizer/SKILL.md`, v2.2.0)
+### 1. Humanizer (`Humanizer/SKILL.md`, v2.3.0)
 
-A single-pass editor prompt that detects and rewrites **24 numbered AI-writing patterns** (significance inflation, copula avoidance, em-dash overuse, rule of three, AI vocabulary, negative parallelisms, chatbot artifacts, etc.), grounded in Wikipedia's "Signs of AI writing" guide. It also emphasizes a "PERSONALITY AND SOUL" section: removing tells is only half the job; the other half is injecting genuine human voice.
+A single-pass editorial prompt that reviews **24 stable, numbered writing patterns**. Pattern matches are style heuristics rather than authorship evidence. Revisions must remain source-faithful; unsupported facts, opinions, experience, emotion, sensory detail, quirks, and speaker voice require explicit author input or approval.
 
 Invoke with `/humanizer` then paste text, or ask Claude to humanize text directly.
 
 ### 2. AI Proofing (`aiproofing/SKILL.md`)
 
-A heavier, agent-executable workflow for narrative Markdown of any length. It runs a **6-phase, 16-task protocol** (intake → lexical depth → syntax → readability → voice/emotion → QA), auto-deriving context (POV, tense, characters) from the source with no metadata required. It ends with an "AI Detection Resistance Gate" (5 sub-checks) and a publication verdict: Ready / Ready with minor tweaks / Hold.
+A structured workflow for English narrative Markdown. It uses **6 phases and 18 canonical tasks**, with literal task IDs `1, 2, 3, 4, 5, 6, 6.5, 7, 8, 9, 10, 11, 12, 13, 14, 14.5, 15, 16`. Its completion status is **Internal editorial checks complete**, which means only that selected internal checks and required fidelity items were resolved. It is not an authorship, detector, misconduct, policy, or publication conclusion.
 
-Each task maps to a protocol file under `aiproofing/protocols/`. `AIproof_plan.md` is the master index; `automation_playbook.md` is what you hand an agent to execute the whole thing autonomously.
+`aiproofing/scripts/task_manifest.json` is the machine-readable contract for IDs, order, dependencies, aliases, file roles, shared checklists, and disabled historical files. `AIproof_plan.md` is its documentation projection; `automation_playbook.md` is the execution guide.
 
 ## Development workflows
 
@@ -75,47 +82,51 @@ Each task maps to a protocol file under `aiproofing/protocols/`. `AIproof_plan.m
 
 ### Running the Python tooling
 
-Both scripts are standard-library only — no dependencies, no virtualenv required. Use a system `python3` (3.8+).
+The Python tooling is standard-library only, offline by default, and must not call external detector or model endpoints.
 
-Benchmark evaluation (pre/post detector measurement):
-```bash
-python aiproofing/benchmark/evaluate.py \
-  --input aiproofing/benchmark/data/example_runs.csv \
-  --output aiproofing/benchmark/results/example_summary.json
-```
-Input is a CSV (one row per detector run): `sample_id, split, stage, detector, score, label_ai, voice_score, clarity_score, faithfulness_score`. Output is a JSON summary with bootstrap 95% CIs, per-split/per-detector deltas, FPR/FNR at threshold 0.5, and detector disagreement.
+Workflow initialization:
 
-Workflow orchestrator (sequences the 6-phase/16-task protocol):
 ```bash
-python aiproofing/scripts/aiproof_runner.py <manuscript.md> [output_dir] \
-  [--preset technical] [--max_edit_pct 15] [--min_faithfulness_delta 4] [--require_semantic_review]
+python aiproofing/scripts/aiproof_runner.py --help
+python aiproofing/scripts/aiproof_runner.py Boundary/Boundary.md --preset narrative --max-edit-pct 15 --min-faithfulness 4 --require-semantic-review
 ```
+
+The runner validates the manuscript and manifest, then writes versioned state and unsigned revision-audit scaffolding. It does not edit the manuscript.
+
+Strict v1 migration and Schema v2 rank-only evaluation:
+
+```bash
+python aiproofing/benchmark/migrate_v1.py --input aiproofing/benchmark/data/example_runs.csv --output-dir tmp/benchmark_v2 --strict
+python aiproofing/benchmark/evaluate.py --mode validate-rank-only --input tmp/benchmark_v2/detector_runs.jsonl --samples tmp/benchmark_v2/sample_revisions.jsonl --output tmp/benchmark_v2/summary.json --seed 20260831
+python -m json.tool tmp/benchmark_v2/summary.json
+```
+
+Textless legacy rows migrate as unavailable/provisional/excluded stubs. They do not become benchmark-eligible samples. Raw thresholds are never invented, and rank-only mode does not emit confusion-matrix metrics.
 
 ### Verifying changes
 
-There is no test suite. To validate edits:
-- Markdown skills: re-read the changed `SKILL.md` and confirm frontmatter parses and pattern numbering is intact.
-- Python: run the command above on the example data and confirm it produces valid JSON without errors.
+Run the complete standard-library test suite:
+
+```bash
+python -m unittest discover -s tests -p "test_*.py" -v
+```
+
+Also run the workflow help/smoke commands and the migration/evaluation/JSON validation sequence above. Tests cover task/file parity, failure paths, deterministic migration and bootstrap behavior, schema cross-record checks, redaction, cards, and historical notices.
 
 ## Key conventions
 
 - **Markdown-first.** Everything user-facing is Markdown. Prefer prose and tables over code.
-- **No new dependencies.** The Python is intentionally dependency-free (argparse, csv, json, statistics, pathlib only). Keep it that way unless explicitly asked.
-- **Practice what the skills preach.** When writing docs or commit messages in this repo, avoid the very patterns the Humanizer flags: no significance inflation, no em-dash overuse, no rule-of-three padding, no "I hope this helps" chatbot artifacts, straight quotes not curly. Plain, specific, varied prose.
-- **Responsible-use framing is load-bearing.** The skills explicitly do **not** guarantee evasion of any AI detector. Every public-facing doc carries a "Limitations & Responsible Use" section. Preserve and update these sections — do not add detector-bypass claims.
+- **No new dependencies.** The Python intentionally uses only the standard library. Keep it that way unless explicitly asked.
+- **Follow the editorial contract in repository prose.** Support significance claims, remove pasted conversational wrappers when they are not content, and treat em dashes, triads, quotation marks, and other style choices as contextual rather than universal defects. Prefer plain, specific prose.
+- **Responsible-use framing is load-bearing.** Pattern observations do not establish authorship, and the offline benchmark does not validate evasion or provide a universal detector threshold. Preserve source-faithfulness, disclosure, limitations, and decision-boundary language.
 - **Roadmap lives in `ENHANCEMENTS.md`.** It consolidates the two archived reviews plus forward-looking work. Update it (don't fork new roadmap files) when planning or completing significant work. The `archive/reviews/` files are historical and should stay verbatim.
 
 ## Git workflow
 
-- Active development branch for this work: `claude/claude-md-docs-txol8r`. Develop, commit, and push there; create it locally if missing.
-- Push with `git push -u origin <branch-name>`; retry on network errors with exponential backoff.
-- Do not open a pull request unless explicitly asked.
-- Commit messages: clear and descriptive. Keep them free of AI-tell padding (see "Practice what the skills preach").
+Inspect the worktree before editing and preserve unrelated user changes. Do not commit, push, create branches, or open pull requests unless the current user request explicitly asks for those actions.
 
 ## Reference
 
-- Humanizer source: [Wikipedia: Signs of AI writing](https://en.wikipedia.org/wiki/Wikipedia:Signs_of_AI_writing) (WikiProject AI Cleanup).
-- Benchmark measurement guidance and the explicit "no guarantees" stance: `aiproofing/benchmark/README.md`.
+- Humanizer pattern background: [Wikipedia: Signs of AI writing](https://en.wikipedia.org/wiki/Wikipedia:Signs_of_AI_writing) (WikiProject AI Cleanup).
+- Benchmark data contract, four-track scope, and limitations: `aiproofing/benchmark/README.md`.
 - Full roadmap and historical context: `ENHANCEMENTS.md`.
-</content>
-</invoke>

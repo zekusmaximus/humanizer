@@ -1,0 +1,4 @@
+sample_id,split,stage,detector,score,label_ai,voice_score,clarity_score,faithfulness_score
+s1,human,before,detA,NaN,0,3,4,5
+s1,human,before,detA,0.10,0,4,4,5
+s2,alien,middle,detB,2.0,maybe,3,4,5

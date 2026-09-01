@@ -1,0 +1,40 @@
+{
+  "schema_version": "2.0.0",
+  "registry": "oversight_crosswalks",
+  "registry_version": "2026-08-31.1",
+  "snapshot_hash_scope": "SHA-256 of the crosswalk version label.",
+  "entries": [
+    {
+      "id": "oversight-map-v1",
+      "owner": "Humanizer maintainers",
+      "version": "1.0.0",
+      "status": "active_contract",
+      "source_reference": "C2PA 2.4 oversight vocabulary as recorded in the 2026-08-31 implementation specification",
+      "reviewed_at": "2026-08-31T00:00:00Z",
+      "snapshot_hash": "989611079a45446523dd6c693d69fa3f59c68875059803f9f5325f724f9fb1f3",
+      "mappings": [
+        {
+          "actor_kind": "model",
+          "human_oversight_internal": "none",
+          "c2pa_value": "fully_autonomous"
+        },
+        {
+          "actor_kind": "model",
+          "human_oversight_internal": "prompt_guided",
+          "c2pa_value": "prompt_guided"
+        },
+        {
+          "actor_kind": "model",
+          "human_oversight_internal": "reviewed",
+          "c2pa_value": "human_validated"
+        },
+        {
+          "actor_kind": "model",
+          "human_oversight_internal": "edited",
+          "c2pa_value": "human_validated"
+        }
+      ],
+      "unmapped_rule": "Human-only, tool-only, unknown actor, and unknown oversight cases remain absent or unknown; do not guess a C2PA value."
+    }
+  ]
+}

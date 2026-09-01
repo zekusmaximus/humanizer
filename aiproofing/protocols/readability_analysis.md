@@ -1,29 +1,30 @@
 # Readability and Flow Analysis
 
 ## Objective
-Match complexity to audience and genre while maintaining clarity and momentum.
+Review complexity, clarity, and flow against a supplied audience or declared experimental preset.
 
 ## Inputs
 - Sentence length stats from **manuscript_analysis.md**.
-- Section map and stakes per scene.
-- Optional: target audience (infer if missing).
+- Section map plus any stakes explicitly stated in the manuscript or author brief; otherwise record stakes as unknown.
+- Optional: author-supplied target audience. If absent, record audience as unknown rather than assuming a grade target.
 
 ## Steps
 1. **Score and Scan**
-   - Compute readability metrics (FK, SMOG, or average sentence length). Flag outliers relative to desired audience.
+   - When enabled, compute a named readability formula with a pinned extractor/version, sentence splitter, syllable method, and Markdown-stripping rule.
+   - Record the result as `MEASURED_FEATURE`. Compare it only with a configured, experimental editorial range; `null` disables the range.
 2. **Paragraph Purpose Check**
-   - Ensure each paragraph centers on one intent (action, reflection, description). Split or merge as needed.
+   - When enabled, review paragraphs whose intent is unclear for the supplied audience. Multi-purpose paragraphs are valid; split or merge only when meaning and pacing improve.
 3. **Transition Variety**
-   - Vary transitions (time shifts, sensory pivots, questions, action beats). Remove repetitive hinge phrases ("as they", "after that").
+   - Review repeated transitions in context. Propose a source-supported time shift, question, or action beat only when the manuscript already supplies it; do not invent sensory detail.
 4. **Density Adjustment**
-   - Simplify overly abstract sentences; replace stacked clauses with sequential actions when urgency is high; allow longer periodic sentences for introspection.
+   - Offer localized clarity options for dense sentences. Do not impose a universal short-for-urgency or long-for-introspection pattern.
 
 ## Deliverables
-- Readability snapshot per section with problem areas highlighted.
-- Rewritten examples showing improved flow and transitions.
+- Readability snapshot per section with extractor metadata, unavailable states, and review candidates.
+- Source-faithful proposals for enabled findings; no minimum rewrite count.
 - Guidance on maintaining genre-appropriate density.
 
 ## Acceptance Criteria
-- No abrupt readability cliffs between adjacent sections unless intentionally contrasted.
-- Paragraphs carry clear intent and transition smoothly.
-- Complexity matches genre expectations without AI-like sameness.
+- Enabled section-to-section changes are reviewed against intended contrast and audience.
+- Accepted paragraph or transition edits preserve scene structure and meaning.
+- Complexity matches the supplied audience and intent without being optimized as an origin signal.

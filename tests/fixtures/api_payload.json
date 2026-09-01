@@ -1,0 +1,11 @@
+{
+  "request_id": "fixture-1",
+  "text": "sensitive manuscript text",
+  "public_dashboard_url": "https://example.invalid/public/result",
+  "raw_body": {"echoed_text": "sensitive manuscript text", "score": 0.7},
+  "result": {
+    "category": "uncertain",
+    "public_url": "https://example.invalid/result",
+    "safe_code": "fixture"
+  }
+}

@@ -1,48 +1,36 @@
-# Burstiness Analysis
+# Sentence-Rhythm Diagnostics
 
 ## Objective
-Introduce controlled unpredictability in diction and rhythm to avoid AI-like uniformity while keeping coherence.
+Describe sentence rhythm and offer optional, source-faithful craft suggestions. Sentence-length variation is not a general AI detector.
 
-## Gating Rule
-If the **flatness flag** was set during manuscript intake (SD < 5 words), run this guide to completion **before** beginning Phase 3 sentence-structure work. A flat sentence-length distribution is the single most reliable statistical signal separating AI writing from human prose at scale; fixing it first creates a better foundation for all downstream edits.
+## Configuration and evidence status
 
-## Variance Thresholds
-Use sentence-length SD from **manuscript_analysis.md** to classify the manuscript:
-
-| SD Range | Classification | Action |
-|---|---|---|
-| < 5 words | Flat — high detection risk | Mandatory revision pass |
-| 5–10 words | Moderate — acceptable | Targeted spot fixes |
-| > 10 words | Varied — low risk | Preserve; audit for over-engineering |
-
-**Genre sensitivity:** Target SD levels differ by form. Aim for SD > 12 for literary fiction, > 10 for thriller/suspense, > 8 for general commercial fiction, > 6 for procedural or epistolary prose. Do not force burstiness above genre norms — mechanical variety is its own tell.
+`sentence_length_sd`, ranges, and local cadence counts are `MEASURED_FEATURE` values only when produced by the extractor declared in `manuscript_analysis.md`. Any review band is a named, configurable `STYLE_HEURISTIC` with rationale and review date; `null` disables it. No band means high or low detection risk, and this task is never a detector gate.
 
 ## Inputs
-- Sentence length distribution, mean, SD, and flatness flag from **manuscript_analysis.md**.
+- Configured sentence-length features and extractor metadata from `manuscript_analysis.md`.
 - Vocabulary swap list from **vocabulary_analysis.md**.
 
 ## Steps
 1. **Flatness Detection**
-   - Identify paragraphs where sentence lengths sit within a narrow band (SD < 5) or where verbs are uniformly mild and predictable.
-   - Flag individually: (a) passages with no sentence shorter than 10 words; (b) passages with no sentence longer than 20 words; (c) three or more consecutive sentences of nearly identical length.
-2. **Targeted Surprises**
-   - Add unexpected but context-fitting verbs/nouns drawn from the story world's setting signals.
-   - Insert a sharp short sentence (≤6 words) after a longer reflective one; insert a longer, winding sentence into action lulls to create micro-rest.
-   - Surprises must be grounded in character sensibility or setting — not arbitrary diction swaps.
+   - When enabled, identify locally uniform passages using the configured window and review band. Report measurements without risk labels.
+2. **Targeted Rhythm Options**
+   - Suggest context-fitting cadence changes only when they serve clarity, emphasis, pacing, or an author-approved voice goal.
+   - Do not require a short/long alternation or add new story-world details merely to increase variance.
 3. **Cadence Play**
-   - Use fragments for emphasis at emotional or action peaks; ensure POV consistency is maintained.
-   - Apply rhythmic devices (anaphora, asyndeton) sparingly — once per scene maximum — for cumulative effect.
+   - Fragments may be proposed when they serve established emphasis or pacing and remain consistent with POV; they are not a required rhythm device.
+   - Preserve deliberate rhythmic devices. New devices require source compatibility and have no universal per-scene cap.
 4. **Safety Check**
-   - Re-compute SD on revised sections. Confirm target threshold is met.
+   - If measurement is enabled, recompute the same feature with the same extractor/configuration and report the change descriptively.
    - Verify that burstiness edits do not obscure meaning or violate genre-appropriate clarity.
 
 ## Deliverables
-- List of flat sections with proposed rhythm/diction tweaks, tagged by classification tier.
-- Revised SD estimate per section after fixes.
-- 3–5 before/after snippets showing increased variability with source-world grounding.
+- List of configured review candidates with optional rhythm suggestions.
+- Recomputed features from the same extractor, or an explicit unavailable state; do not report estimates as measurements.
+- Any approved before/after snippets, with the editorial reason and source-world support; no minimum count or increase in variability is required.
 
 ## Acceptance Criteria
-- Post-edit SD meets or exceeds genre threshold.
-- Variability increases without creating whiplash or confusion.
-- Surprises derive from setting/character sensibilities, not random word swaps.
-- Overall readability remains stable or improves.
+- Enabled rhythm findings are reviewed or intentionally retained.
+- Any accepted variation serves the manuscript without creating whiplash or confusion.
+- Suggestions use existing setting/character evidence and do not invent stance or detail.
+- Human review finds no material readability loss under the selected audience and style requirements.

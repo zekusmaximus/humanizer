@@ -1,0 +1,29 @@
+{
+  "schema_version": "2.0.0",
+  "registry": "datasets",
+  "registry_version": "2026-08-31.1",
+  "snapshot_hash_scope": "Each entry hash is SHA-256 of its declared local synthetic snapshot label; no external data snapshot is implied.",
+  "entries": [
+    {
+      "id": "humanizer-synthetic-legacy",
+      "owner": "Humanizer maintainers",
+      "version": "v1-migrated-2026-08-31",
+      "status": "synthetic_fixture_no_external_evidence",
+      "source_reference": "aiproofing/benchmark/data/cards/synthetic_legacy_v1_dataset.md",
+      "reviewed_at": "2026-08-31T00:00:00Z",
+      "snapshot_hash": "62c6b8d9363d9cb56dba7fad0257643f45e58ae805ddc0deb9a4509a52bc92b3",
+      "allowed_snapshot_ids": [
+        "v1-migrated-2026-08-31",
+        "v2-test",
+        "track-d-test"
+      ],
+      "snapshot_card_refs": {
+        "v1-migrated-2026-08-31": "aiproofing/benchmark/data/cards/synthetic_legacy_v1_dataset.md",
+        "v2-test": "aiproofing/benchmark/data/cards/synthetic_v2_test_dataset.md",
+        "track-d-test": "aiproofing/benchmark/data/cards/synthetic_track_d_test_dataset.md"
+      },
+      "rights_status": "unknown",
+      "redistribution": "fixture code/data only; no inference to repository manuscripts"
+    }
+  ]
+}
