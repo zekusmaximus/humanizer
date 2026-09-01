@@ -24,8 +24,14 @@ from typing import Any, Dict, List, Optional, Sequence, Set, Tuple
 
 
 SCRIPT_PATH = Path(__file__).resolve()
-REPOSITORY_ROOT = SCRIPT_PATH.parents[2]
+SKILL_ROOT = SCRIPT_PATH.parents[1]
+REPOSITORY_ROOT = SKILL_ROOT.parent
 DEFAULT_MANIFEST_PATH = SCRIPT_PATH.with_name("task_manifest.json")
+# Manifest paths are repository-relative and start with this folder name. When
+# the skill is packaged or installed under another folder name (for example
+# ``aiproofing-text`` in a claude.ai upload), the prefix is mapped onto the
+# folder that actually contains SKILL.md so the same manifest keeps working.
+MANIFEST_PACKAGE_PREFIX = "aiproofing"
 
 EXPECTED_TASK_IDS = [
     "1", "2", "3", "4", "5", "6", "6.5", "7", "8", "9", "10",
@@ -171,12 +177,28 @@ def _require_nonempty_string(value: Any, label: str) -> str:
     return value
 
 
+def _package_root(repository_root: Path) -> Path:
+    """Return the folder that manifest paths prefixed ``aiproofing/`` refer to."""
+    canonical = repository_root / MANIFEST_PACKAGE_PREFIX
+    if canonical.is_dir():
+        return canonical
+    skill_root = SKILL_ROOT.resolve()
+    if skill_root.parent == repository_root.resolve() and (skill_root / "SKILL.md").is_file():
+        return skill_root
+    return canonical
+
+
 def _repository_path(repository_root: Path, relative_path: str) -> Path:
     if "\\" in relative_path:
         raise ManifestValidationError(
             f"manifest path must use forward slashes: {relative_path!r}"
         )
-    candidate = (repository_root / relative_path).resolve()
+    prefix = MANIFEST_PACKAGE_PREFIX + "/"
+    if relative_path == MANIFEST_PACKAGE_PREFIX or relative_path.startswith(prefix):
+        remainder = relative_path[len(MANIFEST_PACKAGE_PREFIX):].lstrip("/")
+        candidate = (_package_root(repository_root) / remainder).resolve()
+    else:
+        candidate = (repository_root / relative_path).resolve()
     root = repository_root.resolve()
     try:
         candidate.relative_to(root)
@@ -188,14 +210,15 @@ def _repository_path(repository_root: Path, relative_path: str) -> Path:
 
 
 def _managed_repository_files(repository_root: Path) -> Set[str]:
-    protocol_dir = repository_root / "aiproofing" / "protocols"
+    package_root = _package_root(repository_root)
+    protocol_dir = package_root / "protocols"
     paths = {
-        path.relative_to(repository_root).as_posix()
+        f"{MANIFEST_PACKAGE_PREFIX}/{path.relative_to(package_root).as_posix()}"
         for path in protocol_dir.glob("*.md") if path.is_file()
     }
-    preset_path = repository_root / "aiproofing" / "presets" / "domain_presets.md"
+    preset_path = package_root / "presets" / "domain_presets.md"
     if preset_path.is_file():
-        paths.add(preset_path.relative_to(repository_root).as_posix())
+        paths.add(f"{MANIFEST_PACKAGE_PREFIX}/{preset_path.relative_to(package_root).as_posix()}")
     return paths
 
 

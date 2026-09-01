@@ -1,6 +1,5 @@
 ---
 name: humanizer
-version: 2.3.0
 description: |
   Review recurring editorial patterns and revise text for clarity, specificity,
   source faithfulness, and an author-approved voice. Based on Wikipedia's
@@ -15,6 +14,8 @@ allowed-tools:
   - Grep
   - Glob
   - AskUserQuestion
+metadata:
+  version: "2.3.0"
 ---
 
 # Humanizer: Editorial Pattern and Source-Faithfulness Review

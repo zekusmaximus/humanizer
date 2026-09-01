@@ -1,6 +1,7 @@
 import copy
 import importlib.util
 import json
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -84,6 +85,27 @@ class RunnerCliTests(unittest.TestCase):
             stderr=subprocess.PIPE,
             check=False,
         )
+
+    def test_runner_resolves_manifest_paths_under_a_packaged_folder_name(self):
+        # claude.ai installs the skill under its frontmatter name (aiproofing-text),
+        # not the repository folder name, so the manifest's aiproofing/... paths must
+        # resolve against whichever folder actually holds SKILL.md.
+        with tempfile.TemporaryDirectory() as directory:
+            package = Path(directory) / "aiproofing-text"
+            shutil.copytree(
+                ROOT / "aiproofing", package,
+                ignore=shutil.ignore_patterns("__pycache__", "*.pyc"),
+            )
+            output = Path(directory) / "out"
+            result = subprocess.run(
+                [sys.executable, str(package / "scripts" / "aiproof_runner.py"),
+                 str(SOURCE_PATH), str(output), "--preset", "narrative"],
+                cwd=directory, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=False,
+            )
+            self.assertEqual(result.returncode, 0, result.stderr)
+            self.assertEqual(len(list(output.glob("aiproof_workflow_state_v2_*.json"))), 1)
+            state = json.loads(next(output.glob("aiproof_workflow_state_v2_*.json")).read_text(encoding="utf-8"))
+            self.assertEqual(state["task_count"], 18)
 
     def test_help_succeeds_and_describes_scaffolding(self):
         result = self.run_cli("--help")
