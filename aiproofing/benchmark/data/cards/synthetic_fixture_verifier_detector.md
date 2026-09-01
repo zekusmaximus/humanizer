@@ -1,18 +1,19 @@
 # Detector card: fixture-verifier@1
 
-> Evidence status: **synthetic_fixture_no_external_evidence**. This fictional verifier exists only to exercise Track D schemas.
+> Evidence status: **synthetic_fixture_no_external_evidence**. This fictional verifier exists only to exercise Track D schemas; it supplies no watermark, provenance, or authorship evidence.
 
-- Adapter version: `1`
-- Task: `D.watermark_verification`
-- Configuration hash: fixed synthetic fixture value
-- Native signals: explicit unsupported/no-key control state; no numeric verification statistic
-- Supported scope: schema and state-transition tests only
-- Eligible denominator policy: all attempted synthetic verification controls remain in the status denominator
-- Calibration IDs: none
-- Threshold IDs: none
-- Hardware, latency, and cost: not recorded
-- Policy snapshot: not applicable; offline fixture
-- Drift/retest: rerun with the repository test suite after contract changes
-- Limitations: no key, no text, no empirical verification, and no provenance trust evidence
-
-Claim boundary: contract-validation behavior only; no watermark, provenance, or authorship claim is permitted.
+- Adapter version: 1
+- Task: D.watermark_verification
+- Configuration hash: dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd
+- Native signals and directions: `["explicit unsupported/no-key control state; no numeric verification statistic"]`
+- Supported scope: Schema and state-transition tests only.
+- Eligible denominator policy: All attempted synthetic verification controls remain in the status denominator.
+- Calibration IDs: `[]`
+- Threshold IDs: `[]`
+- Hardware: not applicable
+- Latency: not applicable
+- Cost: not applicable
+- Policy/review snapshot: not applicable; offline fixture
+- Drift/retest date: rerun after benchmark contract changes
+- Contact: Humanizer fixture maintainers
+- Limitations: `["no key","no text","no empirical verification","no provenance trust evidence"]`

@@ -1,0 +1,39 @@
+{
+  "card_schema_version": "2.0.0",
+  "card_type": "dataset",
+  "card_id": "dataset-humanizer-synthetic-legacy-track-d-test",
+  "evidence_status": "synthetic_fixture_no_external_evidence",
+  "claim_boundary": "This one-item Track D fixture verifies schema and control-state handling only; it supplies no watermark, provenance, or authorship evidence.",
+  "dataset_id": "humanizer-synthetic-legacy",
+  "dataset_snapshot_id": "track-d-test",
+  "purpose": "Watermark and signed-provenance validator tests.",
+  "excluded_uses": [
+    "watermark efficacy claims",
+    "provenance trust claims",
+    "authorship decisions",
+    "public performance claims"
+  ],
+  "collection_generation_dates": "Fixed fixture timestamps dated 2026-08-31.",
+  "annotation_scheme_id": "surface-lineage-v2",
+  "label_ontology_and_adjudication": "Synthetic unknown surface label with explicit unsupported and no-key control states.",
+  "independent_group_count": 1,
+  "resampling_cluster_field": "source_group_id",
+  "split_construction": "One synthetic challenge record.",
+  "composition": "Unavailable placeholder text plus known no-key and absent-provenance states.",
+  "language_domain_length_distributions": "Text is unavailable; language is und and domain is synthetic.",
+  "prompt_generation_configuration": null,
+  "assistance_workflows": "No editorial or generation workflow is asserted.",
+  "rights_status": "repository-authored synthetic fixture",
+  "consent_and_access": "No people, submitted manuscripts, keys, or credentials.",
+  "pii_handling": "No personal information is included.",
+  "deduplication_contamination_checks": "Not applicable to the unavailable-text fixture.",
+  "retention_access_controls": "Repository-local fixture access.",
+  "transformations": "None beyond serialization as Benchmark v2 test records.",
+  "limitations": [
+    "no source bytes",
+    "no valid signature",
+    "no watermark key",
+    "no empirical verifier evidence"
+  ],
+  "manifest_hash": "b9fe815ffbd4eb52a0774546c79a2da25c36242c21cf3793898ebe254bfa5df5"
+}

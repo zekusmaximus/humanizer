@@ -141,6 +141,11 @@ _RAW_SIGNAL_REF_RE = re.compile(
 _CALIBRATED_SIGNAL_REF_RE = re.compile(
     r"^calibrator:([A-Za-z0-9_.:-]+)\.output$"
 )
+_RFC3339_UTC_RE = re.compile(
+    r"^[0-9]{4}-[0-9]{2}-[0-9]{2}T"
+    r"[0-9]{2}:[0-9]{2}:[0-9]{2}(?:\.[0-9]+)?(?:Z|\+00:00)$"
+)
+_URL_RE = re.compile(r"https?://", flags=re.IGNORECASE)
 _SENSITIVE_API_KEYS = frozenset(
     {
         "text",
@@ -158,6 +163,27 @@ _SENSITIVE_API_KEYS = frozenset(
         "public_dashboard_url",
         "public_dashboard_link",
     }
+)
+_SENSITIVE_API_KEY_TOKENS = frozenset(
+    {
+        "body",
+        "bodies",
+        "content",
+        "contents",
+        "document",
+        "documents",
+        "input",
+        "inputs",
+        "manuscript",
+        "manuscripts",
+        "prompt",
+        "prompts",
+        "text",
+        "texts",
+    }
+)
+_INACTIVE_REGISTRY_STATUSES = frozenset(
+    {"disabled", "expired", "inactive", "retired", "revoked"}
 )
 
 
@@ -325,6 +351,7 @@ def load_registries(path: str | Path) -> dict[str, dict[str, dict[str, Any]]]:
                     not isinstance(entry[field], list)
                     or not entry[field]
                     or any(not isinstance(value, str) or not value for value in entry[field])
+                    or len(set(entry[field])) != len(entry[field])
                 ):
                     raise ValueError(
                         f"Registry entry {entry['id']!r} has invalid {field}: {registry_path}"
@@ -363,7 +390,12 @@ def load_registries(path: str | Path) -> dict[str, dict[str, dict[str, Any]]]:
     return loaded
 
 
-def redact_api_payload(payload: Any, *, profile: str = "default") -> Any:
+def redact_api_payload(
+    payload: Any,
+    *,
+    profile: str = "default",
+    echoed_texts: Iterable[str] = (),
+) -> Any:
     """Remove echoed manuscript material and public URLs from default storage.
 
     Restricted storage must be an explicit caller choice.  The function returns
@@ -375,26 +407,49 @@ def redact_api_payload(payload: Any, *, profile: str = "default") -> Any:
     if profile == "restricted":
         return copy.deepcopy(payload)
 
+    dropped = object()
+    normalized_echoes = tuple(
+        normalized
+        for item in echoed_texts
+        if isinstance(item, str)
+        and (normalized := normalize_annotation_text(item))
+    )
+
+    def sensitive_key(key: Any) -> bool:
+        raw = re.sub(r"([a-z0-9])([A-Z])", r"\1_\2", str(key))
+        normalized = raw.casefold()
+        tokens = set(filter(None, re.split(r"[^a-z0-9]+", normalized)))
+        return (
+            normalized in _SENSITIVE_API_KEYS
+            or bool(tokens & _SENSITIVE_API_KEY_TOKENS)
+        )
+
     def scrub(value: Any) -> Any:
-        if isinstance(value, list):
-            return [scrub(item) for item in value]
-        if not isinstance(value, dict):
+        if isinstance(value, str):
+            normalized = normalize_annotation_text(value)
+            if _URL_RE.search(value) or any(echo in normalized for echo in normalized_echoes):
+                return dropped
             return value
+        if isinstance(value, list):
+            cleaned_items = []
+            for item in value:
+                cleaned = scrub(item)
+                if cleaned is not dropped:
+                    cleaned_items.append(cleaned)
+            return cleaned_items
+        if not isinstance(value, dict):
+            return copy.deepcopy(value)
         cleaned: dict[str, Any] = {}
         for key, item in value.items():
-            normalized_key = str(key).lower()
-            if normalized_key in _SENSITIVE_API_KEYS:
+            if sensitive_key(key):
                 continue
-            if (
-                isinstance(item, str)
-                and item.lower().startswith(("http://", "https://"))
-                and ("url" in normalized_key or "link" in normalized_key)
-            ):
-                continue
-            cleaned[str(key)] = scrub(item)
+            cleaned_item = scrub(item)
+            if cleaned_item is not dropped:
+                cleaned[str(key)] = cleaned_item
         return cleaned
 
-    return scrub(payload)
+    cleaned_payload = scrub(payload)
+    return None if cleaned_payload is dropped else cleaned_payload
 
 
 def _record_locator(record: Mapping[str, Any], index: int) -> str:
@@ -426,10 +481,12 @@ def _is_finite(value: Any) -> bool:
 
 
 def _is_timestamp_utc(value: Any) -> bool:
-    if not isinstance(value, str) or not value:
+    if not isinstance(value, str) or not _RFC3339_UTC_RE.fullmatch(value):
         return False
     try:
-        parsed = datetime.fromisoformat(value.replace("Z", "+00:00"))
+        parsed = datetime.fromisoformat(
+            value[:-1] + "+00:00" if value.endswith("Z") else value
+        )
     except ValueError:
         return False
     return parsed.tzinfo is not None and parsed.utcoffset() == timezone.utc.utcoffset(parsed)
@@ -438,7 +495,10 @@ def _is_timestamp_utc(value: Any) -> bool:
 def _parse_utc_timestamp(value: Any) -> datetime | None:
     if not _is_timestamp_utc(value):
         return None
-    return datetime.fromisoformat(str(value).replace("Z", "+00:00")).astimezone(timezone.utc)
+    text = str(value)
+    return datetime.fromisoformat(
+        text[:-1] + "+00:00" if text.endswith("Z") else text
+    ).astimezone(timezone.utc)
 
 
 def _registry_maps(
@@ -556,7 +616,14 @@ class _Validator:
         if value is not None and (not isinstance(value, str) or not _SHA256_RE.fullmatch(value)):
             self.add(index, "error", "invalid_sha256", "Value must be a lowercase SHA-256 hex digest.", field=field)
 
-    def string_list(self, index: int, field: str, *, nonempty: bool = False) -> None:
+    def string_list(
+        self,
+        index: int,
+        field: str,
+        *,
+        nonempty: bool = False,
+        unique: bool = False,
+    ) -> None:
         value = self.records[index].get(field)
         if value is None:
             return
@@ -564,6 +631,14 @@ class _Validator:
             self.add(index, "error", "invalid_string_array", "Value must be an array of non-empty strings.", field=field)
         elif nonempty and not value:
             self.add(index, "error", "empty_array", "Array must not be empty.", field=field)
+        elif unique and len(set(value)) != len(value):
+            self.add(
+                index,
+                "error",
+                "duplicate_array_item",
+                "Array items must be unique.",
+                field=field,
+            )
 
     def string(self, index: int, field: str, *, nonempty: bool = True) -> None:
         value = self.records[index].get(field)
@@ -671,10 +746,10 @@ class _Validator:
                 "consent_id",
             ),
         )
-        self.string_list(index, "parent_revision_ids")
-        self.string_list(index, "track", nonempty=True)
-        self.string_list(index, "assistance_modes")
-        self.string_list(index, "analysis_exclusion_reasons")
+        self.string_list(index, "parent_revision_ids", unique=True)
+        self.string_list(index, "track", nonempty=True, unique=True)
+        self.string_list(index, "assistance_modes", unique=True)
+        self.string_list(index, "analysis_exclusion_reasons", unique=True)
         for track in record.get("track", []) if isinstance(record.get("track"), list) else []:
             if not isinstance(track, str) or track not in {"A", "B", "C", "D"}:
                 self.add(index, "error", "unknown_enum", "Track must be A, B, C, or D.", field="track")
@@ -733,6 +808,14 @@ class _Validator:
                     self.add(index, "error", "normalized_hash_mismatch", "Normalized annotation hash does not match embedded text.", field="normalized_text_sha256")
                 if record.get("char_count") != len(normalize_annotation_text(text)):
                     self.add(index, "error", "character_count_mismatch", "Character count does not match the annotation view.", field="char_count")
+                if record.get("word_count") != count_words(text):
+                    self.add(
+                        index,
+                        "error",
+                        "word_count_mismatch",
+                        "Word count does not match the declared extractor.",
+                        field="word_count",
+                    )
         elif availability == "unavailable_legacy":
             for field in text_fields:
                 if record.get(field) is not None:
@@ -1161,7 +1244,7 @@ class _Validator:
             value = record.get(field)
             if value is None:
                 continue
-            self.string_list(index, field)
+            self.string_list(index, field, unique=True)
             if isinstance(value, list):
                 groups[field] = set(item for item in value if isinstance(item, str))
         required_groups = {"selection_group_ids", "test_group_ids"}
@@ -1422,44 +1505,68 @@ class _Validator:
 
     def _lineage_cycles(self, samples: dict[str, tuple[int, dict[str, Any]]]) -> None:
         graph: dict[str, set[str]] = {revision_id: set() for revision_id in samples}
+        issue_locations: dict[str, set[tuple[int, str]]] = {
+            revision_id: {(index, "parent_revision_ids")}
+            for revision_id, (index, _) in samples.items()
+        }
         for revision_id, (_, record) in samples.items():
             parents = record.get("parent_revision_ids", [])
             if isinstance(parents, list):
                 graph[revision_id].update(
                     parent for parent in parents if isinstance(parent, str)
                 )
-        for record in self.records:
+        for index, record in enumerate(self.records):
             if record.get("record_type") == "lineage_event" and isinstance(record.get("output_revision_id"), str):
+                output_revision_id = record["output_revision_id"]
                 inputs = record.get("input_revision_ids", [])
                 if isinstance(inputs, list):
-                    graph.setdefault(record["output_revision_id"], set()).update(
+                    graph.setdefault(output_revision_id, set()).update(
                         item for item in inputs if isinstance(item, str)
                     )
+                    issue_locations.setdefault(output_revision_id, set()).add(
+                        (index, "input_revision_ids")
+                    )
         state: dict[str, int] = {}
-        stack: list[str] = []
         cyclic: set[str] = set()
 
-        def visit(node: str) -> None:
-            marker = state.get(node, 0)
-            if marker == 1:
-                if node in stack:
-                    cyclic.update(stack[stack.index(node) :])
-                return
-            if marker == 2:
-                return
-            state[node] = 1
-            stack.append(node)
-            for parent in sorted(graph.get(node, ())):
-                if parent in graph:
-                    visit(parent)
-            stack.pop()
-            state[node] = 2
-
-        for node in sorted(graph):
-            visit(node)
+        for start in sorted(graph):
+            if state.get(start, 0) != 0:
+                continue
+            state[start] = 1
+            path = [start]
+            positions = {start: 0}
+            frames: list[tuple[str, Any]] = [
+                (start, iter(sorted(graph.get(start, ()))))
+            ]
+            while frames:
+                node, parents = frames[-1]
+                try:
+                    parent = next(parents)
+                except StopIteration:
+                    frames.pop()
+                    state[node] = 2
+                    positions.pop(node, None)
+                    path.pop()
+                    continue
+                if parent not in graph:
+                    continue
+                marker = state.get(parent, 0)
+                if marker == 0:
+                    state[parent] = 1
+                    positions[parent] = len(path)
+                    path.append(parent)
+                    frames.append((parent, iter(sorted(graph.get(parent, ())))))
+                elif marker == 1:
+                    cyclic.update(path[positions[parent] :])
         for revision_id in sorted(cyclic):
-            index = samples[revision_id][0]
-            self.add(index, "error", "lineage_cycle", "Revision lineage contains a cycle.", field="parent_revision_ids")
+            for index, field in sorted(issue_locations.get(revision_id, ())):
+                self.add(
+                    index,
+                    "error",
+                    "lineage_cycle",
+                    "Revision lineage contains a cycle.",
+                    field=field,
+                )
 
     def _span_groups(self, samples: dict[str, tuple[int, dict[str, Any]]]) -> None:
         groups: dict[str, list[tuple[int, dict[str, Any]]]] = {}
@@ -1777,8 +1884,17 @@ class _Validator:
                     # The record-level validator reports the type error.  Avoid
                     # attempting an unhashable list/object lookup here.
                     continue
-                if value not in self.registries[registry_name]:
+                entry = self.registries[registry_name].get(value)
+                if entry is None:
                     self.add(index, "error", "unknown_registry_reference", "Referenced ID does not exist in the supplied registry snapshot.", field=field)
+                elif str(entry.get("status", "")).casefold() in _INACTIVE_REGISTRY_STATUSES:
+                    self.add(
+                        index,
+                        "error",
+                        "inactive_registry_reference",
+                        "Referenced registry entry is not active for new evidence.",
+                        field=field,
+                    )
 
             version_checks: list[tuple[str, str, str, str]] = []
             if record.get("record_type") == "sample_revision":
@@ -1798,6 +1914,15 @@ class _Validator:
                     if verifier_id not in self.registries["tools"]:
                         self.add(index, "error", "unknown_registry_reference", "Referenced verifier ID does not exist in the supplied tool registry snapshot.", field="verifier_id")
                     else:
+                        verifier_entry = self.registries["tools"][verifier_id]
+                        if str(verifier_entry.get("status", "")).casefold() in _INACTIVE_REGISTRY_STATUSES:
+                            self.add(
+                                index,
+                                "error",
+                                "inactive_registry_reference",
+                                "Referenced verifier registry entry is not active for new evidence.",
+                                field="verifier_id",
+                            )
                         version_checks.append(
                             ("verifier_id", "verifier_version", "tools", "allowed_versions")
                         )

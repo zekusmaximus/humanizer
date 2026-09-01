@@ -85,6 +85,7 @@ If editing was separately authorized, the editor may save a revised manuscript a
 |---|---|
 | `<filename>_revised.md` | Separately authorized edits, with source-faithfulness review still required. |
 | `<filename>_report.md` | Component summaries, measurements, human-review items, and completion status. |
+| `aiproof_workflow_state_v2_<run-id>_rNNN.json` | Versioned workflow state, task inventory, constraints, and source digest. |
 | `revision_audit_v2_<run-id>_rNNN.json` | Unsigned, versioned revision-audit scaffold or record. |
 | `revision_audit_v2_<run-id>_rNNN.md` | Human-readable view of the same unsigned audit. |
 

@@ -212,7 +212,9 @@ def cluster_bootstrap(
     records with the same validated ``run_id`` are counted once, so an
     accidental duplicate cannot change the estimate. Each selected cluster
     carries all nested rows together. Clusters are sampled within the declared
-    strata; conflicting strata inside one cluster are rejected.
+    strata. When one dependency cluster spans row-level strata, it is assigned
+    to a deterministic cluster-composition stratum so the cluster is never
+    split and otherwise valid evaluation input does not fail at runtime.
     """
 
     if replicates < 1:
@@ -243,11 +245,25 @@ def cluster_bootstrap(
         clusters[str(cluster)].append(row)
 
     strata: dict[tuple[str, ...], list[str]] = defaultdict(list)
+    mixed_stratum_cluster_count = 0
     for cluster_id, cluster_rows in sorted(clusters.items()):
-        keys = {tuple(str(row.get(field, "unknown")) for field in strata_fields) for row in cluster_rows}
-        if len(keys) != 1:
-            raise ValueError(f"cluster {cluster_id} crosses bootstrap strata")
-        strata[next(iter(keys))].append(cluster_id)
+        member_strata = tuple(
+            sorted(
+                {
+                    tuple(str(row.get(field, "unknown")) for field in strata_fields)
+                    for row in cluster_rows
+                }
+            )
+        )
+        if len(member_strata) == 1:
+            stratum_key = ("uniform", *member_strata[0])
+        else:
+            mixed_stratum_cluster_count += 1
+            stratum_key = (
+                "mixed_cluster_composition",
+                repr(member_strata),
+            )
+        strata[stratum_key].append(cluster_id)
 
     point = metric(canonical)
     rng = random.Random(seed)
@@ -271,6 +287,11 @@ def cluster_bootstrap(
         "seed": seed,
         "resampling_cluster_field": cluster_field,
         "independent_cluster_count": len(clusters),
+        "strata_fields": list(strata_fields),
+        "stratum_assignment_policy": (
+            "row_stratum_for_uniform_clusters_else_cluster_composition"
+        ),
+        "mixed_stratum_cluster_count": mixed_stratum_cluster_count,
     }
 
 

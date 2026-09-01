@@ -1,0 +1,25 @@
+name: P0 offline contract tests
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Run offline unit and contract tests
+        run: python -m unittest discover -s tests -p "test_*.py" -v
+      - name: Compile Python sources
+        run: python -m compileall -q aiproofing tests

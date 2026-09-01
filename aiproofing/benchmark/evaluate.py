@@ -181,6 +181,7 @@ def _ratings_summary(
         if rating.get("pair_id"):
             rated_pair_ids.add(str(rating["pair_id"]))
     return {
+        "status": "available",
         "individual_rating_count": len(unique_ids),
         "rater_count": len(raters),
         "pair_count": len(rated_pair_ids),
@@ -517,7 +518,18 @@ def main() -> int:
         "decision_metrics_available": False,
         "decision_metrics_unavailable_reason": "validate-rank-only mode has no applicable active frozen threshold artifact",
         "detector_results": [],
-        "human_rating_summary": _ratings_summary(ratings, pairs),
+        "human_rating_summary": (
+            _ratings_summary(ratings, pairs)
+            if validation_status == "valid"
+            else {
+                "status": "unavailable_due_to_validation_errors",
+                "paired_outcomes": None,
+                "note": (
+                    "Human-rating outcomes are not computed until all supplied "
+                    "sample, pair, and rating records validate."
+                ),
+            }
+        ),
     }
     exit_code = 2 if validation_status == "invalid" else 0
     if exit_code == 0:

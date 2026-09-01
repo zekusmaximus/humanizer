@@ -55,6 +55,45 @@ class RecordValidationTests(unittest.TestCase):
         samples[1]["parent_revision_ids"] = []
         self.assertIn("dangling_revision_parent", codes(schema.validate_records(samples)))
 
+    def test_long_acyclic_lineage_chain_does_not_recurse(self):
+        base = copy.deepcopy(fixture_records()[0])
+        samples = []
+        for index in range(1200):
+            sample = copy.deepcopy(base)
+            sample["revision_id"] = f"long-{index:04d}"
+            sample["document_id"] = f"document-{index:04d}"
+            sample["source_group_id"] = f"source-{index:04d}"
+            sample["parent_revision_ids"] = (
+                [f"long-{index + 1:04d}"] if index < 1199 else []
+            )
+            samples.append(sample)
+        self.assertEqual(schema.validate_records(samples), [])
+
+    def test_lineage_event_only_cycle_is_reported_without_crashing(self):
+        def event(event_id, output_revision_id, input_revision_id):
+            return {
+                "schema_version": "2.0.0",
+                "record_type": "lineage_event",
+                "event_id": event_id,
+                "output_revision_id": output_revision_id,
+                "input_revision_ids": [input_revision_id],
+                "action": "human_edit",
+                "actor_kind": "human",
+                "human_oversight_internal": "reviewed",
+                "approval_status": "approved",
+            }
+
+        issues = schema.validate_records(
+            [event("event-x", "revision-x", "revision-y"),
+             event("event-y", "revision-y", "revision-x")]
+        )
+        cycle_issues = [issue for issue in issues if issue.code == "lineage_cycle"]
+        self.assertEqual(len(cycle_issues), 2)
+        self.assertEqual(
+            {issue.record_locator for issue in cycle_issues},
+            {"lineage_event:event-x", "lineage_event:event-y"},
+        )
+
     def test_span_hash_offset_overlap_and_exhaustive_coverage(self):
         records = fixture_records()
         sample = copy.deepcopy(records[0])
@@ -108,6 +147,26 @@ class RecordValidationTests(unittest.TestCase):
         text = raw.decode("utf-8")
         self.assertNotEqual(schema.exact_bytes_sha256(raw), schema.annotation_text_sha256(text))
         self.assertEqual(schema.normalize_annotation_text(text), "line one\nline two\n")
+
+    def test_runtime_enforces_unique_arrays_and_embedded_word_counts(self):
+        sample = copy.deepcopy(fixture_records()[0])
+        sample["track"] = ["A", "A"]
+        self.assertIn(
+            "duplicate_array_item",
+            codes(schema.validate_records([sample])),
+        )
+
+        text = "alpha beta"
+        sample = copy.deepcopy(fixture_records()[0])
+        sample.pop("text_ref")
+        sample["text"] = text
+        sample["normalized_text_sha256"] = schema.annotation_text_sha256(text)
+        sample["char_count"] = len(schema.normalize_annotation_text(text))
+        sample["word_count"] = 99
+        self.assertIn(
+            "word_count_mismatch",
+            codes(schema.validate_records([sample], profile="internal")),
+        )
 
     def test_native_signal_bounds_and_raw_output_hash_are_validated(self):
         records = fixture_records()
@@ -367,6 +426,15 @@ class TrackDAndRedactionTests(unittest.TestCase):
             {"dataset_snapshot_id", "detector_version"},
         )
 
+    def test_inactive_registry_entries_cannot_satisfy_references(self):
+        registries = schema.load_registries(BENCHMARK / "registries")
+        registries["datasets"]["humanizer-synthetic-legacy"]["status"] = "revoked"
+        issues = schema.validate_records(
+            [copy.deepcopy(fixture_records()[0])],
+            registries=registries,
+        )
+        self.assertIn("inactive_registry_reference", codes(issues))
+
     def test_absent_manifest_rejects_invented_metadata(self):
         records = fixture_records("track_d_valid.jsonl")
         provenance = next(record for record in records if record["record_type"] == "provenance_verification")
@@ -431,6 +499,71 @@ class TrackDAndRedactionTests(unittest.TestCase):
         restricted = schema.redact_api_payload(payload, profile="restricted")
         self.assertEqual(restricted, payload)
         self.assertIsNot(restricted, payload)
+
+    def test_default_api_redaction_handles_nested_lists_plural_keys_and_echoes(self):
+        payload = {
+            "links": [
+                "https://example.invalid/result?text=secret",
+                {"href": "prefix https://example.invalid/nested"},
+            ],
+            "documents": ["manuscript body"],
+            "nested": {
+                "documentTexts": ["another manuscript body"],
+                "opaque": "prefix exact supplied echo suffix",
+                "safe_categories": ["uncertain", "supported"],
+            },
+        }
+        redacted = schema.redact_api_payload(
+            payload,
+            echoed_texts=["exact supplied echo"],
+        )
+        serialized = json.dumps(redacted)
+        self.assertNotIn("https://", serialized)
+        self.assertNotIn("manuscript body", serialized)
+        self.assertNotIn("exact supplied echo", serialized)
+        self.assertEqual(
+            redacted["nested"]["safe_categories"],
+            ["uncertain", "supported"],
+        )
+
+    def test_runtime_timestamps_require_extended_rfc3339_utc(self):
+        records = fixture_records()
+        run = next(record for record in records if record["record_type"] == "detector_run")
+        rejected = (
+            "2026-08-31 12:00:00+00:00",
+            "20260831T120000Z",
+            "2026-08-31T12:00:00-00:00",
+            "2026-08-31T12:00:00+01:00",
+        )
+        for timestamp in rejected:
+            with self.subTest(timestamp=timestamp):
+                broken = copy.deepcopy(records)
+                broken_run = next(
+                    record
+                    for record in broken
+                    if record.get("run_id") == run["run_id"]
+                )
+                broken_run["queried_at"] = timestamp
+                self.assertIn(
+                    "invalid_utc_timestamp",
+                    codes(schema.validate_records(broken)),
+                )
+        for timestamp in (
+            "2026-08-31T12:00:00Z",
+            "2026-08-31T12:00:00.123456+00:00",
+        ):
+            with self.subTest(timestamp=timestamp):
+                valid = copy.deepcopy(records)
+                valid_run = next(
+                    record
+                    for record in valid
+                    if record.get("run_id") == run["run_id"]
+                )
+                valid_run["queried_at"] = timestamp
+                self.assertNotIn(
+                    "invalid_utc_timestamp",
+                    codes(schema.validate_records(valid)),
+                )
 
 
 class MigrationAndContractFileTests(unittest.TestCase):
@@ -526,6 +659,30 @@ class MigrationAndContractFileTests(unittest.TestCase):
         self.assertIn("datasets", loaded)
         self.assertIn("decision_schemas", loaded)
         self.assertIn("oversight_crosswalks", loaded)
+
+    def test_json_schema_timestamps_match_runtime_rfc3339_utc_contract(self):
+        expected_pattern = (
+            "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:"
+            "[0-9]{2}(?:[.][0-9]+)?(?:Z|[+]00:00)$"
+        )
+
+        def timestamp_nodes(value):
+            if isinstance(value, dict):
+                if value.get("format") == "date-time":
+                    yield value
+                for child in value.values():
+                    yield from timestamp_nodes(child)
+            elif isinstance(value, list):
+                for child in value:
+                    yield from timestamp_nodes(child)
+
+        discovered = 0
+        for path in sorted((BENCHMARK / "schemas").glob("*.json")):
+            payload = json.loads(path.read_text(encoding="utf-8"))
+            for node in timestamp_nodes(payload):
+                discovered += 1
+                self.assertEqual(node.get("pattern"), expected_pattern, path)
+        self.assertGreaterEqual(discovered, 14)
 
     def test_duplicate_registry_ids_fail_instead_of_silently_overwriting(self):
         with tempfile.TemporaryDirectory() as directory:
@@ -746,6 +903,127 @@ class EvaluatorIntegrationTests(unittest.TestCase):
             self.assertEqual(v2["coverage"], 0.0)
             self.assertEqual(v2["status_counts"], {"timeout": 1})
             self.assertEqual(v2["exclusions"], {"run_status:timeout": 1})
+
+    def test_evaluator_handles_dependency_clusters_that_cross_row_strata(self):
+        records = fixture_records()
+        samples = [
+            copy.deepcopy(record)
+            for record in records
+            if record["record_type"] == "sample_revision"
+        ]
+        runs = [
+            copy.deepcopy(record)
+            for record in records
+            if record["record_type"] == "detector_run"
+        ]
+        samples[1]["source_group_id"] = samples[0]["source_group_id"]
+        samples[1]["domain"] = "business"
+        with tempfile.TemporaryDirectory() as directory:
+            directory = Path(directory)
+            sample_path = directory / "samples.jsonl"
+            run_path = directory / "runs.jsonl"
+            output = directory / "summary.json"
+            schema.write_jsonl(sample_path, samples)
+            schema.write_jsonl(run_path, runs)
+            result = subprocess.run(
+                [
+                    sys.executable,
+                    str(BENCHMARK / "evaluate.py"),
+                    "--input", str(run_path),
+                    "--samples", str(sample_path),
+                    "--output", str(output),
+                    "--bootstrap-replicates", "20",
+                ],
+                cwd=ROOT,
+                text=True,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                check=False,
+            )
+            self.assertEqual(result.returncode, 0, result.stderr)
+            self.assertNotIn("Traceback", result.stderr)
+            summary = json.loads(output.read_text(encoding="utf-8"))
+            v1 = next(
+                group
+                for group in summary["detector_results"]
+                if group["detector_version"] == "v1"
+            )
+            uncertainty = v1["ranking_metrics"][0]["uncertainty"]
+            self.assertEqual(uncertainty["mixed_stratum_cluster_count"], 1)
+            self.assertEqual(uncertainty["independent_cluster_count"], 1)
+
+    def test_invalid_rating_references_do_not_emit_editorial_outcomes(self):
+        records = fixture_records()
+        samples = [record for record in records if record["record_type"] == "sample_revision"]
+        runs = [record for record in records if record["record_type"] == "detector_run"]
+        pair = {
+            "schema_version": "2.0.0",
+            "record_type": "revision_pair",
+            "pair_id": "dangling-pair",
+            "source_revision_id": "missing-before",
+            "candidate_revision_id": "missing-after",
+            "pair_kind": "editorial_before_after",
+            "created_at": "2026-08-31T12:00:00Z",
+        }
+        ratings = []
+        for suffix, revision_id, value in (
+            ("before", "missing-before", 2),
+            ("after", "missing-after", 4),
+        ):
+            ratings.append(
+                {
+                    "schema_version": "2.0.0",
+                    "record_type": "human_rating",
+                    "rating_id": f"dangling-rating-{suffix}",
+                    "pair_id": None,
+                    "revision_id": revision_id,
+                    "rater_id_pseudonym": "rater-1",
+                    "dimension": "clarity",
+                    "scale_id": "five-point",
+                    "value": value,
+                    "preference": None,
+                    "blind_order": None,
+                    "rated_at": "2026-08-31T12:00:00Z",
+                    "adjudication_status": "not_needed",
+                }
+            )
+        with tempfile.TemporaryDirectory() as directory:
+            directory = Path(directory)
+            sample_path = directory / "samples.jsonl"
+            run_path = directory / "runs.jsonl"
+            pair_path = directory / "pairs.jsonl"
+            rating_path = directory / "ratings.jsonl"
+            output = directory / "summary.json"
+            schema.write_jsonl(sample_path, samples)
+            schema.write_jsonl(run_path, runs)
+            schema.write_jsonl(pair_path, [pair])
+            schema.write_jsonl(rating_path, ratings)
+            result = subprocess.run(
+                [
+                    sys.executable,
+                    str(BENCHMARK / "evaluate.py"),
+                    "--input", str(run_path),
+                    "--samples", str(sample_path),
+                    "--pairs", str(pair_path),
+                    "--ratings", str(rating_path),
+                    "--output", str(output),
+                    "--bootstrap-replicates", "20",
+                ],
+                cwd=ROOT,
+                text=True,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                check=False,
+            )
+            self.assertEqual(result.returncode, 2, result.stderr)
+            summary = json.loads(output.read_text(encoding="utf-8"))
+            rating_summary = summary["human_rating_summary"]
+            self.assertEqual(
+                rating_summary["status"],
+                "unavailable_due_to_validation_errors",
+            )
+            self.assertIsNone(rating_summary["paired_outcomes"])
+            self.assertNotIn("mean_candidate_minus_source", json.dumps(rating_summary))
 
     def test_evaluator_reports_revision_pair_editorial_outcomes(self):
         records = fixture_records()

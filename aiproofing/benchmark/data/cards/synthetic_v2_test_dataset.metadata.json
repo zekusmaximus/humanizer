@@ -1,0 +1,40 @@
+{
+  "card_schema_version": "2.0.0",
+  "card_type": "dataset",
+  "card_id": "dataset-humanizer-synthetic-legacy-v2-test",
+  "evidence_status": "synthetic_fixture_no_external_evidence",
+  "claim_boundary": "This deterministic two-item fixture tests Benchmark v2 parsing and metric code only; it supplies no external performance evidence.",
+  "dataset_id": "humanizer-synthetic-legacy",
+  "dataset_snapshot_id": "v2-test",
+  "purpose": "Validator, grouping, status, and rank-metric tests.",
+  "excluded_uses": [
+    "detector evaluation",
+    "calibration",
+    "threshold selection",
+    "authorship decisions",
+    "public performance claims"
+  ],
+  "collection_generation_dates": "Fixed fixture timestamps dated 2026-08-31.",
+  "annotation_scheme_id": "surface-lineage-v2",
+  "label_ontology_and_adjudication": "Synthetic controlled-generation human and machine labels created for software tests; no people or submitted manuscripts.",
+  "independent_group_count": 2,
+  "resampling_cluster_field": "source_group_id",
+  "split_construction": "Both synthetic groups are assigned to the test role.",
+  "composition": "One human-only and one model-generated English technical fixture.",
+  "language_domain_length_distributions": "Two short English technical fixture rows of equal length.",
+  "prompt_generation_configuration": "Synthetic values are committed directly; no external generation endpoint was used.",
+  "assistance_workflows": "One human-only and one model-generated control record.",
+  "rights_status": "repository-authored synthetic fixture",
+  "consent_and_access": "No personal data; local test access only.",
+  "pii_handling": "No personal information is included.",
+  "deduplication_contamination_checks": "Identical normalized hashes are deliberate and exercise duplicate-handling behavior.",
+  "retention_access_controls": "Repository-local fixture access.",
+  "transformations": "None beyond the fixture's declared normalization contract.",
+  "limitations": [
+    "tiny artificial sample",
+    "fictional detector",
+    "no calibrated probabilities",
+    "no threshold evidence"
+  ],
+  "manifest_hash": "75fe74b42e7d3a7b65d2b27f8fdb185151485c12fb0a7b083c10bbc86adb4e2b"
+}

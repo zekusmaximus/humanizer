@@ -106,7 +106,7 @@ def _bounded_float(label: str, minimum: float, maximum: float):
 def build_argument_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         description=(
-            "Validate and initialize the 18-task Editorial Pattern & Quality "
+            f"Validate and initialize the {len(EXPECTED_TASK_IDS)}-task Editorial Pattern & Quality "
             "Review workflow. This creates scaffolding and an unsigned revision "
             "audit; it does not edit the manuscript."
         ),
@@ -303,7 +303,11 @@ def validate_manifest_data(
             raise ManifestValidationError(f"duplicate task sequence: {sequence}")
         sequences.add(sequence)
 
-        legacy_number = task.get("legacy_task_number")
+        if "legacy_task_number" not in task:
+            raise ManifestValidationError(
+                f"task {task_id} must declare legacy_task_number (integer or null)"
+            )
+        legacy_number = task["legacy_task_number"]
         if legacy_number is not None:
             if not isinstance(legacy_number, int) or isinstance(legacy_number, bool):
                 raise ManifestValidationError(
@@ -358,8 +362,8 @@ def validate_manifest_data(
         phase_id = task.get("phase_id")
         if phase_id not in phase_ids:
             raise ManifestValidationError(f"task {task_id} references unknown phase {phase_id!r}")
-        if not isinstance(task.get("enabled"), bool):
-            raise ManifestValidationError(f"task {task_id} must declare enabled")
+        if task.get("enabled") is not True:
+            raise ManifestValidationError(f"canonical task {task_id} must be enabled")
 
         dependencies = _require_list(task.get("dependencies"), f"task {task_id} dependencies")
         if len(dependencies) != len(set(dependencies)):
@@ -425,11 +429,13 @@ def validate_manifest_data(
                 raise ManifestValidationError(
                     f"task {task['task_id']} references unknown dependency {dependency!r}"
                 )
+    _validate_dependency_graph(tasks_by_id)
+    for task in tasks:
+        for dependency in task["dependencies"]:
             if sequence_by_id[dependency] >= task["sequence"]:
                 raise ManifestValidationError(
                     f"task {task['task_id']} dependency {dependency} must precede it"
                 )
-    _validate_dependency_graph(tasks_by_id)
 
     declared_task_protocols = {
         path for path, role in roles_by_path.items() if role == "task_protocol"
@@ -744,7 +750,10 @@ class AIProofingOrchestrator:
 
     def print_workflow_summary(self) -> None:
         print("\n" + "=" * 72)
-        print(f"{self.manifest['display_name'].upper()} - 6 PHASES, 18 TASKS")
+        print(
+            f"{self.manifest['display_name'].upper()} - "
+            f"{len(self.phases)} PHASES, {len(self.tasks)} TASKS"
+        )
         print("=" * 72)
         active_phase: Optional[int] = None
         for task in self.tasks:
@@ -762,8 +771,11 @@ class AIProofingOrchestrator:
             return
         references = task["protocols"] + task["shared_checklists"]
         print("\nCurrent scaffolding position:")
-        print(f"  Phase {task['phase_id']}/6: {task['phase_name']}")
-        print(f"  Task {task['task_id']} (sequence {task['sequence']}/18): {task['name']}")
+        print(f"  Phase {task['phase_id']}/{len(self.phases)}: {task['phase_name']}")
+        print(
+            f"  Task {task['task_id']} "
+            f"(sequence {task['sequence']}/{len(self.tasks)}): {task['name']}"
+        )
         print(f"  References: {', '.join(references)}")
 
 

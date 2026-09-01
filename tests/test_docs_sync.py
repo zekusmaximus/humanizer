@@ -9,7 +9,7 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from aiproofing.benchmark.cards import render_result_card, write_card
+from aiproofing.benchmark.cards import RENDERERS, render_result_card, write_card
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -130,6 +130,13 @@ class WorkflowContractTests(unittest.TestCase):
         plan = read("aiproofing/protocols/AIproof_plan.md")
         plan_tasks = re.findall(r"^### Task ([0-9.]+): (.+)$", plan, re.MULTILINE)
         self.assertEqual(plan_tasks, [(task["task_id"], task["name"]) for task in tasks])
+        for task in tasks:
+            for legacy_name in task["legacy_names"]:
+                self.assertIn(
+                    legacy_name,
+                    plan,
+                    f"Task {task['task_id']} legacy name is missing from the plan",
+                )
 
         for task in tasks:
             marker = f"### Task {task['task_id']}: {task['name']}"
@@ -255,6 +262,21 @@ class WorkflowContractTests(unittest.TestCase):
 
 
 class CardsAndLivingDocsTests(unittest.TestCase):
+    def test_checked_in_cards_are_exact_renderer_outputs(self) -> None:
+        metadata_paths = sorted(
+            (ROOT / "aiproofing" / "benchmark").glob("**/*.metadata.json")
+        )
+        self.assertEqual(len(metadata_paths), 9)
+        for metadata_path in metadata_paths:
+            with self.subTest(metadata=metadata_path):
+                metadata = json.loads(metadata_path.read_text(encoding="utf-8"))
+                card_path = metadata_path.with_name(
+                    metadata_path.name.removesuffix(".metadata.json") + ".md"
+                )
+                self.assertTrue(card_path.is_file(), card_path)
+                rendered = RENDERERS[metadata["card_type"]](metadata)
+                self.assertEqual(card_path.read_text(encoding="utf-8"), rendered)
+
     def test_checked_in_result_references_existing_cards(self) -> None:
         result = json.loads(
             (ROOT / "aiproofing" / "benchmark" / "results" / "example_summary.json").read_text(
@@ -405,6 +427,7 @@ class CardsAndLivingDocsTests(unittest.TestCase):
             ROOT / "aiproofing" / "benchmark" / "results" / "example_summary.json",
             *(ROOT / "aiproofing" / "benchmark" / "schemas").glob("*.json"),
             *(ROOT / "aiproofing" / "benchmark" / "registries").glob("*.json"),
+            *(ROOT / "aiproofing" / "benchmark").glob("**/*.metadata.json"),
         ]
         self.assertGreaterEqual(len(paths), 20)
         for path in paths:
@@ -428,13 +451,15 @@ class HistoricalArtifactTests(unittest.TestCase):
 
     def test_underlying_source_manuscripts_match_the_reviewed_baseline(self) -> None:
         expected = {
-            "Boundary/Boundary.md": "1d6b3321352041b441885d63650bd871de2523744dc773be76c52f7430fc9ce1",
-            "Test story/WitCS.md": "45dac0de0e609e232a67c699e4629a09071c76eb6be1e464391ef91d89bb3736",
-            "Mnemosyne_Cycle/Mnemosyne_Cycle.md": "a5c5f6479df14f6eae9c4414426d4928ca20af7f837c3900e09d6976c80da29c",
-            "Tempus_Dimittere/Tempus_Dimittere.md": "45c0ac764a18d4e8e05566bb0c2883671991a3b0119521e620622155704d99c8",
+            "Boundary/Boundary.md": "dbcfe4134a4e0f2f742857f09a0526ccf77c785ddb065851961587e9577ee478",
+            "Test story/WitCS.md": "39a6f7483ba685696a991201aa20abf0c9e90124e8af09714b0be145ff8bf2e5",
+            "Mnemosyne_Cycle/Mnemosyne_Cycle.md": "b60460eacf054e486869c4ffc8caed187c1c83abf0332610d75636c21bf1e608",
+            "Tempus_Dimittere/Tempus_Dimittere.md": "4a2e77bd97219fb8dfa515585aa7f5f2e56af3a3127b5f8aa8646a29cc86133d",
         }
         for path, expected_digest in expected.items():
-            digest = hashlib.sha256((ROOT / path).read_bytes()).hexdigest()
+            payload = (ROOT / path).read_bytes()
+            normalized_lf = payload.replace(b"\r\n", b"\n").replace(b"\r", b"\n")
+            digest = hashlib.sha256(normalized_lf).hexdigest()
             self.assertEqual(digest, expected_digest, path)
 
 

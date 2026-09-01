@@ -1,0 +1,96 @@
+{
+  "card_schema_version": "2.0.0",
+  "card_type": "result",
+  "card_id": "result-example-summary-v1-legacy-synthetic",
+  "evidence_status": "historical_synthetic_fixture_no_external_evidence",
+  "claim_boundary": "Historical synthetic arithmetic only; this result is not reproducible detector evidence under Benchmark v2 and supports no external inference.",
+  "result_id": "example-summary-v1-legacy-synthetic",
+  "task_id": "legacy.v1.score_arithmetic",
+  "estimand": "Historical synthetic pre/post score arithmetic; no eligible confirmatory estimand.",
+  "excluded_uses": [
+    "detector performance claims",
+    "authorship decisions",
+    "threshold selection",
+    "editorial effectiveness claims",
+    "publication decisions"
+  ],
+  "dataset_card_ref": "aiproofing/benchmark/data/cards/synthetic_legacy_v1_dataset.md",
+  "detector_card_ref": "aiproofing/benchmark/data/cards/synthetic_detA_detector.md; aiproofing/benchmark/data/cards/synthetic_detB_detector.md",
+  "dataset_id": "humanizer-synthetic-legacy",
+  "dataset_snapshot_id": "v1-migrated-2026-08-31",
+  "annotation_scheme_id": "legacy labels; provisional under Benchmark v2",
+  "dataset_dates": "repository fixture; no external collection period",
+  "registry_and_rights": "synthetic registry entry; rights status unknown",
+  "label_basis": "legacy fixture labels retained for migration tests only",
+  "class_counts": {
+    "legacy_ai_rows": 4,
+    "legacy_human_rows": 4,
+    "legacy_hybrid_rows": 4
+  },
+  "split_construction": "Three synthetic legacy labels with before/after rows and two fictional detector columns.",
+  "detector_id": "detA + detB",
+  "detector_version": "unknown",
+  "adapter_version": "legacy-v1-evaluator",
+  "model_version": null,
+  "mode": "legacy-v1-evaluator-superseded",
+  "config_hash": null,
+  "hardware": null,
+  "latency": null,
+  "cost": null,
+  "api_policy_snapshot": null,
+  "independent_group_count": 3,
+  "resampling_cluster_field": "source_group_id required by v2; legacy result resampled rows",
+  "valid_run_count": 0,
+  "eligible_status_denominator": 12,
+  "coverage": 0.0,
+  "status_counts": {
+    "legacy_status_missing": 12
+  },
+  "exclusions": {
+    "label_status:provisional": 12,
+    "legacy_text_unavailable": 12
+  },
+  "ranking_metrics": {
+    "historical_delta_ai_score": -0.15166666666666667,
+    "status": "non-evidentiary legacy arithmetic"
+  },
+  "uncertainty": "Legacy exploratory row bootstrap; not dependency-cluster-aware and not valid Benchmark v2 uncertainty.",
+  "threshold_id": null,
+  "calibrator_id": null,
+  "threshold_policy": "Retired universal 0.5 rule; unsupported and not selection-valid.",
+  "common_call_comparison": null,
+  "missingness_analysis": "v1 status fields were absent; v2-compatible coverage is zero.",
+  "prevalence_scenarios": null,
+  "strata": {
+    "legacy_split": [
+      "ai",
+      "hybrid",
+      "human"
+    ]
+  },
+  "unsupported_cells": [
+    "all external estimands"
+  ],
+  "robustness": null,
+  "ablations": null,
+  "detector_correlation": "legacy disagreement arithmetic only; not an independent validity study",
+  "multiplicity_status": "not evaluated",
+  "negative_findings": [],
+  "human_ratings": "Repeated copied quality values are not valid paired human-rating evidence.",
+  "track_d_verification": null,
+  "drift_retest_date": null,
+  "reproducibility_manifest": {
+    "input": "aiproofing/benchmark/data/example_runs.csv",
+    "input_lf_sha256": "574b023405ab2f33a8ee94047eea601777ee89345a59770e5283a5f37c972f6f",
+    "summary": "aiproofing/benchmark/results/example_summary.json"
+  },
+  "contact": "Humanizer fixture maintainers",
+  "limitations": [
+    "synthetic values",
+    "provisional labels",
+    "unavailable text",
+    "fictional detectors",
+    "repeated quality values",
+    "no rights or consent evidence"
+  ]
+}

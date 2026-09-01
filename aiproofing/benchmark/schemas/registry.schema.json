@@ -20,7 +20,7 @@
           "version": {"type": "string", "minLength": 1},
           "status": {"type": "string", "minLength": 1},
           "source_reference": {"type": "string", "minLength": 1},
-          "reviewed_at": {"type": "string", "format": "date-time", "pattern": "(?:Z|[+]00:00)$"},
+          "reviewed_at": {"type": "string", "format": "date-time", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(?:[.][0-9]+)?(?:Z|[+]00:00)$"},
           "snapshot_hash": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
           "allowed_versions": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
           "allowed_snapshot_ids": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 1}},

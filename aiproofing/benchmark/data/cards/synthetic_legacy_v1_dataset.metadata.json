@@ -1,0 +1,41 @@
+{
+  "card_schema_version": "2.0.0",
+  "card_type": "dataset",
+  "card_id": "dataset-humanizer-synthetic-legacy-v1-migrated-2026-08-31",
+  "evidence_status": "synthetic_fixture_no_external_evidence",
+  "claim_boundary": "This fixture supports software tests only and makes no performance, authorship, misconduct, editorial-success, or publication claim.",
+  "dataset_id": "humanizer-synthetic-legacy",
+  "dataset_snapshot_id": "v1-migrated-2026-08-31",
+  "purpose": "Deterministic v1 migration, validation, and metric smoke tests.",
+  "excluded_uses": [
+    "detector evaluation",
+    "calibration",
+    "threshold selection",
+    "external claims",
+    "authorship decisions"
+  ],
+  "collection_generation_dates": "Repository fixture; migration timestamps are supplied per run.",
+  "annotation_scheme_id": "legacy labels retained for audit only",
+  "label_ontology_and_adjudication": "Legacy ai/hybrid/human labels become provisional and analysis-ineligible; no v2 adjudication is asserted.",
+  "independent_group_count": 3,
+  "resampling_cluster_field": "source_group_id",
+  "split_construction": "Synthetic ai, hybrid, and human labels; not a sampled population.",
+  "composition": "Six sample-stage rows represented across twelve detector-run rows.",
+  "language_domain_length_distributions": "Unavailable because source text is absent from the v1 fixture.",
+  "prompt_generation_configuration": null,
+  "assistance_workflows": "Legacy before/after fixture rows only; workflow metadata is incomplete.",
+  "rights_status": "unknown",
+  "consent_and_access": "No people or submitted manuscripts; repository-local synthetic fixture.",
+  "pii_handling": "No personal information is included.",
+  "deduplication_contamination_checks": "Not applicable to the textless migration fixture.",
+  "retention_access_controls": "Repository-local fixture access.",
+  "transformations": "Strict v1-to-v2 compatibility migration creates auditable, excluded stubs.",
+  "limitations": [
+    "source bytes unavailable",
+    "fictional detector identities",
+    "unknown detector versions and configurations",
+    "provisional labels",
+    "repeated copied ratings"
+  ],
+  "manifest_hash": "574b023405ab2f33a8ee94047eea601777ee89345a59770e5283a5f37c972f6f"
+}

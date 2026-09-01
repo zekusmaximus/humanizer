@@ -14,7 +14,7 @@ The runner writes versioned, exclusive-create files in the selected output direc
 - `revision_audit_v2_<run-id>_rNNN.md`
 - `aiproof_workflow_state_v2_<run-id>_rNNN.json`
 
-Each record includes a UTC timestamp, source path and raw-byte SHA-256 digest, run identifier, schema/version fields, configured constraints, and explicit statements about whether edits were performed. Existing files are never overwritten.
+Each record includes a UTC timestamp, source file name and raw-byte SHA-256 digest, run identifier, schema/version fields, configured constraints, and explicit statements about whether edits were performed. The runner does not persist the absolute source path. Existing files are never overwritten.
 
 ## Edit entry contract
 

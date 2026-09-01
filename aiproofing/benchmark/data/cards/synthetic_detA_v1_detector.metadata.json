@@ -1,0 +1,39 @@
+{
+  "card_schema_version": "2.0.0",
+  "card_type": "detector",
+  "card_id": "detector-detA-v1",
+  "evidence_status": "synthetic_fixture_no_external_evidence",
+  "claim_boundary": "detA@v1 is a fictional test adapter, not a product or validated detector.",
+  "detector_id": "detA",
+  "detector_version": "v1",
+  "adapter_version": "2.0.0",
+  "task_id": "A.document_binary",
+  "config_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "native_signals": [
+    {
+      "name": "machine_score",
+      "value_type": "number",
+      "direction": "higher_machine"
+    },
+    {
+      "name": "class_label",
+      "value_type": "string",
+      "direction": "categorical"
+    }
+  ],
+  "supported_scope": "Software tests only; no empirical scope established.",
+  "eligible_denominator_policy": "Verified, analysis-eligible synthetic Track A rows with status=ok.",
+  "calibration_ids": [],
+  "threshold_ids": [],
+  "hardware": "synthetic fixture; not measured",
+  "latency": "synthetic fixture values",
+  "cost": null,
+  "policy_snapshot": "not applicable; offline fixture",
+  "drift_retest_date": "rerun after benchmark contract changes",
+  "contact": "Humanizer fixture maintainers",
+  "limitations": [
+    "two artificial items",
+    "fictional outputs",
+    "no calibration or threshold audit"
+  ]
+}

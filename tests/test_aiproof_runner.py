@@ -44,11 +44,33 @@ class ManifestTests(unittest.TestCase):
         with self.assertRaisesRegex(runner.ManifestValidationError, "one owning task"):
             runner.validate_manifest_data(broken, ROOT)
 
-    def test_cycle_or_forward_dependency_is_rejected(self):
+    def test_dependency_cycle_is_reported_as_a_cycle(self):
         manifest = json.loads(MANIFEST_PATH.read_text(encoding="utf-8"))
         broken = copy.deepcopy(manifest)
         broken["tasks"][0]["dependencies"] = ["16"]
+        with self.assertRaisesRegex(runner.ManifestValidationError, "dependency cycle"):
+            runner.validate_manifest_data(broken, ROOT)
+
+    def test_noncyclic_forward_dependency_is_rejected_for_precedence(self):
+        manifest = json.loads(MANIFEST_PATH.read_text(encoding="utf-8"))
+        broken = copy.deepcopy(manifest)
+        broken["tasks"][0]["dependencies"] = ["2"]
+        broken["tasks"][1]["dependencies"] = []
         with self.assertRaisesRegex(runner.ManifestValidationError, "must precede"):
+            runner.validate_manifest_data(broken, ROOT)
+
+    def test_disabled_canonical_task_is_rejected(self):
+        manifest = json.loads(MANIFEST_PATH.read_text(encoding="utf-8"))
+        broken = copy.deepcopy(manifest)
+        broken["tasks"][6]["enabled"] = False
+        with self.assertRaisesRegex(runner.ManifestValidationError, "must be enabled"):
+            runner.validate_manifest_data(broken, ROOT)
+
+    def test_every_task_must_declare_legacy_number_even_when_null(self):
+        manifest = json.loads(MANIFEST_PATH.read_text(encoding="utf-8"))
+        broken = copy.deepcopy(manifest)
+        del broken["tasks"][6]["legacy_task_number"]
+        with self.assertRaisesRegex(runner.ManifestValidationError, "must declare legacy_task_number"):
             runner.validate_manifest_data(broken, ROOT)
 
 
@@ -71,6 +93,7 @@ class RunnerCliTests(unittest.TestCase):
 
     def test_smoke_writes_versioned_utc_state_and_all_constraints(self):
         with tempfile.TemporaryDirectory() as directory:
+            source_before = SOURCE_PATH.read_bytes()
             result = self.run_cli(
                 SOURCE_PATH,
                 directory,
@@ -109,6 +132,7 @@ class RunnerCliTests(unittest.TestCase):
             self.assertEqual(len(state["source"]["raw_bytes_sha256"]), 64)
             self.assertEqual(audit["authentication_state"], "unsigned")
             self.assertIn("not authenticated provenance", audit["claim_boundary"])
+            self.assertEqual(SOURCE_PATH.read_bytes(), source_before)
 
     def test_legacy_option_aliases_warn_and_apply(self):
         with tempfile.TemporaryDirectory() as directory:

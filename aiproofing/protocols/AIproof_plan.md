@@ -158,4 +158,17 @@ Do not replace them with ordinal IDs 1-18. `../scripts/task_manifest.json` is th
 
 ## Legacy aliases
 
-The established integer IDs and task names remain readable aliases for earlier 16-task logs. The retired names for Tasks `2`, `5`, `6.5`, `10`, `11`, `14.5`, and `16` may appear only in a versioned migration map. The two fractional tasks had no entry in the legacy runner and therefore have no legacy sequential alias.
+The established integer IDs and task names remain readable aliases for earlier 16-task logs. The manifest's versioned migration map retains these retired names:
+
+| Canonical task | Retired name |
+|---|---|
+| `2` | AI Tell Checklist Assembly |
+| `5` | Overused/Bureaucratic Vocabulary Replacement |
+| `6.5` | Formatting Tell Analysis |
+| `7` | Part-of-Speech Balance |
+| `10` | Formulaic Pattern Breaking |
+| `11` | Burstiness Enhancement |
+| `14.5` | Voice and Perspective Injection |
+| `16` | Final Read-Through and Sign-Off |
+
+The two fractional tasks had no entry in the legacy runner and therefore have no legacy sequential alias.
