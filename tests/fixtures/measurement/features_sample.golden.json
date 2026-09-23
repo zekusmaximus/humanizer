@@ -1,0 +1,1374 @@
+{
+  "claim_boundary": "Measured text features for editorial review. Each value is a MEASURED_FEATURE or a STYLE_HEURISTIC candidate count produced by the named extractor and configuration. No value is evidence of authorship, model generation, detector behavior, quality, or publication fitness, and no value is a pass/fail threshold.",
+  "config_sha256": "051764e553151dbcbdaf8408fa445496f8d9360b53a668cb6ccd2945952326bf",
+  "configuration": {
+    "band_notes": {},
+    "bands": {
+      "em_dash_max_per_100_words": null,
+      "sentence_length_sd_min": null
+    },
+    "long_sentence_min_tokens": 40,
+    "rolling_window_sentences": 5,
+    "short_sentence_max_tokens": 4,
+    "top_n": 10
+  },
+  "document": {
+    "cadence": {
+      "evidence_label": "MEASURED_FEATURE",
+      "features": {
+        "rolling_sentence_length_sd": {
+          "method": "sample SD of token lengths over every run of 5 consecutive prose sentences in document order",
+          "status": "measured",
+          "value": {
+            "max": 3.2094,
+            "median": 2.9665,
+            "min": 2.0,
+            "window_sentences": 5,
+            "windows": 7
+          }
+        },
+        "rolling_windows_below_sentence_length_sd_min": {
+          "status": "disabled",
+          "value": null
+        }
+      }
+    },
+    "dialogue": {
+      "evidence_label": "MEASURED_FEATURE",
+      "features": {
+        "dialogue_token_share": {
+          "method": "tokens inside double-quote pairs (curly mapped to straight, paired left to right per paragraph) / prose words",
+          "status": "measured",
+          "value": 0.1282
+        },
+        "dialogue_tokens": {
+          "method": "tokens inside paired double quotes",
+          "status": "measured",
+          "value": 10
+        },
+        "quoted_spans": {
+          "method": "paired double-quote spans; single quotes are not used because they collide with apostrophes",
+          "status": "measured",
+          "value": 2
+        },
+        "unbalanced_quote_paragraph_lines": {
+          "method": "start lines of prose blocks with an odd number of double quotes",
+          "status": "measured",
+          "value": []
+        }
+      }
+    },
+    "formatting": {
+      "evidence_label": "MEASURED_FEATURE",
+      "features": {
+        "bold_spans": {
+          "method": "**x** and __x__ spans in the raw text of prose blocks",
+          "status": "measured",
+          "value": 2
+        },
+        "emoji_counts": {
+          "reason": "not implemented in aiproof-textfeatures 1.0.0; review manually",
+          "status": "unavailable",
+          "value": null
+        },
+        "inline_header_list_items": {
+          "method": "list items opening with a bold label ending in a colon (- **X:**)",
+          "status": "measured",
+          "value": 1
+        },
+        "italic_spans": {
+          "method": "*x* and non-intraword _x_ spans in the raw text of prose blocks after bold removal",
+          "status": "measured",
+          "value": 1
+        },
+        "title_case_heading_checks": {
+          "reason": "not implemented in aiproof-textfeatures 1.0.0; review manually",
+          "status": "unavailable",
+          "value": null
+        }
+      }
+    },
+    "lexicons": {
+      "evidence_label": "STYLE_HEURISTIC",
+      "features": {
+        "bureaucratic": {
+          "method": "editorial_lexicons.json 1.0.0 matching rules over prose blocks; per 1,000 aiproof-token-v1 prose words",
+          "status": "measured",
+          "value": {
+            "count": 1,
+            "entries": {
+              "conducted": {
+                "count": 0,
+                "id": "bureau-009",
+                "lines": [],
+                "per_1000_words": 0.0
+              },
+              "consequently": {
+                "count": 0,
+                "id": "bureau-001",
+                "lines": [],
+                "per_1000_words": 0.0
+              },
+              "executed": {
+                "count": 0,
+                "id": "bureau-008",
+                "lines": [],
+                "per_1000_words": 0.0
+              },
+              "intricate": {
+                "count": 0,
+                "id": "bureau-005",
+                "lines": [],
+                "per_1000_words": 0.0
+              },
+              "leveraged": {
+                "count": 0,
+                "id": "bureau-007",
+                "lines": [],
+                "per_1000_words": 0.0
+              },
+              "nuanced": {
+                "count": 0,
+                "id": "bureau-006",
+                "lines": [],
+                "per_1000_words": 0.0
+              },
+              "pivotal": {
+                "count": 1,
+                "id": "bureau-004",
+                "lines": [
+                  9
+                ],
+                "per_1000_words": 12.8205
+              },
+              "significant": {
+                "count": 0,
+                "id": "bureau-003",
+                "lines": [],
+                "per_1000_words": 0.0
+              },
+              "therefore": {
+                "count": 0,
+                "id": "bureau-002",
+                "lines": [],
+                "per_1000_words": 0.0
+              }
+            },
+            "per_1000_words": 12.8205
+          }
+        },
+        "chat_artifacts": {
+          "method": "editorial_lexicons.json 1.0.0 matching rules over prose blocks; per 1,000 aiproof-token-v1 prose words",
+          "status": "measured",
+          "value": {
+            "count": 0,
+            "entries": {
+              "Certainly!": {
+                "count": 0,
+                "id": "chat-003",
+                "lines": [],
+                "per_1000_words": 0.0
+              },
+              "I hope this helps": {
+                "count": 0,
+                "id": "chat-001",
+                "lines": [],
+                "per_1000_words": 0.0
+              },
+              "Of course!": {
+                "count": 0,
+                "id": "chat-002",
+                "lines": [],
+                "per_1000_words": 0.0
+              },
+              "Would you like": {
+                "count": 0,
+                "id": "chat-005",
+                "lines": [],
+                "per_1000_words": 0.0
+              },
+              "You're absolutely right!": {
+                "count": 0,
+                "id": "chat-004",
+                "lines": [],
+                "per_1000_words": 0.0
+              },
+              "here is a": {
+                "count": 0,
+                "id": "chat-007",
+                "lines": [],
+                "per_1000_words": 0.0
+              },
+              "let me know": {
+                "count": 0,
+                "id": "chat-006",
+                "lines": [],
+                "per_1000_words": 0.0
+              }
+            },
+            "per_1000_words": 0.0
+          }
+        },
+        "copula_phrases": {
+          "method": "editorial_lexicons.json 1.0.0 matching rules over prose blocks; per 1,000 aiproof-token-v1 prose words",
+          "status": "measured",
+          "value": {
+            "count": 0,
+            "entries": {
+              "boasts": {
+                "count": 0,
+                "id": "copula-005",
+                "lines": [],
+                "per_1000_words": 0.0
+              },
+              "features": {
+                "count": 0,
+                "id": "copula-006",
+                "lines": [],
+                "per_1000_words": 0.0
+              },
+              "marks": {
+                "count": 0,
+                "id": "copula-003",
+                "lines": [],
+                "per_1000_words": 0.0
+              },
+              "offers": {
+                "count": 0,
+                "id": "copula-007",
+                "lines": [],
+                "per_1000_words": 0.0
+              },
+              "represents": {
+                "count": 0,
+                "id": "copula-004",
+                "lines": [],
+                "per_1000_words": 0.0
+              },
+              "serves as": {
+                "count": 0,
+                "id": "copula-001",
+                "lines": [],
+                "per_1000_words": 0.0
+              },
+              "stands as": {
+                "count": 0,
+                "id": "copula-002",
+                "lines": [],
+                "per_1000_words": 0.0
+              }
+            },
+            "per_1000_words": 0.0
+          }
+        },
+        "filler_phrases": {
+          "method": "editorial_lexicons.json 1.0.0 matching rules over prose blocks; per 1,000 aiproof-token-v1 prose words",
+          "status": "measured",
+          "value": {
+            "count": 0,
+            "entries": {
+              "at this point in time": {
+                "count": 0,
+                "id": "filler-003",
+                "lines": [],
+                "per_1000_words": 0.0
+              },
+              "due to the fact that": {
+                "count": 0,
+                "id": "filler-002",
+                "lines": [],
+                "per_1000_words": 0.0
+              },
+              "has the ability to": {
+                "count": 0,
+                "id": "filler-005",
+                "lines": [],
+                "per_1000_words": 0.0
+              },
+              "in order to": {
+                "count": 0,
+                "id": "filler-001",
+                "lines": [],
+                "per_1000_words": 0.0
+              },
+              "in the event that": {
+                "count": 0,
+                "id": "filler-004",
+                "lines": [],
+                "per_1000_words": 0.0
+              },
+              "it is important to note that": {
+                "count": 0,
+                "id": "filler-006",
+                "lines": [],
+                "per_1000_words": 0.0
+              }
+            },
+            "per_1000_words": 0.0
+          }
+        },
+        "promotional": {
+          "method": "editorial_lexicons.json 1.0.0 matching rules over prose blocks; per 1,000 aiproof-token-v1 prose words",
+          "status": "measured",
+          "value": {
+            "count": 0,
+            "entries": {
+              "breathtaking": {
+                "count": 0,
+                "id": "promo-001",
+                "lines": [],
+                "per_1000_words": 0.0
+              },
+              "groundbreaking (figurative)": {
+                "count": 0,
+                "id": "promo-002",
+                "lines": [],
+                "per_1000_words": 0.0,
+                "qualifier": "figurative",
+                "qualifier_resolved": false
+              },
+              "nestled": {
+                "count": 0,
+                "id": "promo-003",
+                "lines": [],
+                "per_1000_words": 0.0
+              },
+              "renowned": {
+                "count": 0,
+                "id": "promo-004",
+                "lines": [],
+                "per_1000_words": 0.0
+              },
+              "stunning": {
+                "count": 0,
+                "id": "promo-005",
+                "lines": [],
+                "per_1000_words": 0.0
+              },
+              "vibrant": {
+                "count": 0,
+                "id": "promo-006",
+                "lines": [],
+                "per_1000_words": 0.0
+              }
+            },
+            "per_1000_words": 0.0
+          }
+        },
+        "replacement_cliches": {
+          "method": "editorial_lexicons.json 1.0.0 matching rules over prose blocks; per 1,000 aiproof-token-v1 prose words",
+          "status": "measured",
+          "value": {
+            "count": 0,
+            "entries": {
+              "a shiver ran down her spine": {
+                "count": 0,
+                "id": "cliche-006",
+                "lines": [],
+                "per_1000_words": 0.0
+              },
+              "a wave of relief": {
+                "count": 0,
+                "id": "cliche-005",
+                "lines": [],
+                "per_1000_words": 0.0
+              },
+              "everywhere and nowhere": {
+                "count": 0,
+                "id": "cliche-004",
+                "lines": [],
+                "per_1000_words": 0.0
+              },
+              "hadn't realized she'd been holding her breath": {
+                "count": 0,
+                "id": "cliche-001",
+                "lines": [],
+                "per_1000_words": 0.0
+              },
+              "holding her breath": {
+                "count": 0,
+                "id": "cliche-002",
+                "lines": [],
+                "per_1000_words": 0.0
+              },
+              "let out a breath": {
+                "count": 0,
+                "id": "cliche-003",
+                "lines": [],
+                "per_1000_words": 0.0
+              },
+              "the ghost of a smile": {
+                "count": 0,
+                "id": "cliche-009",
+                "lines": [],
+                "per_1000_words": 0.0
+              },
+              "the silence was deafening": {
+                "count": 0,
+                "id": "cliche-008",
+                "lines": [],
+                "per_1000_words": 0.0
+              },
+              "time stood still": {
+                "count": 0,
+                "id": "cliche-007",
+                "lines": [],
+                "per_1000_words": 0.0
+              }
+            },
+            "per_1000_words": 0.0
+          }
+        },
+        "unsupported_voice_seeds": {
+          "method": "editorial_lexicons.json 1.0.0 matching rules over prose blocks; per 1,000 aiproof-token-v1 prose words",
+          "status": "measured",
+          "value": {
+            "count": 0,
+            "entries": {
+              "Here's what I didn't say": {
+                "count": 0,
+                "id": "voice-004",
+                "lines": [],
+                "per_1000_words": 0.0
+              },
+              "I genuinely don't know how to feel about this": {
+                "count": 0,
+                "id": "voice-001",
+                "lines": [],
+                "per_1000_words": 0.0
+              },
+              "I keep coming back to": {
+                "count": 0,
+                "id": "voice-002",
+                "lines": [],
+                "per_1000_words": 0.0
+              },
+              "Looking back": {
+                "count": 0,
+                "id": "voice-005",
+                "lines": [],
+                "per_1000_words": 0.0
+              },
+              "What I didn't expect was": {
+                "count": 0,
+                "id": "voice-003",
+                "lines": [],
+                "per_1000_words": 0.0
+              }
+            },
+            "per_1000_words": 0.0
+          }
+        },
+        "watch_list": {
+          "method": "editorial_lexicons.json 1.0.0 matching rules over prose blocks; per 1,000 aiproof-token-v1 prose words",
+          "status": "measured",
+          "value": {
+            "count": 3,
+            "entries": {
+              "additionally": {
+                "count": 1,
+                "id": "watch-001",
+                "lines": [
+                  9
+                ],
+                "per_1000_words": 12.8205
+              },
+              "align with": {
+                "count": 0,
+                "id": "watch-002",
+                "lines": [],
+                "per_1000_words": 0.0
+              },
+              "crucial": {
+                "count": 0,
+                "id": "watch-003",
+                "lines": [],
+                "per_1000_words": 0.0
+              },
+              "delve": {
+                "count": 0,
+                "id": "watch-004",
+                "lines": [],
+                "per_1000_words": 0.0
+              },
+              "emphasizing": {
+                "count": 0,
+                "id": "watch-005",
+                "lines": [],
+                "per_1000_words": 0.0
+              },
+              "enduring": {
+                "count": 0,
+                "id": "watch-006",
+                "lines": [],
+                "per_1000_words": 0.0
+              },
+              "enhance": {
+                "count": 0,
+                "id": "watch-007",
+                "lines": [],
+                "per_1000_words": 0.0
+              },
+              "fostering": {
+                "count": 0,
+                "id": "watch-008",
+                "lines": [],
+                "per_1000_words": 0.0
+              },
+              "garner": {
+                "count": 0,
+                "id": "watch-009",
+                "lines": [],
+                "per_1000_words": 0.0
+              },
+              "highlight (verb)": {
+                "count": 1,
+                "id": "watch-010",
+                "lines": [
+                  18
+                ],
+                "per_1000_words": 12.8205,
+                "qualifier": "verb",
+                "qualifier_resolved": false
+              },
+              "interplay": {
+                "count": 0,
+                "id": "watch-011",
+                "lines": [],
+                "per_1000_words": 0.0
+              },
+              "intricate/intricacies": {
+                "count": 0,
+                "id": "watch-012",
+                "lines": [],
+                "per_1000_words": 0.0
+              },
+              "key (adjective)": {
+                "count": 0,
+                "id": "watch-013",
+                "lines": [],
+                "per_1000_words": 0.0,
+                "qualifier": "adjective",
+                "qualifier_resolved": false
+              },
+              "landscape (abstract noun)": {
+                "count": 0,
+                "id": "watch-014",
+                "lines": [],
+                "per_1000_words": 0.0,
+                "qualifier": "abstract noun",
+                "qualifier_resolved": false
+              },
+              "pivotal": {
+                "count": 1,
+                "id": "watch-015",
+                "lines": [
+                  9
+                ],
+                "per_1000_words": 12.8205
+              },
+              "showcase": {
+                "count": 0,
+                "id": "watch-016",
+                "lines": [],
+                "per_1000_words": 0.0
+              },
+              "tapestry (abstract noun)": {
+                "count": 0,
+                "id": "watch-017",
+                "lines": [],
+                "per_1000_words": 0.0,
+                "qualifier": "abstract noun",
+                "qualifier_resolved": false
+              },
+              "testament": {
+                "count": 0,
+                "id": "watch-018",
+                "lines": [],
+                "per_1000_words": 0.0
+              },
+              "underscore (verb)": {
+                "count": 0,
+                "id": "watch-019",
+                "lines": [],
+                "per_1000_words": 0.0,
+                "qualifier": "verb",
+                "qualifier_resolved": false
+              },
+              "valuable": {
+                "count": 0,
+                "id": "watch-020",
+                "lines": [],
+                "per_1000_words": 0.0
+              },
+              "vibrant": {
+                "count": 0,
+                "id": "watch-021",
+                "lines": [],
+                "per_1000_words": 0.0
+              }
+            },
+            "per_1000_words": 38.4615
+          }
+        }
+      },
+      "note": "Lexicon hits are style-review candidates; qualified entries are not resolved by part of speech."
+    },
+    "linguistic": {
+      "evidence_label": "MEASURED_FEATURE",
+      "features": {
+        "entity_classification": {
+          "reason": "capitalization cannot classify characters, places, or organizations; human review required",
+          "status": "unavailable",
+          "value": null
+        },
+        "pos_ratios": {
+          "reason": "no part-of-speech tagger is bundled; aiproof-textfeatures 1.0.0 is standard-library only",
+          "status": "unavailable",
+          "value": null
+        },
+        "tense": {
+          "reason": "tense requires a part-of-speech tagger, which is not bundled",
+          "status": "unavailable",
+          "value": null
+        }
+      }
+    },
+    "openings": {
+      "evidence_label": "MEASURED_FEATURE",
+      "features": {
+        "longest_same_first_word_run": {
+          "method": "longest run of consecutive prose sentences in document order sharing a first word (earliest run on ties)",
+          "status": "measured",
+          "value": {
+            "length": 1,
+            "start_line": 5,
+            "word": "mara"
+          }
+        },
+        "top_first_two_word_openings": {
+          "method": "first two tokens of each sentence with two or more tokens; share of all sentences",
+          "status": "measured",
+          "value": [
+            {
+              "count": 1,
+              "share": 0.0909,
+              "text": "additionally the"
+            },
+            {
+              "count": 1,
+              "share": 0.0909,
+              "text": "are you"
+            },
+            {
+              "count": 1,
+              "share": 0.0909,
+              "text": "it wasn't"
+            },
+            {
+              "count": 1,
+              "share": 0.0909,
+              "text": "mara lit"
+            },
+            {
+              "count": 1,
+              "share": 0.0909,
+              "text": "note the"
+            },
+            {
+              "count": 1,
+              "share": 0.0909,
+              "text": "she had"
+            },
+            {
+              "count": 1,
+              "share": 0.0909,
+              "text": "she waited"
+            },
+            {
+              "count": 1,
+              "share": 0.0909,
+              "text": "the crew"
+            },
+            {
+              "count": 1,
+              "share": 0.0909,
+              "text": "the first"
+            },
+            {
+              "count": 1,
+              "share": 0.0909,
+              "text": "the tide"
+            }
+          ]
+        },
+        "top_first_word_openings": {
+          "method": "first token of each sentence, casefolded and apostrophe-folded; share of sentences",
+          "status": "measured",
+          "value": [
+            {
+              "count": 3,
+              "share": 0.2727,
+              "text": "the"
+            },
+            {
+              "count": 2,
+              "share": 0.1818,
+              "text": "she"
+            },
+            {
+              "count": 1,
+              "share": 0.0909,
+              "text": "additionally"
+            },
+            {
+              "count": 1,
+              "share": 0.0909,
+              "text": "are"
+            },
+            {
+              "count": 1,
+              "share": 0.0909,
+              "text": "it"
+            },
+            {
+              "count": 1,
+              "share": 0.0909,
+              "text": "mara"
+            },
+            {
+              "count": 1,
+              "share": 0.0909,
+              "text": "note"
+            },
+            {
+              "count": 1,
+              "share": 0.0909,
+              "text": "we"
+            }
+          ]
+        }
+      }
+    },
+    "pattern_candidates": {
+      "evidence_label": "STYLE_HEURISTIC",
+      "features": {
+        "from_x_to_y_false_range_candidates": {
+          "reason": "not implemented in aiproof-textfeatures 1.0.0; review manually",
+          "status": "unavailable",
+          "value": null
+        },
+        "negative_parallelism": {
+          "method": "(?:\\bnot|n't|\\bnever)\\s+(?:just|merely|simply|only)\\b, IGNORECASE, on apostrophe-folded prose",
+          "status": "measured",
+          "value": {
+            "forms": {
+              "n't just": 1,
+              "n't merely": 0,
+              "n't only": 0,
+              "n't simply": 0,
+              "never just": 0,
+              "never merely": 1,
+              "never only": 0,
+              "never simply": 0,
+              "not just": 0,
+              "not merely": 0,
+              "not only": 0,
+              "not simply": 0
+            },
+            "lines": [
+              5
+            ],
+            "total": 2
+          }
+        },
+        "not_but_candidates": {
+          "reason": "not implemented in aiproof-textfeatures 1.0.0; review manually",
+          "status": "unavailable",
+          "value": null
+        },
+        "paragraph_opening_repetition": {
+          "reason": "not implemented in aiproof-textfeatures 1.0.0; review manually",
+          "status": "unavailable",
+          "value": null
+        },
+        "superficial_ing_candidates": {
+          "method": "comma plus a Humanizer pattern 3 -ing head running to sentence-final punctuation, IGNORECASE",
+          "status": "measured",
+          "value": {
+            "count": 1,
+            "heads": {
+              "highlighting": 1
+            },
+            "lines": [
+              18
+            ]
+          }
+        },
+        "triad_candidates": {
+          "reason": "not implemented in aiproof-textfeatures 1.0.0; review manually",
+          "status": "unavailable",
+          "value": null
+        }
+      },
+      "note": "Pattern candidates are STYLE_HEURISTIC review prompts, not defects."
+    },
+    "provisional": {
+      "evidence_label": "MEASURED_FEATURE",
+      "features": {
+        "pronoun_counts": {
+          "method": "folded tokens (text before any apostrophe) matching fixed pronoun lists; provisional, no point-of-view verdict",
+          "status": "measured",
+          "value": {
+            "first_person": 1,
+            "second_person": 1,
+            "third_person": 3,
+            "third_person_neuter": 2
+          }
+        }
+      },
+      "note": "Pronoun counts are provisional descriptive counts; no point-of-view verdict is made."
+    },
+    "punctuation": {
+      "evidence_label": "MEASURED_FEATURE",
+      "features": {
+        "colons_count": {
+          "method": "count in prose-block text after inline stripping",
+          "status": "measured",
+          "value": 2
+        },
+        "colons_per_1000_words": {
+          "method": "colons per 1,000 prose words",
+          "status": "measured",
+          "value": 25.641
+        },
+        "dash_punctuation_per_100_words": {
+          "method": "dash_punctuation_total per 100 prose words",
+          "status": "measured",
+          "value": 2.5641
+        },
+        "dash_punctuation_total": {
+          "method": "em dashes + spaced en dashes + letter-letter en dashes + spaced hyphens + double hyphens (digit ranges excluded)",
+          "status": "measured",
+          "value": 2
+        },
+        "double_hyphen_count": {
+          "method": "runs of two or more hyphen-minus characters in prose (thematic breaks are structural)",
+          "status": "measured",
+          "value": 0
+        },
+        "ellipsis_char_count": {
+          "method": "U+2026 count in prose-block text after inline stripping",
+          "status": "measured",
+          "value": 1
+        },
+        "ellipsis_three_dot_count": {
+          "method": "runs of three or more periods count in prose-block text after inline stripping",
+          "status": "measured",
+          "value": 0
+        },
+        "em_dash_closed_count": {
+          "method": "U+2014 with non-space characters on both sides",
+          "status": "measured",
+          "value": 0
+        },
+        "em_dash_count": {
+          "method": "U+2014 count in prose-block text after inline stripping",
+          "status": "measured",
+          "value": 1
+        },
+        "em_dash_per_100_words": {
+          "method": "em dashes per 100 prose words",
+          "status": "measured",
+          "value": 1.2821
+        },
+        "em_dash_spaced_count": {
+          "method": "U+2014 with whitespace or a block edge on at least one side",
+          "status": "measured",
+          "value": 1
+        },
+        "en_dash_digit_range_count": {
+          "method": "U+2013 between two digits; reported but excluded from dash_punctuation_total",
+          "status": "measured",
+          "value": 1
+        },
+        "en_dash_letter_letter_count": {
+          "method": "unspaced U+2013 between two letters",
+          "status": "measured",
+          "value": 0
+        },
+        "en_dash_other_count": {
+          "method": "any other U+2013; reported but excluded from dash_punctuation_total",
+          "status": "measured",
+          "value": 0
+        },
+        "en_dash_spaced_count": {
+          "method": "U+2013 with whitespace or a block edge on at least one side",
+          "status": "measured",
+          "value": 0
+        },
+        "exclamation_marks_count": {
+          "method": "count in prose-block text after inline stripping",
+          "status": "measured",
+          "value": 1
+        },
+        "exclamation_marks_per_1000_words": {
+          "method": "exclamation_marks per 1,000 prose words",
+          "status": "measured",
+          "value": 12.8205
+        },
+        "quote_glyph_counts": {
+          "method": "curly and straight quote and apostrophe glyphs count in prose-block text after inline stripping",
+          "status": "measured",
+          "value": {
+            "left_double_quote": 0,
+            "left_single_quote": 0,
+            "right_double_quote": 0,
+            "right_single_quote_or_apostrophe": 0,
+            "straight_double_quote": 4,
+            "straight_single_quote": 1
+          }
+        },
+        "raw_file_glyph_counts": {
+          "method": "glyph counts over the whole normalized file, including headings, notices, and Markdown syntax",
+          "status": "measured",
+          "value": {
+            "colon": 2,
+            "curly_double_quotes": 0,
+            "curly_single_quotes": 0,
+            "double_hyphen_runs_outside_thematic_breaks": 0,
+            "ellipsis_char": 1,
+            "ellipsis_three_dot": 0,
+            "em_dash": 1,
+            "en_dash": 1,
+            "exclamation": 1,
+            "semicolon": 2,
+            "spaced_hyphen": 1,
+            "straight_double_quotes": 4,
+            "straight_single_quotes": 1
+          }
+        },
+        "semicolons_count": {
+          "method": "count in prose-block text after inline stripping",
+          "status": "measured",
+          "value": 1
+        },
+        "semicolons_per_1000_words": {
+          "method": "semicolons per 1,000 prose words",
+          "status": "measured",
+          "value": 12.8205
+        },
+        "spaced_hyphen_count": {
+          "method": "hyphen-minus with whitespace on both sides",
+          "status": "measured",
+          "value": 1
+        }
+      }
+    },
+    "readability": {
+      "evidence_label": "MEASURED_FEATURE",
+      "features": {
+        "flesch_kincaid_grade": {
+          "method": "Flesch-Kincaid Grade Level over prose tokens and sentences; syllables by vowel-groups-silent-e-v1",
+          "status": "measured",
+          "value": 4.119
+        },
+        "flesch_reading_ease": {
+          "method": "Flesch Reading Ease over prose tokens and sentences; syllables by vowel-groups-silent-e-v1",
+          "status": "measured",
+          "value": 78.1608
+        },
+        "syllables_per_word": {
+          "method": "vowel-groups-silent-e-v1 syllables per prose token",
+          "status": "measured",
+          "value": 1.4359
+        }
+      }
+    },
+    "repetition": {
+      "evidence_label": "MEASURED_FEATURE",
+      "features": {
+        "lemma_frequencies": {
+          "reason": "no lemmatizer is bundled; aiproof-textfeatures 1.0.0 is standard-library only",
+          "status": "unavailable",
+          "value": null
+        },
+        "synonym_cycling": {
+          "reason": "synonym cycling needs a lexical database and semantic judgment, which are not bundled",
+          "status": "unavailable",
+          "value": null
+        },
+        "top_content_words": {
+          "method": "folded non-numeric tokens not in the lexicon stopword list",
+          "status": "measured",
+          "value": [
+            {
+              "count": 2,
+              "text": "item"
+            },
+            {
+              "count": 2,
+              "text": "waited"
+            },
+            {
+              "count": 1,
+              "text": "additionally"
+            },
+            {
+              "count": 1,
+              "text": "asked"
+            },
+            {
+              "count": 1,
+              "text": "boats"
+            },
+            {
+              "count": 1,
+              "text": "counted"
+            },
+            {
+              "count": 1,
+              "text": "crates"
+            },
+            {
+              "count": 1,
+              "text": "crew"
+            },
+            {
+              "count": 1,
+              "text": "digit"
+            },
+            {
+              "count": 1,
+              "text": "error"
+            }
+          ]
+        },
+        "top_repeated_ngrams": {
+          "method": "within-sentence 2-, 3-, and 4-grams of folded tokens with count >= 2, excluding n-grams made only of stopwords",
+          "status": "measured",
+          "value": {
+            "2": [
+              {
+                "count": 2,
+                "text": "item was"
+              }
+            ],
+            "3": [],
+            "4": []
+          }
+        }
+      }
+    },
+    "sentence_length": {
+      "evidence_label": "MEASURED_FEATURE",
+      "features": {
+        "sentence_length_histogram": {
+          "method": "sentence counts by token-length bucket 1-4, 5-9, 10-14, 15-19, 20-29, 30-39, 40+",
+          "status": "measured",
+          "value": {
+            "1-4": 1,
+            "10-14": 3,
+            "15-19": 0,
+            "20-29": 0,
+            "30-39": 0,
+            "40+": 0,
+            "5-9": 7
+          }
+        },
+        "sentence_length_max": {
+          "method": "maximum tokens per sentence",
+          "status": "measured",
+          "value": 12
+        },
+        "sentence_length_mean": {
+          "method": "arithmetic mean of aiproof-token-v1 tokens per aiproof-sentsplit-v1 prose sentence",
+          "status": "measured",
+          "value": 7.0909
+        },
+        "sentence_length_min": {
+          "method": "minimum tokens per sentence",
+          "status": "measured",
+          "value": 4
+        },
+        "sentence_length_p10": {
+          "method": "nearest-rank 10th percentile of tokens per sentence",
+          "status": "measured",
+          "value": 5
+        },
+        "sentence_length_p25": {
+          "method": "nearest-rank 25th percentile of tokens per sentence",
+          "status": "measured",
+          "value": 5
+        },
+        "sentence_length_p50": {
+          "method": "nearest-rank 50th percentile of tokens per sentence",
+          "status": "measured",
+          "value": 6
+        },
+        "sentence_length_p75": {
+          "method": "nearest-rank 75th percentile of tokens per sentence",
+          "status": "measured",
+          "value": 10
+        },
+        "sentence_length_p90": {
+          "method": "nearest-rank 90th percentile of tokens per sentence",
+          "status": "measured",
+          "value": 10
+        },
+        "sentence_length_sd": {
+          "method": "sample standard deviation (n-1) of aiproof-token-v1 tokens per aiproof-sentsplit-v1 prose sentence",
+          "status": "measured",
+          "value": 2.7002
+        }
+      }
+    },
+    "short_long": {
+      "evidence_label": "MEASURED_FEATURE",
+      "features": {
+        "long_sentence_count_ge_40_tokens": {
+          "method": "sentences with at least 40 tokens",
+          "status": "measured",
+          "value": 0
+        },
+        "long_sentence_rate_ge_40_tokens": {
+          "method": "share of sentences with at least 40 tokens; a proxy, not a defect",
+          "status": "measured",
+          "value": 0.0
+        },
+        "short_sentence_count_le_4_tokens": {
+          "method": "sentences with at most 4 tokens",
+          "status": "measured",
+          "value": 1
+        },
+        "short_sentence_rate_le_4_tokens": {
+          "method": "share of sentences with at most 4 tokens; a proxy, not a fragment detector",
+          "status": "measured",
+          "value": 0.0909
+        }
+      },
+      "note": "Short and long sentence rates are proxies; no protocol treats fragments or long sentences as defects."
+    },
+    "structure": {
+      "evidence_label": "MEASURED_FEATURE",
+      "features": {
+        "annotations": {
+          "method": "aiproof-mdblocks-v1 annotation blocks",
+          "status": "measured",
+          "value": 0
+        },
+        "blockquotes": {
+          "method": "aiproof-mdblocks-v1 blockquote blocks",
+          "status": "measured",
+          "value": 0
+        },
+        "code_blocks": {
+          "method": "aiproof-mdblocks-v1 code blocks",
+          "status": "measured",
+          "value": 0
+        },
+        "headings": {
+          "method": "aiproof-mdblocks-v1 heading blocks",
+          "status": "measured",
+          "value": 2
+        },
+        "notices": {
+          "method": "aiproof-mdblocks-v1 notice blocks",
+          "status": "measured",
+          "value": 1
+        },
+        "prose_blocks": {
+          "method": "aiproof-mdblocks-v1 paragraph and list_item blocks in retained sections",
+          "status": "measured",
+          "value": 6
+        },
+        "prose_words": {
+          "method": "aiproof-token-v1 tokens in prose blocks (paragraph and list_item)",
+          "status": "measured",
+          "value": 78
+        },
+        "punctuation_only_sentences": {
+          "method": "zero-token sentence pieces that could not merge into a previous sentence; excluded from denominators",
+          "status": "measured",
+          "value": 0
+        },
+        "scene_breaks": {
+          "method": "aiproof-mdblocks-v1 scene_break blocks",
+          "status": "measured",
+          "value": 1
+        },
+        "sections": {
+          "method": "aiproof-mdblocks-v1 sections (file start, headings, scene breaks) that contain prose",
+          "status": "measured",
+          "value": 2
+        },
+        "sentences": {
+          "method": "aiproof-sentsplit-v1 prose sentences with at least one aiproof-token-v1 token",
+          "status": "measured",
+          "value": 11
+        },
+        "tables": {
+          "method": "aiproof-mdblocks-v1 table blocks",
+          "status": "measured",
+          "value": 0
+        },
+        "word_count_schema_v2_compatible": {
+          "method": "stdlib-re-unicode-word-v1: len(re.findall(r'\\b\\w+\\b', text)) over the whole file after CRLF/CR->LF and NFC",
+          "status": "measured",
+          "value": 90
+        }
+      }
+    },
+    "style_bands": {
+      "evidence_label": "STYLE_HEURISTIC",
+      "features": {
+        "em_dash_max_per_100_words": {
+          "status": "disabled",
+          "value": null
+        },
+        "sentence_length_sd_min": {
+          "status": "disabled",
+          "value": null
+        }
+      },
+      "note": "Bands are optional house-style review ranges with a recorded rationale and review date; a review_flag is not pass/fail."
+    },
+    "syntax": {
+      "evidence_label": "MEASURED_FEATURE",
+      "features": {
+        "sentence_final_participial_clause_count": {
+          "method": "sentences ending in a ', <word>ing' clause with no further , ; : or em dash; -ing word unhyphenated and not in the stoplist",
+          "status": "measured",
+          "value": 1
+        },
+        "sentence_final_participial_clause_lines": {
+          "method": "physical lines of those sentences",
+          "status": "measured",
+          "value": [
+            18
+          ]
+        }
+      },
+      "note": "Ordinary narrative syntax counts, reported without a pattern label."
+    }
+  },
+  "extractor": {
+    "block_model": "aiproof-mdblocks-v1",
+    "comparison_key": "aiproof-compare-key-v1",
+    "lexicon": {
+      "file_name": "editorial_lexicons.json",
+      "sha256": "<checked separately against editorial_lexicons.json>",
+      "version": "1.0.0"
+    },
+    "markdown_stripping_rule": "images dropped; [text](url) -> text; inline code -> content; * / ** / *** and non-intraword _ / __ emphasis markers removed; ~~x~~ -> x; HTML tags and backslash escapes removed",
+    "name": "aiproof-textfeatures",
+    "normalization": "aiproof-normalize-v1",
+    "schema_v2_word_count": "stdlib-re-unicode-word-v1",
+    "sentence_splitter": "aiproof-sentsplit-v1",
+    "syllable_method": "vowel-groups-silent-e-v1",
+    "tokenizer": "aiproof-token-v1",
+    "version": "1.0.0"
+  },
+  "input": {
+    "byte_length": 537,
+    "file_name": "features_sample.md",
+    "normalization": "aiproof-normalize-v1",
+    "normalized_text_sha256": "b4fc104597e4198341bd2bbcbc33189da0e8ecb20f170b194dc2f0d0ced6fd9a",
+    "raw_bytes_sha256": "b4fc104597e4198341bd2bbcbc33189da0e8ecb20f170b194dc2f0d0ced6fd9a"
+  },
+  "record_type": "text_features",
+  "schema_version": "aiproof-textfeatures-output/1",
+  "sections": [
+    {
+      "features": {
+        "flesch_kincaid_grade": {
+          "method": "Flesch-Kincaid Grade Level over prose tokens and sentences; syllables by vowel-groups-silent-e-v1",
+          "status": "measured",
+          "value": 4.3264
+        },
+        "flesch_reading_ease": {
+          "method": "Flesch Reading Ease over prose tokens and sentences; syllables by vowel-groups-silent-e-v1",
+          "status": "measured",
+          "value": 77.2758
+        },
+        "prose_words": {
+          "method": "aiproof-token-v1 tokens in the section's prose blocks",
+          "status": "measured",
+          "value": 52
+        },
+        "sentence_length_mean": {
+          "method": "arithmetic mean of aiproof-token-v1 tokens per aiproof-sentsplit-v1 prose sentence",
+          "status": "measured",
+          "value": 7.4286
+        },
+        "sentence_length_sd": {
+          "method": "sample standard deviation (n-1) of aiproof-token-v1 tokens per aiproof-sentsplit-v1 prose sentence",
+          "status": "measured",
+          "value": 2.9921
+        },
+        "sentences": {
+          "method": "aiproof-sentsplit-v1 sentences with at least one token",
+          "status": "measured",
+          "value": 7
+        }
+      },
+      "heading": "the lantern test",
+      "line": 1,
+      "opened_by": "heading",
+      "ordinal": 1,
+      "section_key": "the lantern test#1"
+    },
+    {
+      "features": {
+        "flesch_kincaid_grade": {
+          "method": "Flesch-Kincaid Grade Level over prose tokens and sentences; syllables by vowel-groups-silent-e-v1",
+          "status": "measured",
+          "value": 3.7373
+        },
+        "flesch_reading_ease": {
+          "method": "Flesch Reading Ease over prose tokens and sentences; syllables by vowel-groups-silent-e-v1",
+          "status": "measured",
+          "value": 79.8452
+        },
+        "prose_words": {
+          "method": "aiproof-token-v1 tokens in the section's prose blocks",
+          "status": "measured",
+          "value": 26
+        },
+        "sentence_length_mean": {
+          "method": "arithmetic mean of aiproof-token-v1 tokens per aiproof-sentsplit-v1 prose sentence",
+          "status": "measured",
+          "value": 6.5
+        },
+        "sentence_length_sd": {
+          "method": "sample standard deviation (n-1) of aiproof-token-v1 tokens per aiproof-sentsplit-v1 prose sentence",
+          "status": "measured",
+          "value": 2.3805
+        },
+        "sentences": {
+          "method": "aiproof-sentsplit-v1 sentences with at least one token",
+          "status": "measured",
+          "value": 4
+        }
+      },
+      "heading": "harbor",
+      "line": 13,
+      "opened_by": "heading",
+      "ordinal": 2,
+      "section_key": "harbor#1"
+    }
+  ],
+  "unavailable": {
+    "formatting.emoji_counts": "not implemented in aiproof-textfeatures 1.0.0; review manually",
+    "formatting.title_case_heading_checks": "not implemented in aiproof-textfeatures 1.0.0; review manually",
+    "linguistic.entity_classification": "capitalization cannot classify characters, places, or organizations; human review required",
+    "linguistic.pos_ratios": "no part-of-speech tagger is bundled; aiproof-textfeatures 1.0.0 is standard-library only",
+    "linguistic.tense": "tense requires a part-of-speech tagger, which is not bundled",
+    "pattern_candidates.from_x_to_y_false_range_candidates": "not implemented in aiproof-textfeatures 1.0.0; review manually",
+    "pattern_candidates.not_but_candidates": "not implemented in aiproof-textfeatures 1.0.0; review manually",
+    "pattern_candidates.paragraph_opening_repetition": "not implemented in aiproof-textfeatures 1.0.0; review manually",
+    "pattern_candidates.triad_candidates": "not implemented in aiproof-textfeatures 1.0.0; review manually",
+    "repetition.lemma_frequencies": "no lemmatizer is bundled; aiproof-textfeatures 1.0.0 is standard-library only",
+    "repetition.synonym_cycling": "synonym cycling needs a lexical database and semantic judgment, which are not bundled"
+  }
+}
