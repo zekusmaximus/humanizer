@@ -11,7 +11,7 @@ Review bureaucratic, academic, promotional, or generic wording as a configurable
 1. **Frozen Lexical Watch List**
    When the `lexical_watch_list` preference is enabled, review the following words in context. This frozen list is a `STYLE_HEURISTIC`, not a validated detector signal. A precise domain term may be retained.
 
-   **Content inflation words:** additionally, crucial, delve, emphasizing, enduring, enhance, fostering, garner, highlight (as a verb), interplay, intricate / intricacies, key (as an adjective), landscape (as an abstract noun), pivotal, showcase, tapestry (as an abstract noun), testament, underscore (as a verb), valuable, vibrant
+   **Content inflation words:** additionally, align with, crucial, delve, emphasizing, enduring, enhance, fostering, garner, highlight (as a verb), interplay, intricate / intricacies, key (as an adjective), landscape (as an abstract noun), pivotal, showcase, tapestry (as an abstract noun), testament, underscore (as a verb), valuable, vibrant
 
    **Promotional/atmospheric words:** breathtaking, groundbreaking (figurative), nestled, renowned, stunning, vibrant
 
@@ -20,6 +20,8 @@ Review bureaucratic, academic, promotional, or generic wording as a configurable
    - *boasts / features / offers* [a] → consider *has* or a direct statement when the selected style benefits
 
    Record occurrences as review candidates before the general bureaucratic sweep. Do not convert counts into an AI or authorship score.
+
+   The machine-readable copy of these lists lives in `../scripts/editorial_lexicons.json` and is kept in sync with this file and the Humanizer watch list by a parity test (`tests/test_lexicon_parity.py`).
 
 2. **Identify Bureaucratic or Abstract Drift**
    - Flag words like: consequently, therefore, significant, pivotal, intricate, nuanced, leveraged, executed, conducted.
