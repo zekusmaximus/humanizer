@@ -1,0 +1,891 @@
+{
+  "lexicon_version": "1.0.0",
+  "evidence_role": "STYLE_HEURISTIC",
+  "claim_boundary": "Editorial style-review lists. A match is a review candidate for a person to judge in context; it is not evidence of authorship, model generation, detector behavior, or quality.",
+  "matching": {
+    "text": "prose-block text after aiproof-mdblocks-v1 inline stripping and the apostrophe fold; never across blocks",
+    "case": "re.IGNORECASE",
+    "boundaries": "(?<![^\\W_])(?:ENTRY)(?![^\\W_]) with \\s+ between words",
+    "forms": "an entry with forms matches any listed form; an entry with pattern matches that regular expression",
+    "overlaps": "within one list a span counts once; the longest overlapping match wins and ties go to the lowest id",
+    "qualifiers": "qualifiers (verb, adjective, abstract noun, figurative) are recorded but not resolved; hits on qualified entries carry qualifier_resolved: false"
+  },
+  "sources": {
+    "watch_list": [
+      {
+        "path": "Humanizer/SKILL.md",
+        "line": 173,
+        "locator": "### 7. / **Frozen style watch list:**"
+      },
+      {
+        "path": "aiproofing/protocols/overused_vocabulary_analysis.md",
+        "line": 14,
+        "locator": "**Content inflation words:**"
+      }
+    ],
+    "copula_phrases": [
+      {
+        "path": "Humanizer/SKILL.md",
+        "line": 187,
+        "locator": "### 8. / **Words to watch:**"
+      },
+      {
+        "path": "aiproofing/protocols/overused_vocabulary_analysis.md",
+        "line": 19,
+        "locator": "**Copula avoidance constructions**"
+      }
+    ],
+    "promotional": [
+      {
+        "path": "aiproofing/protocols/overused_vocabulary_analysis.md",
+        "line": 16,
+        "locator": "**Promotional/atmospheric words:**"
+      },
+      {
+        "path": "Humanizer/SKILL.md",
+        "line": 129,
+        "locator": "### 4. / **Words to watch:** (superset)"
+      }
+    ],
+    "bureaucratic": [
+      {
+        "path": "aiproofing/protocols/overused_vocabulary_analysis.md",
+        "line": 25,
+        "locator": "Step 2 / Flag words like:"
+      }
+    ],
+    "chat_artifacts": [
+      {
+        "path": "Humanizer/SKILL.md",
+        "line": 329,
+        "locator": "### 19. / **Words to watch:**"
+      }
+    ],
+    "filler_phrases": [
+      {
+        "path": "Humanizer/SKILL.md",
+        "line": 372,
+        "locator": "### 22. / **Before → After:** left-hand phrases (lines 372-377)"
+      }
+    ],
+    "replacement_cliches": [
+      {
+        "path": "aiproofing/scripts/editorial_lexicons.json",
+        "line": null,
+        "locator": "editor seed list; extend deliberately"
+      }
+    ],
+    "unsupported_voice_seeds": [
+      {
+        "path": "aiproofing/protocols/voice_injection_analysis.md",
+        "line": 28,
+        "locator": "### 2. Source-Supported Viewpoint examples (line 28)"
+      },
+      {
+        "path": "aiproofing/protocols/voice_injection_analysis.md",
+        "line": 49,
+        "locator": "### 5. First-Person Signals examples (lines 49-50)"
+      }
+    ],
+    "stopwords": [
+      {
+        "path": "aiproofing/scripts/editorial_lexicons.json",
+        "line": null,
+        "locator": "declared English function-word list for n-gram and content-word filtering"
+      }
+    ]
+  },
+  "watch_list": {
+    "description": "Humanizer pattern 7 frozen style watch list with explicit inflected forms",
+    "entries": [
+      {
+        "id": "watch-001",
+        "entry": "additionally",
+        "headword": "additionally",
+        "forms": [
+          "additionally"
+        ],
+        "qualifier": null,
+        "qualifier_resolvable": false
+      },
+      {
+        "id": "watch-002",
+        "entry": "align with",
+        "headword": "align with",
+        "forms": [
+          "align with",
+          "aligns with",
+          "aligned with",
+          "aligning with"
+        ],
+        "qualifier": null,
+        "qualifier_resolvable": false
+      },
+      {
+        "id": "watch-003",
+        "entry": "crucial",
+        "headword": "crucial",
+        "forms": [
+          "crucial"
+        ],
+        "qualifier": null,
+        "qualifier_resolvable": false
+      },
+      {
+        "id": "watch-004",
+        "entry": "delve",
+        "headword": "delve",
+        "forms": [
+          "delve",
+          "delves",
+          "delved",
+          "delving"
+        ],
+        "qualifier": null,
+        "qualifier_resolvable": false
+      },
+      {
+        "id": "watch-005",
+        "entry": "emphasizing",
+        "headword": "emphasizing",
+        "forms": [
+          "emphasizing"
+        ],
+        "qualifier": null,
+        "qualifier_resolvable": false
+      },
+      {
+        "id": "watch-006",
+        "entry": "enduring",
+        "headword": "enduring",
+        "forms": [
+          "enduring"
+        ],
+        "qualifier": null,
+        "qualifier_resolvable": false
+      },
+      {
+        "id": "watch-007",
+        "entry": "enhance",
+        "headword": "enhance",
+        "forms": [
+          "enhance",
+          "enhances",
+          "enhanced",
+          "enhancing"
+        ],
+        "qualifier": null,
+        "qualifier_resolvable": false
+      },
+      {
+        "id": "watch-008",
+        "entry": "fostering",
+        "headword": "fostering",
+        "forms": [
+          "fostering"
+        ],
+        "qualifier": null,
+        "qualifier_resolvable": false
+      },
+      {
+        "id": "watch-009",
+        "entry": "garner",
+        "headword": "garner",
+        "forms": [
+          "garner",
+          "garners",
+          "garnered",
+          "garnering"
+        ],
+        "qualifier": null,
+        "qualifier_resolvable": false
+      },
+      {
+        "id": "watch-010",
+        "entry": "highlight (verb)",
+        "headword": "highlight",
+        "forms": [
+          "highlight",
+          "highlights",
+          "highlighted",
+          "highlighting"
+        ],
+        "qualifier": "verb",
+        "qualifier_resolvable": false
+      },
+      {
+        "id": "watch-011",
+        "entry": "interplay",
+        "headword": "interplay",
+        "forms": [
+          "interplay",
+          "interplays"
+        ],
+        "qualifier": null,
+        "qualifier_resolvable": false
+      },
+      {
+        "id": "watch-012",
+        "entry": "intricate/intricacies",
+        "headword": "intricate",
+        "forms": [
+          "intricate",
+          "intricacies"
+        ],
+        "qualifier": null,
+        "qualifier_resolvable": false
+      },
+      {
+        "id": "watch-013",
+        "entry": "key (adjective)",
+        "headword": "key",
+        "forms": [
+          "key"
+        ],
+        "qualifier": "adjective",
+        "qualifier_resolvable": false
+      },
+      {
+        "id": "watch-014",
+        "entry": "landscape (abstract noun)",
+        "headword": "landscape",
+        "forms": [
+          "landscape",
+          "landscapes"
+        ],
+        "qualifier": "abstract noun",
+        "qualifier_resolvable": false
+      },
+      {
+        "id": "watch-015",
+        "entry": "pivotal",
+        "headword": "pivotal",
+        "forms": [
+          "pivotal"
+        ],
+        "qualifier": null,
+        "qualifier_resolvable": false
+      },
+      {
+        "id": "watch-016",
+        "entry": "showcase",
+        "headword": "showcase",
+        "forms": [
+          "showcase",
+          "showcases",
+          "showcased",
+          "showcasing"
+        ],
+        "qualifier": null,
+        "qualifier_resolvable": false
+      },
+      {
+        "id": "watch-017",
+        "entry": "tapestry (abstract noun)",
+        "headword": "tapestry",
+        "forms": [
+          "tapestry",
+          "tapestries"
+        ],
+        "qualifier": "abstract noun",
+        "qualifier_resolvable": false
+      },
+      {
+        "id": "watch-018",
+        "entry": "testament",
+        "headword": "testament",
+        "forms": [
+          "testament",
+          "testaments"
+        ],
+        "qualifier": null,
+        "qualifier_resolvable": false
+      },
+      {
+        "id": "watch-019",
+        "entry": "underscore (verb)",
+        "headword": "underscore",
+        "forms": [
+          "underscore",
+          "underscores",
+          "underscored",
+          "underscoring"
+        ],
+        "qualifier": "verb",
+        "qualifier_resolvable": false
+      },
+      {
+        "id": "watch-020",
+        "entry": "valuable",
+        "headword": "valuable",
+        "forms": [
+          "valuable"
+        ],
+        "qualifier": null,
+        "qualifier_resolvable": false
+      },
+      {
+        "id": "watch-021",
+        "entry": "vibrant",
+        "headword": "vibrant",
+        "forms": [
+          "vibrant"
+        ],
+        "qualifier": null,
+        "qualifier_resolvable": false
+      }
+    ]
+  },
+  "copula_phrases": {
+    "description": "Humanizer pattern 8 copula-avoidance constructions",
+    "entries": [
+      {
+        "id": "copula-001",
+        "entry": "serves as",
+        "forms": [
+          "serves as"
+        ]
+      },
+      {
+        "id": "copula-002",
+        "entry": "stands as",
+        "forms": [
+          "stands as"
+        ]
+      },
+      {
+        "id": "copula-003",
+        "entry": "marks",
+        "forms": [
+          "marks"
+        ]
+      },
+      {
+        "id": "copula-004",
+        "entry": "represents",
+        "forms": [
+          "represents"
+        ]
+      },
+      {
+        "id": "copula-005",
+        "entry": "boasts",
+        "forms": [
+          "boasts"
+        ]
+      },
+      {
+        "id": "copula-006",
+        "entry": "features",
+        "forms": [
+          "features"
+        ]
+      },
+      {
+        "id": "copula-007",
+        "entry": "offers",
+        "forms": [
+          "offers"
+        ]
+      }
+    ]
+  },
+  "promotional": {
+    "description": "Promotional/atmospheric words from overused_vocabulary_analysis.md (a subset of Humanizer pattern 4)",
+    "entries": [
+      {
+        "id": "promo-001",
+        "entry": "breathtaking",
+        "headword": "breathtaking",
+        "forms": [
+          "breathtaking"
+        ],
+        "qualifier": null,
+        "qualifier_resolvable": false
+      },
+      {
+        "id": "promo-002",
+        "entry": "groundbreaking (figurative)",
+        "headword": "groundbreaking",
+        "forms": [
+          "groundbreaking"
+        ],
+        "qualifier": "figurative",
+        "qualifier_resolvable": false
+      },
+      {
+        "id": "promo-003",
+        "entry": "nestled",
+        "headword": "nestled",
+        "forms": [
+          "nestled"
+        ],
+        "qualifier": null,
+        "qualifier_resolvable": false
+      },
+      {
+        "id": "promo-004",
+        "entry": "renowned",
+        "headword": "renowned",
+        "forms": [
+          "renowned"
+        ],
+        "qualifier": null,
+        "qualifier_resolvable": false
+      },
+      {
+        "id": "promo-005",
+        "entry": "stunning",
+        "headword": "stunning",
+        "forms": [
+          "stunning"
+        ],
+        "qualifier": null,
+        "qualifier_resolvable": false
+      },
+      {
+        "id": "promo-006",
+        "entry": "vibrant",
+        "headword": "vibrant",
+        "forms": [
+          "vibrant"
+        ],
+        "qualifier": null,
+        "qualifier_resolvable": false
+      }
+    ]
+  },
+  "bureaucratic": {
+    "description": "Bureaucratic or abstract drift words from overused_vocabulary_analysis.md step 2",
+    "entries": [
+      {
+        "id": "bureau-001",
+        "entry": "consequently",
+        "forms": [
+          "consequently"
+        ]
+      },
+      {
+        "id": "bureau-002",
+        "entry": "therefore",
+        "forms": [
+          "therefore"
+        ]
+      },
+      {
+        "id": "bureau-003",
+        "entry": "significant",
+        "forms": [
+          "significant"
+        ]
+      },
+      {
+        "id": "bureau-004",
+        "entry": "pivotal",
+        "forms": [
+          "pivotal"
+        ]
+      },
+      {
+        "id": "bureau-005",
+        "entry": "intricate",
+        "forms": [
+          "intricate"
+        ]
+      },
+      {
+        "id": "bureau-006",
+        "entry": "nuanced",
+        "forms": [
+          "nuanced"
+        ]
+      },
+      {
+        "id": "bureau-007",
+        "entry": "leveraged",
+        "forms": [
+          "leveraged"
+        ]
+      },
+      {
+        "id": "bureau-008",
+        "entry": "executed",
+        "forms": [
+          "executed"
+        ]
+      },
+      {
+        "id": "bureau-009",
+        "entry": "conducted",
+        "forms": [
+          "conducted"
+        ]
+      }
+    ]
+  },
+  "chat_artifacts": {
+    "description": "Humanizer pattern 19 conversational-wrapper phrases; trailing ellipses removed, exclamation marks kept",
+    "entries": [
+      {
+        "id": "chat-001",
+        "entry": "I hope this helps",
+        "forms": [
+          "I hope this helps"
+        ]
+      },
+      {
+        "id": "chat-002",
+        "entry": "Of course!",
+        "forms": [
+          "Of course!"
+        ]
+      },
+      {
+        "id": "chat-003",
+        "entry": "Certainly!",
+        "forms": [
+          "Certainly!"
+        ]
+      },
+      {
+        "id": "chat-004",
+        "entry": "You're absolutely right!",
+        "forms": [
+          "You're absolutely right!"
+        ]
+      },
+      {
+        "id": "chat-005",
+        "entry": "Would you like",
+        "forms": [
+          "Would you like"
+        ]
+      },
+      {
+        "id": "chat-006",
+        "entry": "let me know",
+        "forms": [
+          "let me know"
+        ]
+      },
+      {
+        "id": "chat-007",
+        "entry": "here is a",
+        "forms": [
+          "here is a"
+        ]
+      }
+    ]
+  },
+  "filler_phrases": {
+    "description": "Humanizer pattern 22 filler phrases (left-hand side of each Before -> After pair)",
+    "entries": [
+      {
+        "id": "filler-001",
+        "entry": "in order to",
+        "forms": [
+          "in order to"
+        ]
+      },
+      {
+        "id": "filler-002",
+        "entry": "due to the fact that",
+        "forms": [
+          "due to the fact that"
+        ]
+      },
+      {
+        "id": "filler-003",
+        "entry": "at this point in time",
+        "forms": [
+          "at this point in time"
+        ]
+      },
+      {
+        "id": "filler-004",
+        "entry": "in the event that",
+        "forms": [
+          "in the event that"
+        ]
+      },
+      {
+        "id": "filler-005",
+        "entry": "has the ability to",
+        "forms": [
+          "has the ability to"
+        ]
+      },
+      {
+        "id": "filler-006",
+        "entry": "it is important to note that",
+        "forms": [
+          "it is important to note that"
+        ]
+      }
+    ]
+  },
+  "replacement_cliches": {
+    "description": "editor seed list; extend deliberately. Stock phrases that sometimes replace specific source detail during revision",
+    "entries": [
+      {
+        "id": "cliche-001",
+        "entry": "hadn't realized she'd been holding her breath",
+        "pattern": "(?:hadn't|had not) realized (?:she|he|they|I)(?:'d| had) been holding (?:her|his|their|my) breath"
+      },
+      {
+        "id": "cliche-002",
+        "entry": "holding her breath",
+        "pattern": "holding (?:her|his|their|my) breath"
+      },
+      {
+        "id": "cliche-003",
+        "entry": "let out a breath",
+        "pattern": "(?:let out|released) a (?:long |slow |shaky )?breath(?: (?:she|he|they|I) (?:didn't know|hadn't realized|felt))?"
+      },
+      {
+        "id": "cliche-004",
+        "entry": "everywhere and nowhere",
+        "pattern": "everywhere and nowhere"
+      },
+      {
+        "id": "cliche-005",
+        "entry": "a wave of relief",
+        "pattern": "a wave of (?:relief|panic|nausea|exhaustion)"
+      },
+      {
+        "id": "cliche-006",
+        "entry": "a shiver ran down her spine",
+        "pattern": "a shiver (?:ran|went) down (?:her|his|my|their) spine"
+      },
+      {
+        "id": "cliche-007",
+        "entry": "time stood still",
+        "pattern": "time (?:seemed to |seems to )?(?:stood|stands|stand) still"
+      },
+      {
+        "id": "cliche-008",
+        "entry": "the silence was deafening",
+        "pattern": "the silence was deafening"
+      },
+      {
+        "id": "cliche-009",
+        "entry": "the ghost of a smile",
+        "pattern": "(?:the|a) ghost of a smile"
+      }
+    ]
+  },
+  "unsupported_voice_seeds": {
+    "description": "Viewpoint and first-person example phrases that voice_injection_analysis.md says must not be inserted without source support or author approval",
+    "entries": [
+      {
+        "id": "voice-001",
+        "entry": "I genuinely don't know how to feel about this",
+        "forms": [
+          "I genuinely don't know how to feel about this"
+        ]
+      },
+      {
+        "id": "voice-002",
+        "entry": "I keep coming back to",
+        "forms": [
+          "I keep coming back to"
+        ]
+      },
+      {
+        "id": "voice-003",
+        "entry": "What I didn't expect was",
+        "forms": [
+          "What I didn't expect was"
+        ]
+      },
+      {
+        "id": "voice-004",
+        "entry": "Here's what I didn't say",
+        "forms": [
+          "Here's what I didn't say"
+        ]
+      },
+      {
+        "id": "voice-005",
+        "entry": "Looking back",
+        "forms": [
+          "Looking back"
+        ]
+      }
+    ]
+  },
+  "stopwords": {
+    "description": "Small declared English function-word list (apostrophe-folded, casefolded)",
+    "entries": [
+      "a",
+      "about",
+      "above",
+      "after",
+      "again",
+      "against",
+      "all",
+      "am",
+      "an",
+      "and",
+      "any",
+      "are",
+      "aren't",
+      "as",
+      "at",
+      "be",
+      "because",
+      "been",
+      "before",
+      "being",
+      "below",
+      "between",
+      "both",
+      "but",
+      "by",
+      "can",
+      "can't",
+      "could",
+      "couldn't",
+      "did",
+      "didn't",
+      "do",
+      "does",
+      "doesn't",
+      "doing",
+      "don't",
+      "down",
+      "during",
+      "each",
+      "few",
+      "for",
+      "from",
+      "further",
+      "had",
+      "hadn't",
+      "has",
+      "hasn't",
+      "have",
+      "haven't",
+      "having",
+      "he",
+      "he'd",
+      "he'll",
+      "he's",
+      "her",
+      "here",
+      "here's",
+      "hers",
+      "herself",
+      "him",
+      "himself",
+      "his",
+      "how",
+      "i",
+      "i'd",
+      "i'll",
+      "i'm",
+      "i've",
+      "if",
+      "in",
+      "into",
+      "is",
+      "isn't",
+      "it",
+      "it's",
+      "its",
+      "itself",
+      "just",
+      "let's",
+      "me",
+      "more",
+      "most",
+      "my",
+      "myself",
+      "no",
+      "nor",
+      "not",
+      "now",
+      "of",
+      "off",
+      "on",
+      "once",
+      "only",
+      "or",
+      "other",
+      "our",
+      "ours",
+      "ourselves",
+      "out",
+      "over",
+      "own",
+      "same",
+      "she",
+      "she'd",
+      "she'll",
+      "she's",
+      "should",
+      "shouldn't",
+      "so",
+      "some",
+      "such",
+      "than",
+      "that",
+      "that's",
+      "the",
+      "their",
+      "theirs",
+      "them",
+      "themselves",
+      "then",
+      "there",
+      "there's",
+      "these",
+      "they",
+      "they'd",
+      "they'll",
+      "they're",
+      "they've",
+      "this",
+      "those",
+      "through",
+      "to",
+      "too",
+      "under",
+      "until",
+      "up",
+      "very",
+      "was",
+      "wasn't",
+      "we",
+      "we'd",
+      "we'll",
+      "we're",
+      "we've",
+      "were",
+      "weren't",
+      "what",
+      "what's",
+      "when",
+      "where",
+      "which",
+      "while",
+      "who",
+      "whom",
+      "why",
+      "will",
+      "with",
+      "won't",
+      "would",
+      "wouldn't",
+      "you",
+      "you'd",
+      "you'll",
+      "you're",
+      "you've",
+      "your",
+      "yours",
+      "yourself",
+      "yourselves"
+    ]
+  }
+}
