@@ -9,6 +9,17 @@ and dialogue; lost protected vocabulary; added stock phrases; and dash or
 construction changes. It never edits text, never assigns semantic risk or
 approval, and its output is not authorship, detector, quality, or pass/fail
 evidence.
+
+Known limitations of ``aiproof-revision-diff`` 1.0.0: categories are
+lexical-overlap bands, so one substituted token is ``minor`` in a sentence of
+10 or more tokens but ``major`` in one of 9 or fewer; a new name that appears
+only sentence-initially, or that casefolds to a common source word (``Hope``),
+is not a capitalized-token candidate; the number words exclude ``one`` and
+``second``; dialogue candidates use double quotes only; the automatic
+trademark rule takes the maximal capitalized run before ``™``, which can
+include a capitalized sentence-initial word; and replace spans above 40,000
+cells skip the alignment program, so their sentences count as deleted or
+inserted unless an adjacent resegmentation matches.
 """
 
 from __future__ import annotations
@@ -589,6 +600,12 @@ def _is_number(value: Any) -> bool:
     return isinstance(value, (int, float)) and not isinstance(value, bool)
 
 
+def _delta(before: Any, after: Any) -> Any:
+    if isinstance(before, int) and isinstance(after, int):
+        return after - before
+    return features.r4(after - before)
+
+
 def feature_deltas(before: Dict[str, Any], after: Dict[str, Any]) -> Dict[str, Any]:
     result: Dict[str, Any] = {}
     for group_name, group in before["document"].items():
@@ -607,7 +624,7 @@ def feature_deltas(before: Dict[str, Any], after: Dict[str, Any]) -> Dict[str, A
                 continue
             b, a = leaf["value"], partner["value"]
             if _is_number(b) and _is_number(a):
-                group_result[name] = {"before": b, "after": a, "delta": features.r4(a - b)}
+                group_result[name] = {"before": b, "after": a, "delta": _delta(b, a)}
             elif group_name == "lexicons":
                 entries = {}
                 for entry, record in b["entries"].items():
@@ -624,10 +641,10 @@ def feature_deltas(before: Dict[str, Any], after: Dict[str, Any]) -> Dict[str, A
                 deltas = {}
                 for key in sorted(set(b) & set(a)):
                     if _is_number(b[key]) and _is_number(a[key]):
-                        deltas[key] = features.r4(a[key] - b[key])
+                        deltas[key] = _delta(b[key], a[key])
                     elif isinstance(b[key], dict) and isinstance(a[key], dict):
                         nested = {
-                            inner: features.r4(a[key][inner] - b[key][inner])
+                            inner: _delta(b[key][inner], a[key][inner])
                             for inner in sorted(set(b[key]) & set(a[key]))
                             if _is_number(b[key][inner]) and _is_number(a[key][inner])
                         }
