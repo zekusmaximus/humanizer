@@ -49,4 +49,4 @@ The runner records the selected profile in its versioned state and unsigned revi
 
 ## Constraint precedence
 
-Explicit user constraints and source fidelity take precedence over a preset. `--max-edit-pct`, `--min-faithfulness`, and `--require-semantic-review` are recorded separately and remain auditable. If a proposed edit lacks source support or approval, leave the text unchanged and record an unresolved human-review item.
+Explicit user constraints and source fidelity take precedence over a preset. `--max-edit-pct`, `--min-faithfulness`, and `--require-semantic-review` are recorded separately and remain auditable. `../scripts/revision_diff.py` computes the declared `--max-edit-pct` measure; it never chooses a budget, and no preset supplies one. If a proposed edit lacks source support or approval, leave the text unchanged and record an unresolved human-review item.

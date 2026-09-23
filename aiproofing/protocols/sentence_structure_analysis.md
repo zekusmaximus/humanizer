@@ -9,7 +9,7 @@ Review cadence and syntactic variety without flattening intentional rhythm or ch
 
 ## Steps
 1. **Cadence Audit**
-   - If configured, identify recurring openings with a named sentence splitter and declared window. A style default may flag concentration for review; `null` disables it.
+   - If configured, identify recurring openings with a named sentence splitter and declared window. A style default may flag concentration for review; `null` disables it. `../scripts/features.py` reports top first-word and first-two-word openings and the longest same-first-word run using `aiproof-sentsplit-v1`.
    - Do not treat an opening frequency as origin evidence or apply a universal cap.
 2. **Length Variation**
    - Describe the observed length distribution. Suggest changes only when cadence conflicts with clarity, scene intent, or an author-approved style goal.

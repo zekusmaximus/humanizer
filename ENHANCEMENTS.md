@@ -1,7 +1,7 @@
 # Humanizer and AI proofing evidence-status roadmap
 
-**Status:** P0 offline foundation implemented; external validation is not claimed.
-**Last updated:** 2026-08-31.
+**Status:** P0 offline foundation and measurement helpers implemented; external validation is not claimed.
+**Last updated:** 2026-09-23.
 
 ## Historical context
 
@@ -39,6 +39,22 @@ This living roadmap uses evidence status rather than promotional verdicts:
 - Dataset, detector, and result cards record the scope and limitations of each artifact.
 - Synthetic fixture banners prevent starter examples from being mistaken for external validation.
 
+## Measurement helpers implemented on 2026-09-23
+
+**Implemented and tested.** The protocols require every `MEASURED_FEATURE` to come from a named, pinned extractor and require the declared edit budget to be computed. These standard-library, offline tools under `aiproofing/scripts/` supply both. They edit no text and are not registered in the task manifest.
+
+- `textkit.py`: `aiproof-normalize-v1` normalization; the `aiproof-mdblocks-v1` line-based block model, in which only headings and scene breaks delimit sections; the `aiproof-sentsplit-v1` splitter; the `aiproof-token-v1` tokenizer; the `aiproof-compare-key-v1` comparison key; and lexicon matching.
+- `features.py` (`aiproof-textfeatures` 1.0.0): structure, sentence length, cadence, short/long proxies, openings, repetition, lexicons, pattern candidates, syntax, punctuation, formatting, dialogue, readability (`vowel-groups-silent-e-v1` syllables), and provisional pronoun counts. Each feature is measured with a declared method, `unavailable` with a reason, or `disabled`. Optional style bands require a rationale and review date and yield a `review_flag`, never pass/fail.
+- `revision_diff.py` (`aiproof-revision-diff` 1.0.0): sentence alignment on comparison keys; lexical-overlap categories; the declared `--max-edit-pct` measure over source sentences, with inserted sentences reported separately; `--runner-state` integration; exit codes 0/1/2; structural and feature deltas; `HUMAN_REVIEW_REQUIRED` candidates for numbers, capitalized tokens, dialogue, protected vocabulary, and stock phrases; and semantic-review candidate rows whose claims, risk, and approval stay with people.
+- `editorial_lexicons.json` 1.0.0: the Humanizer pattern 7 watch list with explicit inflected forms, pattern 8 copula phrases, promotional and bureaucratic lists, pattern 19 and 22 phrases, an editor seed list of stock phrases, unsupported voice seeds, and stopwords.
+- Tests cover every splitter and block-model rule, a hand-verified features golden, diff categories and exit codes, the runner-state recipe, runs from a packaged `aiproofing-text` copy, and regression values from the historical artifact pairs.
+
+Still unavailable in 1.0.0: part-of-speech ratios, lemma frequencies, synonym cycling, tense, and entity classification, because no tagger or lemmatizer is bundled. The `not … but`, `from X to Y`, triad, paragraph-opening-repetition, title-case heading, and emoji checks are emitted as not implemented and left to manual review.
+
+`overused_vocabulary_analysis.md` gained the `align with` watch-list entry that `Humanizer/SKILL.md` pattern 7 already carried; no other entry was missing. `tests/test_lexicon_parity.py` couples `editorial_lexicons.json` to `Humanizer/SKILL.md` patterns 4, 7, 8, 19, and 22 and to the protocol lists, so a rewrite of those Humanizer lists must update the JSON and the test together.
+
+All required and optional documentation edits were made; none were skipped.
+
 ## Evidence boundaries
 
 No P0 component calls external APIs, downloads dependencies, or reports live detector performance. No current result demonstrates detector evasion, human authorship, misconduct, policy compliance, or publication fitness. Detector thresholds are task-specific and must be registered; no universal `0.5` cutoff is supplied. Normalized scores cannot be substituted for native signals without an explicit, active calibrator.
@@ -69,6 +85,12 @@ The revision audit is unsigned. It records source hashes, constraints, and revie
 
 - Add optional watermark-provider adapters and cryptographic verification integrations with explicit trust roots.
 - If authenticated provenance is pursued, specify signatures, trusted timestamps, identities, custody, revocation, and verification policy separately from editorial audit logs.
+
+### Measurement helpers
+
+- Implement the `not … but`, `from X to Y`, triad, paragraph-opening-repetition, title-case heading, and emoji candidates, each with a versioned rule and tests.
+- Consider optional, pinned part-of-speech tagger or lemmatizer adapters only if they can run offline with recorded versions; until then those features stay unavailable.
+- Reduce documented splitter limitations (speech verbs outside the R5 list, ellipsis-initial sentences, and sentence-final abbreviations) with corpus tests before bumping `aiproof-sentsplit-v1`.
 
 ### Cross-cutting
 

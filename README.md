@@ -52,6 +52,15 @@ python aiproofing/scripts/aiproof_runner.py Boundary/Boundary.md --preset narrat
 
 The runner validates the manuscript and the machine-readable contract in [aiproofing/scripts/task_manifest.json](aiproofing/scripts/task_manifest.json), then writes versioned workflow state and unsigned revision-audit scaffolding. It does not edit the manuscript itself — the editing happens through the skill workflow.
 
+Measure a manuscript, or compare a revision with its source and check the declared edit budget:
+
+```bash
+python aiproofing/scripts/features.py Boundary/Boundary.md --output tmp/measure/boundary_features.json
+python aiproofing/scripts/revision_diff.py Boundary/Boundary.md Boundary/Boundary_revised.md --max-edit-pct 15 --output tmp/measure/boundary_diff.json --markdown tmp/measure/boundary_diff.md
+```
+
+`features.py` reports every feature with its method, or as `unavailable` with a reason. `revision_diff.py` reports the percentage of source sentences changed or deleted (inserted sentences are reported separately), exits 1 when a declared budget is exceeded, and lists new numbers, names, and dialogue, lost protected terms, and added stock phrases for human review. Neither tool edits text, assigns semantic risk, or issues an authorship verdict.
+
 The workflow's terminal status is **Internal editorial checks complete**. That means the selected internal checks and required fidelity items were resolved — nothing more.
 
 ### 3. Run the benchmark tooling
@@ -76,7 +85,7 @@ Run the full standard-library test suite from the repository root:
 python -m unittest discover -s tests -p "test_*.py" -v
 ```
 
-Tests cover task/file parity, failure paths, deterministic migration and bootstrap behavior, schema cross-record checks, redaction, card rendering, and historical notices. A GitHub Actions workflow ([.github/workflows/p0-offline-tests.yml](.github/workflows/p0-offline-tests.yml)) runs them offline on push.
+Tests cover task/file parity, the measurement helpers and lexicon parity, failure paths, deterministic migration and bootstrap behavior, schema cross-record checks, redaction, card rendering, and historical notices. A GitHub Actions workflow ([.github/workflows/p0-offline-tests.yml](.github/workflows/p0-offline-tests.yml)) runs them offline on push.
 
 ## Repository layout
 
@@ -86,7 +95,7 @@ humanizer/
 ├── aiproofing/           # Skill 2: deep narrative AI-proofing workflow
 │   ├── protocols/        #   24 protocol files with declared manifest roles
 │   ├── presets/          #   narrative/technical/academic/business tuning
-│   ├── scripts/          #   aiproof_runner.py + task_manifest.json (canonical contract)
+│   ├── scripts/          #   aiproof_runner.py + task_manifest.json (canonical contract); features.py + revision_diff.py (measurement helpers)
 │   └── benchmark/        #   offline four-track measurement contract (schema, migration, metrics, cards)
 ├── tests/                # standard-library unit and parity tests
 ├── ENHANCEMENTS.md       # living roadmap

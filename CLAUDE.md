@@ -28,7 +28,11 @@ humanizer/
 │   │   └── domain_presets.md     #   narrative/technical/academic/business tuning
 │   ├── scripts/
 │   │   ├── aiproof_runner.py     #   validates and creates workflow scaffolding
-│   │   └── task_manifest.json    #   canonical IDs, order, dependencies, and roles
+│   │   ├── task_manifest.json    #   canonical IDs, order, dependencies, and roles
+│   │   ├── textkit.py            #   shared normalization, block model, splitter, tokenizer, lexicon matching
+│   │   ├── features.py           #   aiproof-textfeatures extractor (measurements, never verdicts)
+│   │   ├── revision_diff.py      #   edit budget, feature deltas, and human-review candidates
+│   │   └── editorial_lexicons.json # versioned watch and stock-phrase lists (parity-tested)
 │   └── benchmark/                #   offline four-track measurement contract
 │       ├── schema_v2.py          #   validation, hashing, ledgers, and redaction
 │       ├── migrate_v1.py         #   strict v1 migration with exclusion status
@@ -39,7 +43,7 @@ humanizer/
 │       ├── registries/           #   governed metadata registries
 │       └── data/                 #   synthetic fixtures and starter corpus
 ├── scripts/package_skills.py    # zips both skills for claude.ai upload
-├── tests/                       # standard-library unit and parity tests
+├── tests/                       # standard-library unit and parity tests (fixtures under tests/fixtures/)
 ├── ENHANCEMENTS.md             # Living roadmap (consolidates archived reviews)
 ├── archive/reviews/            # Historical repo reviews (preserved verbatim)
 └── <artifact dirs>/            # Real writing samples (see "Artifacts" below)
@@ -104,6 +108,16 @@ python -m json.tool tmp/benchmark_v2/summary.json
 
 Textless legacy rows migrate as unavailable/provisional/excluded stubs. They do not become benchmark-eligible samples. Raw thresholds are never invented, and rank-only mode does not emit confusion-matrix metrics.
 
+Measurement helpers (standard library, offline; they never edit their inputs and refuse to overwrite an existing output, so write to `tmp/`):
+
+```bash
+python aiproofing/scripts/features.py --help
+python aiproofing/scripts/features.py Boundary/Boundary.md --output tmp/measure/boundary_features.json --markdown tmp/measure/boundary_features.md
+python aiproofing/scripts/revision_diff.py Boundary/Boundary.md Boundary/Boundary_revised.md --max-edit-pct 15 --output tmp/measure/boundary_diff.json --markdown tmp/measure/boundary_diff.md
+```
+
+`features.py` (`aiproof-textfeatures` 1.0.0) emits every feature with its method, as `unavailable` with a reason, or as `disabled` when an optional band is unset. `revision_diff.py` (`aiproof-revision-diff` 1.0.0) measures `edit_pct` over source sentences (inserted sentences are reported separately), and `--runner-state` reads the budget from runner state after checking the source digest. Its exit codes: `0` when the budget is not exceeded or none is set; `1` when it is exceeded (outputs are still written and an open required issue is recorded); `2` for usage, input, or validation errors (nothing is written). Review candidates are `HUMAN_REVIEW_REQUIRED` prompts, and semantic-review rows leave claims, risk, and approval to people. Both tools live under `aiproofing/scripts/`, import only siblings via `textkit`, and must not be registered in `task_manifest.json`.
+
 ### Packaging the skills for claude.ai
 
 claude.ai and the Skills API accept a zip whose single top-level folder is named after the skill's `name` and contains `SKILL.md`. The repository folders do not use those names (`Humanizer/` vs `humanizer`, `aiproofing/` vs `aiproofing-text`), so use the packager rather than zipping the folders directly:
@@ -123,7 +137,17 @@ Run the complete standard-library test suite:
 python -m unittest discover -s tests -p "test_*.py" -v
 ```
 
-Also run the workflow help/smoke commands and the migration/evaluation/JSON validation sequence above. Tests cover task/file parity, failure paths, deterministic migration and bootstrap behavior, schema cross-record checks, redaction, cards, and historical notices.
+Also run the workflow help/smoke commands and the migration/evaluation/JSON validation sequence above, plus the measurement-helper smoke commands (clear old outputs first, because the tools refuse to overwrite):
+
+```bash
+python -c "import shutil; shutil.rmtree('tmp/measure', ignore_errors=True)"
+python aiproofing/scripts/features.py Boundary/Boundary.md --output tmp/measure/boundary_features.json
+python aiproofing/scripts/revision_diff.py Boundary/Boundary.md Boundary/Boundary_revised.md --max-edit-pct 15 --output tmp/measure/boundary_diff.json
+python -m compileall -q aiproofing tests
+python scripts/package_skills.py --check
+```
+
+CI runs Python 3.13, and the code must also run on 3.11: avoid PEP 701 f-strings and 3.12+-only APIs. Tests cover task/file parity, failure paths, deterministic migration and bootstrap behavior, schema cross-record checks, redaction, cards, and historical notices.
 
 ## Key conventions
 

@@ -14,7 +14,7 @@ Do not replace them with ordinal IDs 1-18. `../scripts/task_manifest.json` is th
 
 - **Primary guide:** `manuscript_analysis.md`
 - **Dependencies:** none
-- **Evidence role:** `MEASURED_FEATURE` for configured counts; provisional context for inferred POV, entities, and voice cues
+- **Evidence role:** `MEASURED_FEATURE` for configured counts from `../scripts/features.py` (`aiproof-textfeatures` 1.0.0) or recorded as unavailable; provisional context for inferred POV, entities, and voice cues
 - Segment the supplied file, record declared measurements, and produce a provisional context map. Do not infer identity or background from capitalization alone.
 
 ### Task 2: Editorial Pattern Checklist Assembly
@@ -68,7 +68,7 @@ Do not replace them with ordinal IDs 1-18. `../scripts/task_manifest.json` is th
 
 - **Primary guide:** `part_of_speech_analysis.md`
 - **Dependencies:** Task `6.5`
-- **Evidence role:** `MEASURED_FEATURE` only with a named tagger/version; otherwise `STYLE_HEURISTIC`
+- **Evidence role:** `MEASURED_FEATURE` only with a named tagger/version; otherwise `STYLE_HEURISTIC`. `../scripts/features.py` has no tagger and reports POS ratios as unavailable
 - Treat POS ratios as diagnostics, not targets or detector scores.
 
 ### Task 8: Modal and Epistemic Nuance
@@ -84,7 +84,7 @@ Do not replace them with ordinal IDs 1-18. `../scripts/task_manifest.json` is th
 
 - **Primary guide:** `readability_analysis.md`
 - **Dependencies:** Task `8`
-- **Evidence role:** `MEASURED_FEATURE` only with a named formula/extractor; recommendations are `STYLE_HEURISTIC`
+- **Evidence role:** `MEASURED_FEATURE` only with a named formula/extractor, such as the Flesch scores from `../scripts/features.py` with the `vowel-groups-silent-e-v1` syllable method; recommendations are `STYLE_HEURISTIC`
 - Compare configured measurements with the intended audience without treating a score as origin evidence.
 
 ### Task 10: Formulaic Pattern Review
@@ -98,7 +98,7 @@ Do not replace them with ordinal IDs 1-18. `../scripts/task_manifest.json` is th
 
 - **Primary guide:** `burstiness_analysis.md` (legacy filename retained for compatibility)
 - **Dependencies:** Task `10`
-- **Evidence role:** sentence-length statistics are `MEASURED_FEATURE` only with a declared extractor; revision advice is `STYLE_HEURISTIC`
+- **Evidence role:** sentence-length statistics are `MEASURED_FEATURE` only with a declared extractor, such as `../scripts/features.py`, whose before/after deltas `../scripts/revision_diff.py` reports; revision advice is `STYLE_HEURISTIC`
 - No sentence-length band is a general detector threshold. Run the review only when enabled by the selected configuration.
 
 ## Phase 5: Voice, emotion, and source-supported specificity

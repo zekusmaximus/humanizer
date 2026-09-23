@@ -33,9 +33,9 @@ Verify source faithfulness, consistency, and the selected editorial configuratio
 
 5. **Configured Edit-Budget and Faithfulness Checks**
    - Run only constraints explicitly supplied by the user or validated preset. Omission disables a constraint; do not invent defaults.
-   - `--max-edit-pct`: compute the declared edit-budget measure and record its extractor/method. Exceeding the supplied value leaves a required issue open. The deprecated alias `--max_edit_pct` remains accepted.
+   - `--max-edit-pct`: compute the declared edit-budget measure and record its extractor/method. `../scripts/revision_diff.py` (`aiproof-revision-diff` 1.0.0) computes `edit_pct = 100 × (minor + major + deleted source sentences) / (source prose sentences)` over aligned comparison keys and records its `budget_scope`: source sentences changed or deleted; inserted sentences are reported separately and are not budgeted. Exceeding the supplied value leaves a required issue open, and the tool exits 1. The deprecated alias `--max_edit_pct` remains accepted.
    - `--min-faithfulness`: compare the human review score with the supplied absolute 1-5 minimum. The deprecated aliases `--min_faithfulness` and `--min_faithfulness_delta` are accepted for compatibility; neither represents a delta.
-   - `--require-semantic-review`: output a semantic-diff table with original claim, revised claim, risk (`none|low|medium|high`), and human approval. Unapproved `medium` or `high` risk remains open. The deprecated alias `--require_semantic_review` remains accepted.
+   - `--require-semantic-review`: output a semantic-diff table with original claim, revised claim, risk (`none|low|medium|high`), and human approval. `../scripts/revision_diff.py` may pre-populate candidate rows (location, original and revised text, similarity, and mechanical flags) with claims, risk, and approval left empty; people split rows into claims and assign risk and approval. Unapproved `medium` or `high` risk remains open. The deprecated alias `--require_semantic_review` remains accepted.
 6. **Readability and Flow Recheck**
    - Re-run only enabled readability features with the same named extractor/configuration. Report differences descriptively.
 7. **Shared Checklist Review**

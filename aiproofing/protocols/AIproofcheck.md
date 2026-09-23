@@ -13,15 +13,15 @@ For each item record `required|optional`, `reviewed|retained|open|disabled`, and
 - [ ] **C04 Idioms and figurative language** (`optional/human review`) - New cultural, experiential, or story-world detail is source-supported or author-approved.
 - [ ] **C05 Voice consistency** (`human review`) - Accepted voice changes follow manuscript evidence or an approved voice guide; similarity is not forced away.
 - [ ] **C06 Emotion and sensory detail** (`human review`) - No reaction, bodily cue, experience, or ambivalence was invented.
-- [ ] **C07 Sentence rhythm** (`optional`) - Enabled measurements name their extractor/configuration; no value is treated as origin evidence.
-- [ ] **C08 Readability and flow** (`optional`) - Enabled features use the same pinned extractor and the intended audience is supplied or marked unknown.
+- [ ] **C07 Sentence rhythm** (`optional`) - Enabled measurements name their extractor/configuration (for example `aiproof-textfeatures` 1.0.0 from `../scripts/features.py`); no value is treated as origin evidence.
+- [ ] **C08 Readability and flow** (`optional`) - Enabled features use the same pinned extractor and syllable method before and after revision (for example `features.py` with `vowel-groups-silent-e-v1`), and the intended audience is supplied or marked unknown.
 - [ ] **C09 Formulaic patterns** (`optional`) - Review candidates were addressed or retained as intentional rhetoric/motif.
-- [ ] **C10 POS diagnostics** (`optional`) - Any numeric ratios name a tagger/version and remain descriptive.
+- [ ] **C10 POS diagnostics** (`optional`) - Any numeric ratios name a tagger/version and remain descriptive; `features.py` bundles no tagger and reports POS ratios as unavailable.
 - [ ] **C11 Consistency** (`required`) - POV, tense, names, locations, chronology, facts, and quotations have no unresolved contradiction.
 - [ ] **C12 Formatting and typography** (`optional`) - The selected genre/house style was applied; unset preferences are `disabled`.
 - [ ] **C13 Voice and perspective craft** (`human review`) - No fact, quotation, experience, emotion, opinion, anecdote, or author stance was added without support or approval.
 - [ ] **C14 Source faithfulness** (`required`) - Every substantive change preserves claims, scope, citations, meaning, and calibrated uncertainty; open issues remain visible.
-- [ ] **C15 Configured constraints** (`required when enabled`) - Edit budget, minimum faithfulness score, and semantic review match validated user inputs. Omitted constraints are `disabled`.
+- [ ] **C15 Configured constraints** (`required when enabled`) - Edit budget (source sentences changed or deleted, measured by `../scripts/revision_diff.py`), minimum faithfulness score, and semantic review match validated user inputs. Omitted constraints are `disabled`.
 
 ## Detail Prompts (for humans or agents)
 - Where do configured frequency findings cluster, and does repetition serve meaning or motif?

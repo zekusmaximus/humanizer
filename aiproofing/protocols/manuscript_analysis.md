@@ -9,7 +9,7 @@ Create a provisional working map of an English narrative `.md` file. Separate di
 
 ## Steps
 1. **Segment the Text**
-   - Use headings, scene breaks (***, ---), and blank lines to define sections.
+   - Use headings and scene breaks (***, ---) to define sections. Blank lines separate paragraphs; they never delimit sections.
    - Record word counts and sentence counts per section.
 2. **Narrative Mode Detection**
    - Sample the opening, middle, and closing sections to propose POV and tense. Mark the result provisional and note shifts.
@@ -17,7 +17,7 @@ Create a provisional working map of an English narrative `.md` file. Separate di
    - Identify repeated names and noun phrases as entity candidates. Capitalization alone cannot determine whether a token is a character, location, or organization.
    - Record nearby diction as provisional voice evidence. Do not infer protected traits, background, education, class, or identity.
 4. **Rhythm Baseline**
-   - When measurement is enabled, record the extractor name/version, Markdown-stripping rule, sentence splitter, token definition, and configuration.
+   - When measurement is enabled, record the extractor name/version, Markdown-stripping rule, sentence splitter, token definition, and configuration. The bundled extractor `../scripts/features.py` (`aiproof-textfeatures` 1.0.0) records all of these in its output.
    - Compute the configured sentence-length and opening-pattern features. If no pinned extractor is available, record the feature as unavailable rather than estimating it.
    - A configured sentence-SD review is a `MEASURED_FEATURE` plus an optional `STYLE_HEURISTIC`; it is not an origin threshold or workflow gate.
 5. **Tone and Setting Signals**

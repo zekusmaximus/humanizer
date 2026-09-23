@@ -4,7 +4,7 @@
 Use optional part-of-speech measurements to locate passages for editorial review. POS ratios are not detector signals or universal quality targets.
 
 ## Inputs
-- POS distribution per section from a named tagger, tag set, tokenizer, and version; otherwise manual observations labeled non-measured.
+- POS distribution per section from a named tagger, tag set, tokenizer, and version; otherwise manual observations labeled non-measured. `../scripts/features.py` bundles no tagger and reports POS ratios as unavailable.
 - Character voice cues from **manuscript_analysis.md**.
 
 ## Steps
