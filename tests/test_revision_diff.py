@@ -184,7 +184,7 @@ class CliTests(unittest.TestCase):
             ):
                 self.assertIn(phrase, markdown)
 
-            for bad in ("abc", "101", "-1", "nan", "inf"):
+            for bad in ("abc", "101", "-1", "nan", "inf", "1_5", "\u0661\u0665", "0x10"):
                 with self.subTest(budget=bad):
                     result = run_cli(DIFF_SCRIPT, ORIGINAL, REVISED, "--max-edit-pct", bad, "--output", out / "bad.json")
                     self.assertEqual(result.returncode, 2)
@@ -193,7 +193,7 @@ class CliTests(unittest.TestCase):
     def test_similarity_threshold_validation(self):
         with tempfile.TemporaryDirectory() as directory:
             target = Path(directory) / "t.json"
-            for value in ("0", "0.0", "1.5", "x"):
+            for value in ("0", "0.0", "1.5", "x", "1.00000000000000001", "0x1", "1_0"):
                 with self.subTest(value=value):
                     result = run_cli(DIFF_SCRIPT, ORIGINAL, REVISED, "--similarity-threshold", value, "--output", target)
                     self.assertEqual(result.returncode, 2)
@@ -253,6 +253,34 @@ class CliTests(unittest.TestCase):
             bogus.write_text(json.dumps({"record_type": "something_else"}), encoding="utf-8")
             result = run_cli(DIFF_SCRIPT, original, REVISED, "--runner-state", bogus)
             self.assertEqual(result.returncode, 2)
+
+            state_data = json.loads(state.read_text(encoding="utf-8"))
+            same_payload = (tmp / "same.json").read_text(encoding="utf-8")
+            self.assertNotIn(state_data["run_id"], same_payload)
+            self.assertIn(state_data["run_id"], state.name)
+            for mutate in (
+                lambda data: data.update(state_revision=float("nan")),
+                lambda data: data["constraints"].update(max_edit_pct=10 ** 400),
+                lambda data: data["constraints"].update(max_edit_pct="15"),
+                lambda data: data.update(run_id=float("nan"), state_revision="1"),
+            ):
+                data = json.loads(state.read_text(encoding="utf-8"))
+                mutate(data)
+                bogus.unlink()
+                bogus.write_text(json.dumps(data), encoding="utf-8")
+                target = tmp / "bogus_out.json"
+                result = run_cli(DIFF_SCRIPT, original, REVISED, "--runner-state", bogus, "--output", target)
+                self.assertEqual(result.returncode, 2, result.stderr[-300:])
+                self.assertNotIn("Traceback", result.stderr)
+                self.assertFalse(target.exists())
+
+    def test_exceeded_detail_shows_unrounded_value_when_rounding_hides_it(self):
+        text = b"One sentence here.\nTwo sentence here.\nThree sentence here.\n"
+        revised = b"One sentence changed.\nTwo sentence here.\nThree sentence here.\n"
+        payload = revision_diff.diff_documents(text, revised, max_edit_pct="33.33333")
+        self.assertTrue(payload["edit_budget"]["exceeded"])
+        self.assertEqual(payload["edit_budget"]["edit_pct_exact"], "100/3")
+        self.assertIn("unrounded edit_pct 100/3", payload["open_required_issues"][0]["detail"])
 
     def test_protect_flags_repeat_and_files_merge(self):
         with tempfile.TemporaryDirectory() as directory:
@@ -323,6 +351,10 @@ class ReviewCandidateTests(unittest.TestCase):
         self.assertEqual({item["value"] for item in numbers["count_increases"]}, {"two"})
         self.assertEqual({item["value"] for item in numbers["lost"]}, {"fifth"})
         self.assertNotIn("1200", {item["value"] for item in numbers["new_types"]})
+        decimal = self.diff("It weighed 1,5 kilos in rooms 2,3.\n", "It weighed 15 kilos in rooms 23.\n")
+        self.assertEqual(
+            {item["value"] for item in decimal["review_candidates"]["numbers"]["new_types"]}, {"15", "23"}
+        )
         allowed = self.diff(
             "Two boats waited.\n", "Seven boats waited.\n", allow_terms=["seven"],
         )

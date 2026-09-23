@@ -380,6 +380,33 @@ class CliTests(unittest.TestCase):
             self.assertEqual(same.returncode, 2)
             self.assertFalse((tmp / "x").exists())
 
+            for payload in ('{"bands": {"sentence_length_sd_min": 1' + "0" * 400 + "}}",
+                            "[" * 200000 + "]" * 200000, '{"top_n": 1' + "0" * 5000 + "}"):
+                config.write_text(payload, encoding="utf-8")
+                result = run_cli(SAMPLE, "--config", config, "--output", target)
+                self.assertEqual(result.returncode, 2, result.stderr[-300:])
+                self.assertNotIn("Traceback", result.stderr)
+                self.assertFalse(target.exists())
+
+            long_name = run_cli(SAMPLE, "--output", tmp / ("x" * 300 + ".json"))
+            self.assertEqual(long_name.returncode, 2)
+            self.assertNotIn("Traceback", long_name.stderr)
+
+            nested = run_cli(SAMPLE, "--output", tmp / "px" / "y.json", "--markdown", tmp / "px")
+            self.assertEqual(nested.returncode, 2)
+            self.assertIn("must not contain one another", nested.stderr)
+            self.assertFalse((tmp / "px").exists())
+
+            loop = tmp / "loop"
+            try:
+                loop.symlink_to(loop)
+            except OSError:
+                loop = None
+            if loop is not None:
+                result = run_cli(loop, "--output", target)
+                self.assertEqual(result.returncode, 2)
+                self.assertNotIn("Traceback", result.stderr)
+
             for top in ("0", "-2", "x"):
                 result = run_cli(SAMPLE, "--top", top)
                 self.assertEqual(result.returncode, 2)

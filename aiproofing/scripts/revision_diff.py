@@ -19,7 +19,12 @@ is not a capitalized-token candidate; the number words exclude ``one`` and
 trademark rule takes the maximal capitalized run before ``™``, which can
 include a capitalized sentence-initial word; and replace spans above 40,000
 cells skip the alignment program, so their sentences count as deleted or
-inserted unless an adjacent resegmentation matches.
+inserted unless an adjacent resegmentation matches. Alignment is monotone, so a
+moved sentence counts as one deletion plus one insertion. The dialogue filter
+checks quoted text against all source prose (narration included), so new
+dialogue whose words already run contiguously in the source narration is not
+flagged. The 40,000-cell limit applies per replace span, so a long document with
+many medium-sized changed spans can take tens of seconds.
 """
 
 from __future__ import annotations
@@ -115,6 +120,7 @@ CATEGORIES = ("unchanged", "resegmented", "minor", "major", "deleted")
 CHANGED_TOKEN_BUCKETS = (("1-2", 1, 2), ("3-5", 3, 5), ("6+", 6, None))
 
 KeyFunction = Callable[[str], Tuple[str, ...]]
+DECIMAL_STRING = re.compile(r"[+-]?(?:[0-9]+(?:\.[0-9]*)?|\.[0-9]+)(?:[eE][+-]?[0-9]+)?")
 
 
 class DiffError(ValueError):
@@ -147,8 +153,10 @@ def _bounded_decimal_string(label: str, minimum: float, maximum: float):
     check = _bounded_float(label, minimum, maximum)
 
     def convert(raw_value: str) -> str:
-        check(raw_value)
         text = raw_value.strip()
+        if not DECIMAL_STRING.fullmatch(text):
+            raise argparse.ArgumentTypeError(f"{label} must be a number")
+        check(text)
         try:
             Fraction(text)
         except (ValueError, ZeroDivisionError) as exc:
@@ -160,7 +168,7 @@ def _bounded_decimal_string(label: str, minimum: float, maximum: float):
 
 def similarity_threshold_string(raw_value: str) -> str:
     text = _bounded_decimal_string("similarity threshold", 0.0, 1.0)(raw_value)
-    if Fraction(text) <= 0:
+    if not 0 < Fraction(text) <= 1:
         raise argparse.ArgumentTypeError("similarity threshold must be greater than 0 and at most 1")
     return text
 
@@ -413,7 +421,7 @@ def vocabulary(document: Document) -> Set[str]:
 
 
 def normalize_number(value: str) -> str:
-    value = re.sub(r"(?<=\d),(?=\d)", "", value)
+    value = re.sub(r"(?<=\d),(?=\d{3}(?!\d))", "", value)
     return value[:-1] if value.endswith("%") else value
 
 
@@ -736,12 +744,16 @@ def diff_documents(
     inserted_words = sum(len(revised.sentences[index].tokens) for index in inserted_indexes)
     inserted_pct = _round(Fraction(100 * len(inserted_indexes), total_source))
 
+    exact = str(edit_fraction)
     open_issues: List[Dict[str, Any]] = []
     if exceeded:
+        detail = f"edit budget exceeded: {edit_pct}% > {max_edit_pct}%"
+        if budget is not None and Fraction(str(edit_pct)) <= budget:
+            detail += f" (unrounded edit_pct {exact})"
         open_issues.append({
             "issue": "edit_budget_exceeded",
             "evidence_label": "HUMAN_REVIEW_REQUIRED",
-            "detail": f"edit budget exceeded: {edit_pct}% > {max_edit_pct}%",
+            "detail": detail,
             "required": True,
         })
 
@@ -873,6 +885,7 @@ def diff_documents(
             "counted_source_sentences": counted,
             "source_prose_sentences": total_source,
             "edit_pct": edit_pct,
+            "edit_pct_exact": exact,
             "max_edit_pct": max_edit_pct,
             "budget_source": budget_source if budget is not None else None,
             "exceeded": exceeded,
@@ -1396,7 +1409,7 @@ def read_runner_state(path_text: str, original_bytes: bytes) -> Tuple[Optional[s
     path, payload = features.read_input(path_text, "runner state")
     try:
         state = json.loads(payload.decode("utf-8"))
-    except (UnicodeDecodeError, json.JSONDecodeError) as exc:
+    except (UnicodeDecodeError, ValueError, RecursionError) as exc:
         raise DiffError(f"runner state is not valid UTF-8 JSON: {path_text}") from exc
     if not isinstance(state, dict) or state.get("record_type") != "aiproof_workflow_state":
         raise DiffError("runner state record_type must be 'aiproof_workflow_state'")
@@ -1411,16 +1424,20 @@ def read_runner_state(path_text: str, original_bytes: bytes) -> Tuple[Optional[s
     value = constraints["max_edit_pct"]
     budget: Optional[str] = None
     if value is not None:
-        if isinstance(value, bool) or not isinstance(value, (int, float)) or not math.isfinite(float(value)):
+        if isinstance(value, bool) or not isinstance(value, (int, float)) or (
+            isinstance(value, float) and not math.isfinite(value)
+        ):
             raise DiffError("runner state constraints.max_edit_pct must be a finite number or null")
         if value < 0 or value > 100:
             raise DiffError("runner state constraints.max_edit_pct must be between 0 and 100")
         budget = str(value)
+    revision = state.get("state_revision")
+    if revision is not None and (isinstance(revision, bool) or not isinstance(revision, int)):
+        raise DiffError("runner state state_revision must be an integer")
+    # The state file name and run_id embed a random run UUID, so only the digest is recorded.
     return budget, {
-        "file_name": path.name,
         "sha256": sha256_bytes(payload),
-        "run_id": state.get("run_id"),
-        "state_revision": state.get("state_revision"),
+        "state_revision": revision,
         "max_edit_pct": value,
     }
 
@@ -1519,7 +1536,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
         features.write_outputs(cli_payload, output, markdown_path, markdown_text)
     except FileExistsError as exc:
         parser.error(f"refusing to overwrite existing output: {exc.filename}")
-    except OSError as exc:
+    except (OSError, ValueError) as exc:
         parser.error(f"cannot write output: {exc}")
     for warning in payload["warnings"]:
         print(f"warning: {warning}", file=sys.stderr)
@@ -1532,7 +1549,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
         file=sys.stderr,
     )
     if budget_info["exceeded"]:
-        print(f"edit budget exceeded: {budget_info['edit_pct']}% > {budget_info['max_edit_pct']}%", file=sys.stderr)
+        print(payload["open_required_issues"][0]["detail"], file=sys.stderr)
         return 1
     return 0
 

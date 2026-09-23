@@ -122,6 +122,13 @@ class SplitterRuleTests(unittest.TestCase):
         self.assertEqual(len(document.sentences), 1)
         self.assertEqual(document.punctuation_only_sentences, 1)
 
+    def test_long_single_line_block_splits_in_linear_time(self):
+        import time
+
+        started = time.perf_counter()
+        self.assertEqual(len(sentences("Word one here. " * 20000)), 20000)
+        self.assertLess(time.perf_counter() - started, 5.0)
+
     def test_colons_and_semicolons_never_split(self):
         self.assertEqual(len(sentences("He came; she left: nobody stayed.")), 1)
 
@@ -139,6 +146,15 @@ class BlockModelTests(unittest.TestCase):
             ["The Title", "Atx Heading", "Setext Line", "Chapter 3: The Fall", "THE END",
              "1.1 Scope Notes", "Bold Heading", "— End of Trilogy —"],
         )
+
+    def test_atx_closing_sequence_and_pathological_spacing(self):
+        blocks = parse("# Title ##\n\n# a # b ##\n\n# C#\n").blocks
+        self.assertEqual([block.text for block in blocks], ["Title", "a # b", "C"])
+        import time
+
+        started = time.perf_counter()
+        self.assertEqual(textkit.parse_blocks("# a" + " " * 5000 + "b")[0].kind, "heading")
+        self.assertLess(time.perf_counter() - started, 5.0)
 
     def test_plain_heading_rules_reject_prose(self):
         text = "Opening line.\n\nA quiet room without a period\n\n“SHOUT IN QUOTES”\n\nTHE END.\n"

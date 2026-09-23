@@ -53,7 +53,7 @@ Still unavailable in 1.0.0: part-of-speech ratios, lemma frequencies, synonym cy
 
 `overused_vocabulary_analysis.md` gained the `align with` watch-list entry that `Humanizer/SKILL.md` pattern 7 already carried; no other entry was missing. `tests/test_lexicon_parity.py` couples `editorial_lexicons.json` to `Humanizer/SKILL.md` patterns 4, 7, 8, 19, and 22 and to the protocol lists, so a rewrite of those Humanizer lists must update the JSON and the test together.
 
-All required and optional documentation edits were made; none were skipped.
+The optional cross-references in `vocabulary_analysis.md`, `formulaic_pattern_analysis.md`, `sentence_structure_analysis.md`, checklist item C10, and `protocols/README.md` were also updated.
 
 ## Evidence boundaries
 

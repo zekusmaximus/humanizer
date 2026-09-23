@@ -79,7 +79,9 @@ SETEXT_UNDERLINE = re.compile(r"^\s{0,3}(?:=+|-+)\s*$")
 THEMATIC_BREAK = re.compile(
     r"^\s{0,3}(?:(?:\*[ \t]*){3,}|(?:-[ \t]*){3,}|(?:_[ \t]*){3,})$"
 )
-ATX_HEADING = re.compile(r"^\s{0,3}(#{1,6})\s+(.*?)\s*#*\s*$")
+# Equivalent to ^\s{0,3}(#{1,6})\s+(.*?)\s*#*\s*$ on right-stripped lines; the
+# closing sequence is removed with str.rstrip to avoid regex backtracking.
+ATX_HEADING = re.compile(r"^\s{0,3}(#{1,6})\s+(.*)$")
 BLOCKQUOTE = re.compile(r"^\s{0,3}>\s?")
 TABLE_ROW = re.compile(r"^\s{0,3}\|")
 ANNOTATION = re.compile(r"^\s{0,3}(\*{1,3}|_{1,3})\(.*\)\1\s*$")
@@ -118,7 +120,7 @@ ABBREVIATIONS = frozenset({
     "gen", "col", "rev", "hon", "vs", "cf", "fig", "approx", "dept", "inc", "ltd", "co",
 })
 SPEECH_TAG = re.compile(
-    r"^(?:[A-Z][\w’'-]*|the\s+[A-Z][\w’'-]*)(?:\s+[A-Z][\w’'-]*)?\s+"
+    r"(?:[A-Z][\w’'-]*|the\s+[A-Z][\w’'-]*)(?:\s+[A-Z][\w’'-]*)?\s+"
     r"(?:said|says|asked|asks|replied|replies|answered|muttered|murmured|whispered"
     r"|cried|chirped|intoned|explained|repeated|echoed|called|shouted|snapped|added"
     r"|agreed|admitted|began|continued|demanded|insisted|breathed|growled|yelled"
@@ -474,7 +476,7 @@ def parse_blocks(text: str) -> List[Block]:
         atx = ATX_HEADING.match(content)
         if atx:
             builder = emit(_BlockBuilder("heading", physical, "atx"))
-            builder.add_line(atx.group(2), physical)
+            builder.add_line(atx.group(2).rstrip("#").rstrip(), physical)
             previous_index = index
             group_kind = None
             continue
@@ -565,15 +567,18 @@ def comparison_key(sentence: str) -> Tuple[str, ...]:
 def _should_split(text: str, match: "re.Match[str]") -> bool:
     term = match.group("term")
     close = match.group("close")
-    following = text[match.end():]
-    next_char = following[:1]
+    after = match.end()
+    next_char = text[after:after + 1]
     # R2: a lowercase continuation never splits.
     if next_char.islower():
         return False
     # R3: abbreviations, "No." before a digit, and initials.
     if term == "." and not close:
-        preceding = re.search(r"\S+$", text[:match.end("term")])
-        token = preceding.group(0) if preceding else ""
+        token_end = match.end("term")
+        token_start = token_end
+        while token_start > 0 and not text[token_start - 1].isspace():
+            token_start -= 1
+        token = text[token_start:token_end]
         bare = token.lstrip(TOKEN_LEAD_STRIP).casefold()
         if bare.endswith("."):
             bare = bare[:-1]
@@ -589,7 +594,7 @@ def _should_split(text: str, match: "re.Match[str]") -> bool:
         if not close:
             return False
     # R5: closing double quote followed by a speech tag.
-    if ('"' in close or "”" in close) and SPEECH_TAG.match(following):
+    if ('"' in close or "”" in close) and SPEECH_TAG.match(text, after):
         return False
     # R6 is enforced by the CANDIDATE lookahead; R7: split.
     return True
@@ -784,7 +789,7 @@ def load_lexicons(path: Optional[Path] = None) -> Lexicons:
         raise LexiconError(f"lexicon file is not readable: {lexicon_path.name}: {exc}") from exc
     try:
         data = json.loads(payload.decode("utf-8"))
-    except (UnicodeDecodeError, json.JSONDecodeError) as exc:
+    except (UnicodeDecodeError, ValueError, RecursionError) as exc:
         raise LexiconError(f"lexicon file is not valid UTF-8 JSON: {lexicon_path.name}") from exc
     if not isinstance(data, dict) or not isinstance(data.get("lexicon_version"), str):
         raise LexiconError("lexicon file must be an object with a lexicon_version string")

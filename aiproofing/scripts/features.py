@@ -212,7 +212,11 @@ def _validate_band(value: Any, label: str) -> Optional[float]:
         return None
     if isinstance(value, bool) or not isinstance(value, (int, float)):
         raise FeatureError(f"config bands.{label} must be a number or null")
-    if not math.isfinite(float(value)) or value < 0:
+    try:
+        finite = math.isfinite(float(value))
+    except OverflowError:
+        finite = False
+    if not finite or value < 0:
         raise FeatureError(f"config bands.{label} must be a finite, non-negative number")
     return value
 
@@ -318,6 +322,8 @@ def load_config_file(path: Path) -> Dict[str, Any]:
         raise FeatureError(
             f"config file is not valid JSON at line {exc.lineno}, column {exc.colno}: {path}"
         ) from exc
+    except (ValueError, RecursionError) as exc:
+        raise FeatureError(f"config file cannot be parsed as JSON: {path}") from exc
     if not isinstance(data, dict):
         raise FeatureError(f"config file must contain a JSON object: {path}")
     return data
@@ -1018,11 +1024,12 @@ def read_input(path_text: str, label: str) -> Tuple[Path, bytes]:
     candidate = Path(path_text).expanduser()
     try:
         resolved = candidate.resolve(strict=True)
+        is_file = resolved.is_file()
     except FileNotFoundError as exc:
         raise FeatureError(f"{label} file does not exist: {candidate}") from exc
-    except OSError as exc:
+    except (OSError, RuntimeError) as exc:
         raise FeatureError(f"cannot resolve {label} path {candidate}: {exc}") from exc
-    if not resolved.is_file():
+    if not is_file:
         raise FeatureError(f"{label} path is not a file: {candidate}")
     try:
         return resolved, resolved.read_bytes()
@@ -1032,27 +1039,37 @@ def read_input(path_text: str, label: str) -> Tuple[Path, bytes]:
 
 def validate_output_paths(output: Optional[str], markdown: Optional[str]) -> Tuple[Optional[Path], Optional[Path]]:
     paths: List[Optional[Path]] = []
+    resolved: List[Path] = []
     for text in (output, markdown):
         if text is None:
             paths.append(None)
             continue
         candidate = Path(text).expanduser()
-        if candidate.exists() or candidate.is_symlink():
-            raise FeatureError(f"refusing to overwrite existing output: {text}")
-        for parent in candidate.parents:
-            if parent.exists():
-                if not parent.is_dir():
-                    raise FeatureError(f"output parent is not a directory: {parent}")
-                break
+        try:
+            if candidate.exists() or candidate.is_symlink():
+                raise FeatureError(f"refusing to overwrite existing output: {text}")
+            for parent in candidate.parents:
+                if parent.exists():
+                    if not parent.is_dir():
+                        raise FeatureError(f"output parent is not a directory: {parent}")
+                    break
+            resolved.append(candidate.resolve())
+        except (OSError, RuntimeError) as exc:
+            raise FeatureError(f"cannot use output path {text}: {exc}") from exc
         paths.append(candidate)
-    if paths[0] is not None and paths[1] is not None and paths[0].resolve() == paths[1].resolve():
-        raise FeatureError("--output and --markdown must be different paths")
+    if len(resolved) == 2:
+        first, second = resolved
+        if first == second:
+            raise FeatureError("--output and --markdown must be different paths")
+        if first in second.parents or second in first.parents:
+            raise FeatureError("--output and --markdown must not contain one another")
     return paths[0], paths[1]
 
 
 def write_outputs(
     payload: Dict[str, Any], output: Optional[Path], markdown_path: Optional[Path], markdown_text: Optional[str],
 ) -> None:
+    serialized = serialize(payload)  # fails before any file or directory is created
     for path in (output, markdown_path):
         if path is not None:
             path.parent.mkdir(parents=True, exist_ok=True)
@@ -1061,7 +1078,7 @@ def write_outputs(
             json.dump(payload, handle, indent=2, sort_keys=True, ensure_ascii=False, allow_nan=False)
             handle.write("\n")
     else:
-        sys.stdout.buffer.write(serialize(payload).encode("utf-8"))
+        sys.stdout.buffer.write(serialized.encode("utf-8"))
         sys.stdout.buffer.flush()
     if markdown_path is not None and markdown_text is not None:
         with markdown_path.open("x", encoding="utf-8", newline="\n") as handle:
@@ -1106,7 +1123,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
         write_outputs(cli_payload, output, markdown_path, markdown_text)
     except FileExistsError as exc:
         parser.error(f"refusing to overwrite existing output: {exc.filename}")
-    except OSError as exc:
+    except (OSError, ValueError) as exc:
         parser.error(f"cannot write output: {exc}")
     return 0
 
