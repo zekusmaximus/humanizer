@@ -7,7 +7,7 @@ description: Reviews English narrative Markdown for editorial patterns, readabil
 
 ## Overview
 
-This skill provides an English-narrative-first editorial workflow for Markdown. It derives provisional context from the supplied text, records measured features only when an extractor is declared, and separates optional style preferences from required source-faithfulness checks. Other languages and domains are experimental until reviewed under a separate preset and evidence record.
+This skill provides an English-narrative-first editorial workflow for Markdown. It derives provisional context from the supplied text, records measured features only when an extractor is declared, and separates optional style preferences from required source-faithfulness checks. The bundled offline extractors are `scripts/features.py` (`aiproof-textfeatures` 1.0.0) for text features and `scripts/revision_diff.py` (`aiproof-revision-diff` 1.0.0) for revision comparison and the edit budget. Other languages and domains are experimental until reviewed under a separate preset and evidence record.
 
 ## Evidence and decision boundary
 
@@ -67,7 +67,7 @@ Task 2 and Task 16 may both reference `AIproofcheck.md` as a declared shared che
 
 - Read the full source and retain pre-edit snapshots.
 - Treat automatically derived characters, entities, and voice cues as provisional.
-- Record extractor names and configurations for any reported count or score.
+- Record extractor names and configurations for any reported count or score. Output from `scripts/features.py` and `scripts/revision_diff.py` embeds the extractor ID, version, configuration, and configuration hash.
 - Keep style suggestions optional and preserve intentional repetition, typography, and rhythm.
 - Require human approval for a new viewpoint, emotional reaction, anecdote, quotation, or factual claim.
 - Resolve source-faithfulness warnings before reporting editorial completion.
@@ -75,6 +75,10 @@ Task 2 and Task 16 may both reference `AIproofcheck.md` as a declared shared che
 ## Runner scope
 
 `scripts/aiproof_runner.py` validates inputs and constraints, loads the canonical manifest, and writes workflow state plus an unsigned revision-audit record. It scaffolds and records task transitions; it does not itself rewrite a manuscript or authenticate provenance.
+
+## Measurement helpers
+
+`scripts/features.py` measures one manuscript and `scripts/revision_diff.py` compares an original with a revision. Both are standard-library only and offline, read their inputs without editing them, and refuse to overwrite an existing output. `revision_diff.py` computes the declared `--max-edit-pct` measure (the percentage of source prose sentences changed or deleted; inserted sentences are reported separately), exits 1 when that budget is exceeded, lists `HUMAN_REVIEW_REQUIRED` candidates, and drafts semantic-review rows. Neither tool edits text or assigns semantic risk or approval; people do. Part-of-speech ratios, lemma frequencies, synonym cycling, and tense are reported as unavailable because no tagger or lemmatizer is bundled.
 
 ## Editorial Pattern & Quality Review
 

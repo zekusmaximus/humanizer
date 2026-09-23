@@ -9,7 +9,7 @@ Review repetition and word choice while preserving meaning, terminology, motifs,
 
 ## Steps
 1. **Frequency Scan**
-   - If configured, compute lemma or token frequencies with a named extractor/version and declared window/count settings. `null` disables the diagnostic.
+   - If configured, compute lemma or token frequencies with a named extractor/version and declared window/count settings. `null` disables the diagnostic. `../scripts/features.py` reports token frequencies (top content words and repeated n-grams); lemma frequencies are unavailable.
    - A frequency is a `MEASURED_FEATURE`, not evidence of text origin.
 2. **Contextual Replacements**
    - For a cluster that impairs clarity or rhythm, propose source-faithful alternatives. Repeating the clearest term is often preferable to synonym cycling.

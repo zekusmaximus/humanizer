@@ -10,8 +10,8 @@ Review structural and visual conventions against the requested genre and house s
 ## Steps
 
 ### 1. Em Dash Overuse
-- Count em dashes (—) across the manuscript.
-- If `em_dash_max_per_100_words` is configured, record the named value, rationale, and evidence status; `null` disables it. The count is a `MEASURED_FEATURE`, and the cap is only a house-style preference.
+- Count em dashes (—) across the manuscript. `../scripts/features.py` reports prose `em_dash_count`, `em_dash_per_100_words`, and `dash_punctuation_total`, plus raw-file glyph counts.
+- If `em_dash_max_per_100_words` is configured, record the named value, rationale, and evidence status; `null` disables it. The measured counterpart is `em_dash_per_100_words`; a configured band requires a rationale and review date in `band_notes` and yields a `review_flag`, not pass/fail. The count is a `MEASURED_FEATURE`, and the cap is only a house-style preference.
 - Review clusters for readability. Preserve an em dash when the interruption itself carries meaning.
 - **Before:** "The term is promoted by Dutch institutions—not by the people themselves—yet this mislabeling continues—even in official documents."
 - **After:** "The term is promoted by Dutch institutions, not by the people themselves. The mislabeling continues even in official documents."

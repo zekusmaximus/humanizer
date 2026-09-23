@@ -7,15 +7,15 @@ Use this playbook for source-faithful review of an English narrative Markdown fi
 - Optional: target audience, genre, and supplied house style. Do not invent missing metadata.
 - Optional: `--preset narrative|technical|academic|business` (see `../presets/domain_presets.md`). There is no implicit preset.
 - Optional constraints, recorded exactly by the runner:
-  - `--max-edit-pct 10`: maximum permitted percentage of sentences substantively changed.
+  - `--max-edit-pct 10`: maximum permitted percentage of **source** sentences substantively changed, measured by `../scripts/revision_diff.py`; inserted sentences are reported separately and are not budgeted.
   - `--min-faithfulness 4`: minimum human source-faithfulness rating on the 1–5 scale.
-  - `--require-semantic-review`: require an explicit semantic-drift review and human sign-off.
+  - `--require-semantic-review`: require an explicit semantic-drift review and human sign-off. `../scripts/revision_diff.py` drafts candidate rows only; people assign claims, risk, and approval.
 
 The underscore spellings remain deprecated compatibility aliases. The runner warns when they are used.
 
 ## Step 1: Ingest and Normalize
 1. Load the file; strip Markdown formatting only for analysis (preserve headings for structure cues).
-2. Detect sections via headings, blank-line breaks, or scene separators (***, ---).
+2. Detect sections via headings and scene separators (***, ---) only. Blank lines separate paragraphs and never delimit sections.
 3. Record word counts per section and overall.
 
 ## Step 2: Auto-Derive Context
@@ -23,7 +23,7 @@ The underscore spellings remain deprecated compatibility aliases. The runner war
 - **Speaker/Character List**: Use repeated names, noun phrases, and local context to propose characters, locations, or organizations. Mark classifications provisional and do not infer protected traits or personal background.
 - **Setting Signals**: Extract concrete nouns (objects, locales) and time markers to ground metaphors and idioms.
 - **Voice Baseline**: Record any recurring, source-supported diction or cadence evidence for selected speakers or narrators. Do not impose a trait count; use `unknown` where evidence is insufficient.
-- **Rhythm Baseline**: When enabled, compute configured sentence-length and opening-pattern features with a named extractor and configuration; otherwise record them as unavailable.
+- **Rhythm Baseline**: When enabled, compute configured sentence-length and opening-pattern features with a named extractor and configuration; otherwise record them as unavailable. The bundled extractor is `../scripts/features.py` (`aiproof-textfeatures` 1.0.0).
 
 If a preset was supplied, load `../presets/domain_presets.md`. Presets change editorial emphasis only. They do not establish universal numerical pass conditions.
 
@@ -79,7 +79,7 @@ To use this protocol on a manuscript:
 2. Place your input `.md` file in that folder (e.g., `my_story/my_story.md`).
 3. Run the agent prompt below, substituting the path to your file.
 
-If editing was separately authorized, the editor may save a revised manuscript and report to an explicitly selected output location. The runner itself writes only scaffolding to its output directory:
+If editing was separately authorized, the editor may save a revised manuscript and report to an explicitly selected output location. The runner itself writes only scaffolding to its output directory, and the measurement helpers write only to the `--output` and `--markdown` paths they are given:
 
 | Output file | Contents |
 |---|---|
@@ -88,6 +88,8 @@ If editing was separately authorized, the editor may save a revised manuscript a
 | `aiproof_workflow_state_v2_<run-id>_rNNN.json` | Versioned workflow state, task inventory, constraints, and source digest. |
 | `revision_audit_v2_<run-id>_rNNN.json` | Unsigned, versioned revision-audit scaffold or record. |
 | `revision_audit_v2_<run-id>_rNNN.md` | Human-readable view of the same unsigned audit. |
+| `<filename>_features.json` / `.md` | `features.py` measurements with extractor ID, version, configuration, and unavailable states. |
+| `<filename>_diff.json` / `.md` | `revision_diff.py` edit budget, categories, feature deltas, review candidates, and semantic-review candidate rows. |
 
 Never overwrite the input or an existing output. If required review remains incomplete, report the outstanding items without issuing the completion status.
 
@@ -144,7 +146,8 @@ House style or additional constraints: <text|none>
    opinions, experiences, emotions, sensory details, quirks, or speaker voice.
    Leave unsupported changes unapplied and request human approval.
 5. If editing is separately authorized, record accepted substantive changes in
-   the unsigned revision audit. Respect the configured edit budget.
+   the unsigned revision audit. Respect the configured edit budget; measure it
+   with scripts/revision_diff.py.
 6. Apply final_analysis.md and every stable item in AIproofcheck.md to the full
    text. Required fidelity and safety items must be resolved or signed off;
    optional style items may be not selected.

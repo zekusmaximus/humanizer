@@ -5,7 +5,7 @@ Describe sentence rhythm and offer optional, source-faithful craft suggestions. 
 
 ## Configuration and evidence status
 
-`sentence_length_sd`, ranges, and local cadence counts are `MEASURED_FEATURE` values only when produced by the extractor declared in `manuscript_analysis.md`. Any review band is a named, configurable `STYLE_HEURISTIC` with rationale and review date; `null` disables it. No band means high or low detection risk, and this task is never a detector gate.
+`sentence_length_sd`, ranges, and local cadence counts are `MEASURED_FEATURE` values only when produced by the extractor declared in `manuscript_analysis.md`; `../scripts/features.py` (`aiproof-textfeatures` 1.0.0) reports the sample standard deviation, nearest-rank percentiles, a length histogram, and a rolling-window SD summary with its configuration. Any review band is a named, configurable `STYLE_HEURISTIC` with rationale and review date; `null` disables it. No band means high or low detection risk, and this task is never a detector gate.
 
 ## Inputs
 - Configured sentence-length features and extractor metadata from `manuscript_analysis.md`.
@@ -21,7 +21,7 @@ Describe sentence rhythm and offer optional, source-faithful craft suggestions. 
    - Fragments may be proposed when they serve established emphasis or pacing and remain consistent with POV; they are not a required rhythm device.
    - Preserve deliberate rhythmic devices. New devices require source compatibility and have no universal per-scene cap.
 4. **Safety Check**
-   - If measurement is enabled, recompute the same feature with the same extractor/configuration and report the change descriptively.
+   - If measurement is enabled, recompute the same feature with the same extractor/configuration and report the change descriptively. `../scripts/revision_diff.py` reports these before/after values as feature deltas.
    - Verify that burstiness edits do not obscure meaning or violate genre-appropriate clarity.
 
 ## Deliverables

@@ -9,7 +9,7 @@ Review templated phrasing and repeated structures as contextual editorial patter
 
 ## Steps
 1. **N-gram Sweep**
-   - When enabled, identify recurring sequences with a named tokenizer, n-gram range, window, and configured review count. `null` disables the diagnostic.
+   - When enabled, identify recurring sequences with a named tokenizer, n-gram range, window, and configured review count. `null` disables the diagnostic. `../scripts/features.py` reports repeated 2- to 4-grams of `aiproof-token-v1` tokens (stopword-only n-grams excluded) and negative-parallelism counts; `not … but`, `from X to Y`, and triad candidates are not implemented and remain manual review.
    - Repetition may be necessary for terminology, rhetoric, characterization, accessibility, or motif; there is no universal cap.
 2. **Opening Variety**
    - Review clustered openings against scene needs. Offer a localized alternative only when it preserves emphasis and voice; no opening type or quota is required.

@@ -46,7 +46,7 @@ The final status is **Internal editorial checks complete**. It means the selecte
 
 - Never fabricate a fact, source, quotation, experience, emotion, opinion, or author stance.
 - Keep intentional repetition, typography, dialect, and genre conventions when they serve the manuscript.
-- Treat counts and readability features as measured only when the extractor and configuration are recorded.
+- Treat counts and readability features as measured only when the extractor and configuration are recorded. `../scripts/features.py` and `../scripts/revision_diff.py` record both in every output.
 - The workflow is English-narrative-first. Other domains and languages are experimental.
 - The revision audit is unsigned self-report, not authenticated provenance.
 - Do not use this workflow as the sole basis for a high-consequence decision.

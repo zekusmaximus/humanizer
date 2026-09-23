@@ -10,7 +10,7 @@ Review complexity, clarity, and flow against a supplied audience or declared exp
 
 ## Steps
 1. **Score and Scan**
-   - When enabled, compute a named readability formula with a pinned extractor/version, sentence splitter, syllable method, and Markdown-stripping rule.
+   - When enabled, compute a named readability formula with a pinned extractor/version, sentence splitter, syllable method, and Markdown-stripping rule. `../scripts/features.py` (`aiproof-textfeatures` 1.0.0) reports Flesch Reading Ease and Flesch-Kincaid Grade Level over prose tokens and prose sentences, counting syllables with `vowel-groups-silent-e-v1` (vowel groups, minus a silent final e); both are approximations for English prose.
    - Record the result as `MEASURED_FEATURE`. Compare it only with a configured, experimental editorial range; `null` disables the range.
 2. **Paragraph Purpose Check**
    - When enabled, review paragraphs whose intent is unclear for the supplied audience. Multi-purpose paragraphs are valid; split or merge only when meaning and pacing improve.

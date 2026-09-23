@@ -133,7 +133,7 @@ def build_argument_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "--max-edit-pct", "--max_edit_pct", dest="max_edit_pct",
         type=_bounded_float("max edit percent", 0.0, 100.0), default=None,
-        metavar="PERCENT", help="Maximum percentage of sentences permitted to be rewritten",
+        metavar="PERCENT", help="Maximum percentage of source sentences substantively changed (see revision_diff.py)",
     )
     parser.add_argument(
         "--min-faithfulness", "--min_faithfulness", "--min_faithfulness_delta",
